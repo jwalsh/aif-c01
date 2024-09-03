@@ -1,0 +1,229 @@
+#+TITLE: AIF-C01 Exam Prep
+#+AUTHOR: Jason Walsh
+#+EMAIL: j@wal.sh
+
+* AIF-C01 Exam Prep
+:PROPERTIES:
+:CUSTOM_ID: aif-c01-exam-prep
+:END:
+
+This project contains study materials and code examples for the AWS Certified AI Practitioner (AIF-C01) exam.
+
+* Project Workflow
+:PROPERTIES:
+:CUSTOM_ID: project-workflow
+:END:
+
+The following diagram illustrates the main workflow and available commands in this project:
+
+#+BEGIN_SRC mermaid :file workflow.png :exports both
+graph TD
+    A[Start] --> B[make setup]
+    B --> C[make deps]
+    C --> D[make init]
+    D --> E{Choose Environment}
+    E -->|LocalStack| F[make switch-profile-lcl]
+    E -->|AWS Dev| G[make switch-profile-dev]
+    F --> H[make localstack-up]
+    F --> I[make run]
+    G --> I
+    I --> J{Choose Action}
+    J -->|Run Tests| K[make test]
+    J -->|Lint Code| L[make lint]
+    J -->|Fix Lint Issues| M[make lint-fix]
+    J -->|Clean Project| N[make clean]
+    J -->|Build Uberjar| O[make uberjar]
+    J -->|Show Help| P[make help]
+    J -->|Stop LocalStack| Q[make localstack-down]
+    K --> J
+    L --> J
+    M --> J
+    N --> J
+    O --> J
+    P --> J
+    Q --> R[End]
+#+END_SRC
+
+#+RESULTS:
+[[file:workflow.png]]
+
+* Setup
+:PROPERTIES:
+:CUSTOM_ID: setup
+:END:
+
+1. Clone this repository
+2. Run the setup script:
+
+#+BEGIN_SRC shell
+make setup
+#+END_SRC
+
+3. Install project dependencies:
+
+#+BEGIN_SRC shell
+make deps
+#+END_SRC
+
+4. Initialize the project:
+
+#+BEGIN_SRC shell
+make init
+#+END_SRC
+
+5. Choose your profile:
+
+   For LocalStack:
+#+BEGIN_SRC shell
+make switch-profile-lcl
+make localstack-up
+#+END_SRC
+
+   For AWS Dev:
+#+BEGIN_SRC shell
+make switch-profile-dev
+#+END_SRC
+
+* Usage
+:PROPERTIES:
+:CUSTOM_ID: usage
+:END:
+
+To start exploring the concepts:
+
+1. Start the REPL:
+
+#+BEGIN_SRC shell
+make run
+#+END_SRC
+
+2. In the REPL, you can require and use the namespaces for each domain:
+
+#+BEGIN_SRC clojure :results output
+(require '[aif-c01.d0-setup.environment :as d0])
+(d0/check-environment)
+#+END_SRC
+
+* Example Usage for Each Domain
+
+** Domain 0: Environment Setup and Connection Checks
+
+#+BEGIN_SRC clojure :results output
+(require '[aif-c01.d0-setup.environment :as d0])
+(d0/check-aws-credentials)
+#+END_SRC
+
+** Domain 1: Fundamentals of AI and ML
+
+#+BEGIN_SRC clojure :results output
+(require '[aif-c01.d1-fundamentals.basics :as d1])
+(d1/explain-ai-term :ml)
+(d1/list-ml-types)
+#+END_SRC
+
+** Domain 2: Fundamentals of Generative AI
+
+#+BEGIN_SRC clojure :results output
+(require '[aif-c01.d2-generative-ai.concepts :as d2])
+(d2/explain-gen-ai-concept :prompt-engineering)
+(d2/list-gen-ai-use-cases)
+#+END_SRC
+
+** Domain 3: Applications of Foundation Models
+
+#+BEGIN_SRC clojure :results output
+(require '[aif-c01.d3-foundation-models.applications :as d3])
+(d3/describe-rag)
+(d3/list-model-selection-criteria)
+#+END_SRC
+
+** Domain 4: Guidelines for Responsible AI
+
+#+BEGIN_SRC clojure :results output
+(require '[aif-c01.d4-responsible-ai.practices :as d4])
+(d4/list-responsible-ai-features)
+(d4/describe-bias-effects)
+#+END_SRC
+
+** Domain 5: Security, Compliance, and Governance for AI Solutions
+
+#+BEGIN_SRC clojure :results output
+(require '[aif-c01.d5-security-compliance.governance :as d5])
+(d5/list-aws-security-services)
+(d5/describe-data-governance-strategies)
+#+END_SRC
+
+* Development Commands
+:PROPERTIES:
+:CUSTOM_ID: development-commands
+:END:
+
+This project uses a Makefile to manage common development tasks. To see all available commands and their descriptions, run:
+
+#+BEGIN_SRC shell
+make help
+#+END_SRC
+
+This will display a list of commands with inline descriptions, making it easy to understand and use the project's development workflow.
+
+* LocalStack Usage
+:PROPERTIES:
+:CUSTOM_ID: localstack-usage
+:END:
+
+This project supports LocalStack for local development and testing. To use LocalStack:
+
+1. Ensure Docker is installed and running on your system.
+2. Switch to the LocalStack profile: =make switch-profile-lcl=
+3. Start LocalStack: =make localstack-up=
+4. Run the REPL: =make run=
+5. When finished, stop LocalStack: =make localstack-down=
+
+* Python Integration
+:PROPERTIES:
+:CUSTOM_ID: python-integration
+:END:
+
+This project uses Poetry for Python dependency management. The AWS CLI and other Python dependencies are installed within the project's virtual environment. To use Python or the AWS CLI:
+
+1. Activate the Poetry shell: =poetry shell=
+2. Run Python scripts or AWS CLI commands as needed
+
+Example of using boto3 to interact with AWS services:
+
+#+BEGIN_SRC python :results output
+import boto3
+
+def list_s3_buckets():
+    s3 = boto3.client('s3')
+    response = s3.list_buckets()
+    return [bucket['Name'] for bucket in response['Buckets']]
+
+print(list_s3_buckets())
+#+END_SRC
+
+* Troubleshooting
+:PROPERTIES:
+:CUSTOM_ID: troubleshooting
+:END:
+
+If you encounter issues:
+
+1. Ensure your AWS credentials are correctly set up in =~/.aws/credentials= or environment variables.
+2. For LocalStack issues, check that Docker is running and ports are not conflicting.
+3. If REPL startup fails, try running =make deps= to ensure all dependencies are fetched.
+4. For Python-related issues, ensure you're in the Poetry shell (=poetry shell=) before running commands.
+
+* License
+:PROPERTIES:
+:CUSTOM_ID: license
+:END:
+
+This project is licensed under the MIT License - see the [[file:LICENSE][LICENSE]] file for details.
+
+* Author
+:PROPERTIES:
+:CUSTOM_ID: author
+:END:
+
+Jason Walsh (GitHub: [[https://github.com/jwalsh][@jwalsh]])

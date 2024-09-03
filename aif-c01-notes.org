@@ -1,0 +1,89 @@
+#+TITLE: AWS Certified AI Practitioner (AIF-C01) Exam Notes
+#+AUTHOR: Jason Walsh
+#+EMAIL: j@wal.sh
+
+* Domain 1: Fundamentals of AI and ML
+
+** Key Concepts
+- Artificial Intelligence
+- Machine Learning
+- Deep Learning
+- Neural Networks
+
+** ML Types
+- Supervised Learning
+- Unsupervised Learning
+- Reinforcement Learning
+
+** Data Types
+- Labeled and Unlabeled
+- Structured and Unstructured
+- Time-series, Image, Text
+
+* Domain 2: Fundamentals of Generative AI
+
+** Key Concepts
+- Tokens and Embeddings
+- Prompt Engineering
+- Transformer Architecture
+- Foundation Models
+
+** Use Cases
+- Image and Text Generation
+- Summarization and Translation
+- Chatbots and Customer Service
+
+* Domain 3: Applications of Foundation Models
+
+** Selection Criteria
+- Cost, Modality, Latency
+- Model Size and Complexity
+
+** Techniques
+- Retrieval Augmented Generation (RAG)
+- Prompt Engineering Techniques
+- Fine-tuning Methods
+
+** Evaluation
+- ROUGE, BLEU, BERTScore
+
+* Domain 4: Guidelines for Responsible AI
+
+** Key Features
+- Bias, Fairness, Inclusivity
+- Robustness and Safety
+
+** Considerations
+- Legal Risks
+- Dataset Characteristics
+- Bias Effects and Monitoring
+
+* Domain 5: Security, Compliance, and Governance
+
+** AWS Security
+- IAM, Encryption, Macie
+- Shared Responsibility Model
+
+** Compliance
+- ISO, SOC
+- Algorithm Accountability
+
+** Data Governance
+- Lifecycles, Logging, Monitoring
+
+* TODO Tasks [0/3]
+- [ ] Review all AWS services mentioned in the exam guide
+- [ ] Practice with hands-on labs
+- [ ] Take practice exams
+
+* Resources
+- [[https://aws.amazon.com/certification/certified-ai-ml-specialty/][AWS Certified Machine Learning - Specialty]]
+- [[https://docs.aws.amazon.com/][AWS Documentation]]
+
+** AWS Power Hour: ML Engineer Associate
+
+- https://pages.awscloud.com/GLOBAL-other-T2-Traincert-Power-Hour-ML-Assoc-2024-reg.html?sc_channel=ha&sc_icampaign=event_global_150_twitch_powerhour-mla_2up_tnc&sc_ichannel=ha&sc_icontent=awssm-1878301_event_tnc&sc_iplace=2up&trk=6d7900ce-02ec-49e3-b3fb-89534535e60b~ha_awssm-1878301_event_tnc
+
+** Services
+
+*** Amazon Q 

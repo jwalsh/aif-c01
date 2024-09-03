@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "aif-c01"
+version = "0.1.0"
+description = ""
+authors = ["Jason Walsh <j@wal.sh>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+click = "^8.1.7"
+anthropic = "^0.34.1"
+boto3 = "^1.35.11"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

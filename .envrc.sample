@@ -1,0 +1,23 @@
+# Sample .envrc file for AIF-C01 project
+# Copy this file to .envrc and modify as needed
+
+# Uncomment and set the appropriate profile
+
+# For LocalStack profile
+#export AWS_PROFILE=lcl
+#export AWS_ACCESS_KEY_ID=test
+#export AWS_SECRET_ACCESS_KEY=test
+#export AWS_DEFAULT_REGION=us-east-1
+#export LOCALSTACK_ENDPOINT=http://localhost:4566
+
+# For AWS dev profile
+#export AWS_PROFILE=dev
+#export AWS_ACCESS_KEY_ID=your_aws_access_key_id
+#export AWS_SECRET_ACCESS_KEY=your_aws_secret_access_key
+#export AWS_DEFAULT_REGION=us-east-1
+
+# Common settings
+export PROJECT_ROOT=$(pwd)
+export LEIN_REPL_HOST=0.0.0.0
+export LEIN_REPL_PORT=7000
+
