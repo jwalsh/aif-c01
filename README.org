@@ -9,6 +9,8 @@
 
 This project contains study materials and code examples for the AWS Certified AI Practitioner (AIF-C01) exam.
 
+[[file:resources/test-image.png]]
+
 * Project Workflow
 :PROPERTIES:
 :CUSTOM_ID: project-workflow
