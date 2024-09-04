@@ -2,12 +2,7 @@
 #+AUTHOR: Jason Walsh
 #+EMAIL: j@wal.sh
 
-* AIF-C01 Exam Prep
-:PROPERTIES:
-:CUSTOM_ID: aif-c01-exam-prep
-:END:
-
-This project contains study materials and code examples for the AWS Certified AI Practitioner (AIF-C01) exam.
+This project contains study materials and code examples for the AWS Certified AI Practitioner (AIF-C01) exam announced in [[https://aws.amazon.com/blogs/training-and-certification/august-2024-new-offerings/][August 2024]]. By extension it will also include materials for AWS Certified Machine Learning Engineer – Associate but the initial scope just covers executive-level topics. 
 
 [[file:resources/test-image-640x.png]]
 
