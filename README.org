@@ -1,6 +1,7 @@
 #+TITLE: AWS Certified AI Practitioner (AIF-C01) Exam Preparation
 #+AUTHOR: Jason Walsh
 #+EMAIL: j@wal.sh
+#+PROPERTY: AIF_C01_BUCKET aif-c01-jwalsh
 
 * Introduction
 
@@ -49,7 +50,6 @@ graph TD
     P --> J
     Q --> R[End]
 #+END_SRC
-
 
 * Architecture
 
@@ -244,8 +244,6 @@ If you encounter issues:
 3. If REPL startup fails, try running =make deps= to ensure all dependencies are fetched.
 4. For Python-related issues, ensure you're in the Poetry shell (=poetry shell=) before running commands.
 
-
-
 * AWS Services Covered
 
 This project includes examples and study materials for the following AWS services relevant to the AIF-C01 exam:
@@ -267,7 +265,7 @@ This project includes examples and study materials for the following AWS service
 
 Each service is explored in the context of AI/ML workflows and best practices.
 
-** Amazon S3
+** Amazon S3 (static)
 Create a bucket and upload a file:
 
 #+BEGIN_SRC shell
@@ -282,8 +280,95 @@ aws s3 ls s3://aif-c01
 #+END_SRC
 
 #+RESULTS:
+| 2024-09-04 | 09:01:29 |   18539 | 1f948c3f-b232-45bb-b78f-c5050ec94155.mp3 |
+| 2024-09-04 | 09:06:39 |   18539 | test-audio.mp3                           |
+| 2024-09-04 | 08:57:32 | 1870744 | test-image.png                           |
 
 For more S3 examples, refer to the [[file:/opt/homebrew/share/awscli/examples/s3/][S3 AWS CLI Examples]].
+
+** Amazon S3 (dynamic)
+
+#+NAME: aif-c01-bucket
+#+BEGIN_SRC elisp :results value
+(format "aif-c01-%s" (downcase (or (getenv "USER") (user-login-name))))
+#+END_SRC
+
+#+RESULTS: aif-c01-bucket
+: aif-c01-jasonwalsh
+
+Create a bucket and enable versioning:
+
+#+BEGIN_SRC shell :var BUCKET=aif-c01-bucket
+aws s3 mb s3://$BUCKET
+aws s3api put-bucket-versioning --bucket $BUCKET --versioning-configuration Status=Enabled
+#+END_SRC
+
+#+RESULTS:
+: make_bucket: aif-c01-jasonwalsh
+
+Upload PDF files to the papers/ prefix:
+
+#+BEGIN_SRC shell :var BUCKET=aif-c01-bucket
+aws s3 sync resources/papers s3://$BUCKET/papers/ --exclude "*" --include "*.pdf"
+#+END_SRC
+
+#+RESULTS:
+
+List contents of the papers/ prefix:
+
+#+BEGIN_SRC shell :var BUCKET=aif-c01-bucket
+aws s3 ls s3://$BUCKET/papers/
+#+END_SRC
+
+#+RESULTS:
+|        PRE | resources/ |         |                           |
+| 2024-09-04 |   19:28:18 | 2215244 | 1706.03762.pdf            |
+| 2024-09-04 |   19:28:18 | 1834683 | 2303.18223-LLM-survey.pdf |
+| 2024-09-04 |   19:28:18 |  734098 | 2310.04562.pdf            |
+| 2024-09-04 |   19:28:18 |  552884 | 2310.07064.pdf            |
+
+Upload a new version of a file and list versions:
+
+#+BEGIN_SRC shell :var BUCKET=aif-c01-bucket
+# Create a markdown file with the content
+cat << EOF > example.md
+# Example Document
+
+This is a new version of the document with updated content.
+
+## Details
+- Filename: 2310.07064.pdf
+- Bucket: $BUCKET
+- Path: papers/2310.07064.pdf
+
+## Content
+New content
+EOF
+
+# Convert markdown to PDF
+pandoc example.md -o 2310.07064.pdf
+
+# Upload the PDF to S3
+aws s3 cp 2310.07064.pdf s3://$BUCKET/papers/
+
+#+END_SRC
+
+#+RESULTS:
+: Completed 53.9 KiB/53.9 KiB (81.3 KiB/s) with 1 file(s) remainingupload: ./2310.07064.pdf to s3://aif-c01-jasonwalsh/papers/2310.07064.pdf
+
+#+BEGIN_SRC shell :var BUCKET=aif-c01-bucket
+aws s3api list-object-versions \
+    --bucket $BUCKET \
+    --prefix "papers/2310.07064.pdf" \
+    --query 'Versions[*].[VersionId, LastModified, Size]' \
+    --output text
+#+END_SRC
+
+#+RESULTS:
+| xhTn96WWUZfiAwzUksu3ndTAjHKmYXu_ | 2024-09-04T23:39:33+00:00 |  55194 |
+| bJ3N8GQoB9NB9oMTFqYoKD.K_eSQ4_I1 | 2024-09-04T23:32:48+00:00 |     12 |
+| PxEPB7TjtHmzp2hYpTpmt7hcv2yK7BG0 | 2024-09-04T23:28:18+00:00 | 552884 |
+| null                             | 2024-09-04T23:25:17+00:00 |     12 |
 
 ** Amazon Bedrock
 List available foundation models:
@@ -292,12 +377,27 @@ List available foundation models:
 aws bedrock list-foundation-models | jq -r '.modelSummaries[]|.modelId' | head
 #+END_SRC
 
+#+RESULTS:
+| amazon.titan-tg1-large            |
+| amazon.titan-image-generator-v1:0 |
+| amazon.titan-image-generator-v1   |
+| amazon.titan-image-generator-v2:0 |
+| amazon.titan-text-premier-v1:0    |
+| amazon.titan-embed-g1-text-02     |
+| amazon.titan-text-lite-v1:0:4k    |
+| amazon.titan-text-lite-v1         |
+| amazon.titan-text-express-v1:0:8k |
+| amazon.titan-text-express-v1      |
+
 ** Amazon Q Business
 List applications:
 
 #+BEGIN_SRC shell
 aws qbusiness list-applications | jq .applications
 #+END_SRC
+
+#+RESULTS:
+: []
 
 ** Amazon Comprehend
 Detect sentiment in text:
@@ -324,6 +424,10 @@ List transcription jobs:
 aws transcribe list-transcription-jobs | jq -r '.TranscriptionJobSummaries[]|.TranscriptionJobName'
 #+END_SRC
 
+#+RESULTS:
+| AIFC03TranscriptionJob8221 |
+| AIFC03TranscriptionJob     |
+
 Start a new transcription job:
 
 #+BEGIN_SRC shell
@@ -343,7 +447,6 @@ List speech synthesis tasks and check the output in S3:
 
 #+BEGIN_SRC shell
 aws polly list-speech-synthesis-tasks | jq .SynthesisTasks
-aws s3 ls aif-c01
 #+END_SRC
 
 For more Polly examples, see the [[file:/opt/homebrew/share/awscli/examples/polly/][Polly AWS CLI Examples]].
@@ -374,8 +477,10 @@ For more Kendra examples, see the [[file:/opt/homebrew/share/awscli/examples/ken
 List notebook instances:
 
 #+BEGIN_SRC shell
-aws sagemaker list-notebook-instances | jq -r '.NotebookInstances[]|.NotebookInstanceName'
+aws sagemaker list-notebook-instances | jq -r '.NotebookInstances[]| select(.NotebookInstanceName | test("AIF|MLA"))'
 #+END_SRC
+
+#+RESULTS:
 
 List SageMaker pipelines:
 
@@ -383,11 +488,17 @@ List SageMaker pipelines:
 aws sagemaker list-pipelines | jq .PipelineSummaries
 #+END_SRC
 
+#+RESULTS:
+: []
+
 List SageMaker models:
 
 #+BEGIN_SRC shell
 aws sagemaker list-models | jq .Models
 #+END_SRC
+
+#+RESULTS:
+: []
 
 For more SageMaker examples, refer to the [[file:/opt/homebrew/share/awscli/examples/sagemaker/][SageMaker AWS CLI Examples]].
 
@@ -401,8 +512,10 @@ aws lambda list-functions | jq -r '.Functions[]|.FunctionName'
 List Lambda functions with "ML" or "AI" in the name:
 
 #+BEGIN_SRC shell
-aws lambda list-functions | jq '.Functions[] | select(.FunctionName | test("ML|AI"))'
+aws lambda list-functions | jq '.Functions[] | select(.FunctionName | test("MLA|AIF"))'
 #+END_SRC
+
+#+RESULTS:
 
 For more Lambda examples, check the [[file:/opt/homebrew/share/awscli/examples/lambda/][Lambda AWS CLI Examples]].
 
@@ -413,6 +526,9 @@ List metrics for SageMaker:
 aws cloudwatch list-metrics --namespace "AWS/SageMaker" | jq .Metrics
 #+END_SRC
 
+#+RESULTS:
+: []
+
 For more CloudWatch examples, see the [[file:/opt/homebrew/share/awscli/examples/cloudwatch/][CloudWatch AWS CLI Examples]].
 
 ** Amazon Kinesis
@@ -421,6 +537,9 @@ List Kinesis streams:
 #+BEGIN_SRC shell
 aws kinesis list-streams | jq .StreamNames
 #+END_SRC
+
+#+RESULTS:
+: []
 
 For more Kinesis examples, refer to the [[file:/opt/homebrew/share/awscli/examples/kinesis/][Kinesis AWS CLI Examples]].
 
@@ -431,14 +550,19 @@ List Glue databases:
 aws glue get-databases | jq .DatabaseList
 #+END_SRC
 
+#+RESULTS:
+: []
+
 For more Glue examples, check the [[file:/opt/homebrew/share/awscli/examples/glue/][Glue AWS CLI Examples]].
 
 ** Amazon DynamoDB
 List DynamoDB tables:
 
 #+BEGIN_SRC shell
-aws dynamodb list-tables | jq -r '.TableNames[]'
+  aws dynamodb list-tables | jq -r '.TableNames[] | select(. | test("MLA|AIF"))'
 #+END_SRC
+
+#+RESULTS:
 
 For more DynamoDB examples, see the [[file:/opt/homebrew/share/awscli/examples/dynamodb/][DynamoDB AWS CLI Examples]].
 
@@ -446,22 +570,31 @@ For more DynamoDB examples, see the [[file:/opt/homebrew/share/awscli/examples/d
 List Forecast datasets:
 
 #+BEGIN_SRC shell
-aws forecast list-datasets | jq .Datasets
+  aws forecast list-datasets | jq .Datasets
 #+END_SRC
+
+#+RESULTS:
+: []
 
 ** Amazon Lex
 List Lex bots:
 
 #+BEGIN_SRC shell
-aws lexv2-models list-bots | jq .botSummaries
+  aws lexv2-models list-bots | jq .botSummaries
 #+END_SRC
+
+#+RESULTS:
+: []
 
 ** Amazon Personalize
 List Personalize datasets:
 
 #+BEGIN_SRC shell
-aws personalize list-datasets | jq .datasets
+  aws personalize list-datasets | jq .datasets
 #+END_SRC
+
+#+RESULTS:
+: []
 
 ** Amazon Textract
 Analyze a document (replace `YOUR_BUCKET_NAME` and `YOUR_DOCUMENT_NAME` with actual values):
@@ -514,7 +647,6 @@ In addition to code examples, this project includes:
 :END:
 
 This project is licensed under the MIT License - see the [[file:LICENSE][LICENSE]] file for details.
-
 
 * Disclaimer
 
