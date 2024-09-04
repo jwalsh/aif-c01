@@ -267,6 +267,228 @@ This project includes examples and study materials for the following AWS service
 
 Each service is explored in the context of AI/ML workflows and best practices.
 
+** Amazon S3
+Create a bucket and upload a file:
+
+#+BEGIN_SRC shell
+aws s3 mb s3://aif-c01
+aws s3 cp resources/test-image.png s3://aif-c01
+#+END_SRC
+
+List contents of the bucket:
+
+#+BEGIN_SRC shell
+aws s3 ls s3://aif-c01
+#+END_SRC
+
+#+RESULTS:
+
+For more S3 examples, refer to the [[file:/opt/homebrew/share/awscli/examples/s3/][S3 AWS CLI Examples]].
+
+** Amazon Bedrock
+List available foundation models:
+
+#+BEGIN_SRC shell
+aws bedrock list-foundation-models | jq -r '.modelSummaries[]|.modelId' | head
+#+END_SRC
+
+** Amazon Q Business
+List applications:
+
+#+BEGIN_SRC shell
+aws qbusiness list-applications | jq .applications
+#+END_SRC
+
+** Amazon Comprehend
+Detect sentiment in text:
+
+#+BEGIN_SRC shell
+aws comprehend detect-sentiment --text "I love using AWS services" --language-code en | jq -r .Sentiment
+#+END_SRC
+
+For more Comprehend examples, see the [[file:/opt/homebrew/share/awscli/examples/comprehend/][Comprehend AWS CLI Examples]].
+
+** Amazon Translate
+Translate text:
+
+#+BEGIN_SRC shell
+aws translate translate-text --text "Hello, world" --source-language-code en --target-language-code es | jq -r '.TranslatedText'
+#+END_SRC
+
+For more Translate examples, check the [[file:/opt/homebrew/share/awscli/examples/translate/][Translate AWS CLI Examples]].
+
+** Amazon Transcribe
+List transcription jobs:
+
+#+BEGIN_SRC shell
+aws transcribe list-transcription-jobs | jq -r '.TranscriptionJobSummaries[]|.TranscriptionJobName'
+#+END_SRC
+
+Start a new transcription job:
+
+#+BEGIN_SRC shell
+aws transcribe start-transcription-job --transcription-job-name "AIFC03TranscriptionJob$((RANDOM % 9000 + 1000))" --language-code en-US --media-format mp3 --media '{"MediaFileUri": "s3://aif-c01/test-audio.mp3"}' | jq
+#+END_SRC
+
+For more Transcribe examples, refer to the [[file:/opt/homebrew/share/awscli/examples/transcribe/][Transcribe AWS CLI Examples]].
+
+** Amazon Polly
+Start a speech synthesis task:
+
+#+BEGIN_SRC shell
+aws polly start-speech-synthesis-task --output-format mp3 --output-s3-bucket-name aif-c01 --text "Hello, welcome to AWS AI services" --voice-id Joanna
+#+END_SRC
+
+List speech synthesis tasks and check the output in S3:
+
+#+BEGIN_SRC shell
+aws polly list-speech-synthesis-tasks | jq .SynthesisTasks
+aws s3 ls aif-c01
+#+END_SRC
+
+For more Polly examples, see the [[file:/opt/homebrew/share/awscli/examples/polly/][Polly AWS CLI Examples]].
+
+** Amazon Rekognition
+Detect labels in an image:
+
+#+BEGIN_SRC shell
+aws rekognition detect-labels \
+    --image '{"S3Object":{"Bucket":"aif-c01","Name":"test-image.png"}}' \
+    --max-labels 10 \
+    --region us-east-1 \
+    --output json | jq -r '.Labels[]|.Name'
+#+END_SRC
+
+For more Rekognition examples, check the [[file:/opt/homebrew/share/awscli/examples/rekognition/][Rekognition AWS CLI Examples]].
+
+** Amazon Kendra
+List Kendra indices:
+
+#+BEGIN_SRC shell
+aws kendra list-indices | jq .IndexConfigurationSummaryItems
+#+END_SRC
+
+For more Kendra examples, see the [[file:/opt/homebrew/share/awscli/examples/kendra/][Kendra AWS CLI Examples]].
+
+** Amazon SageMaker
+List notebook instances:
+
+#+BEGIN_SRC shell
+aws sagemaker list-notebook-instances | jq -r '.NotebookInstances[]|.NotebookInstanceName'
+#+END_SRC
+
+List SageMaker pipelines:
+
+#+BEGIN_SRC shell
+aws sagemaker list-pipelines | jq .PipelineSummaries
+#+END_SRC
+
+List SageMaker models:
+
+#+BEGIN_SRC shell
+aws sagemaker list-models | jq .Models
+#+END_SRC
+
+For more SageMaker examples, refer to the [[file:/opt/homebrew/share/awscli/examples/sagemaker/][SageMaker AWS CLI Examples]].
+
+** AWS Lambda
+List Lambda functions:
+
+#+BEGIN_SRC shell
+aws lambda list-functions | jq -r '.Functions[]|.FunctionName'
+#+END_SRC
+
+List Lambda functions with "ML" or "AI" in the name:
+
+#+BEGIN_SRC shell
+aws lambda list-functions | jq '.Functions[] | select(.FunctionName | test("ML|AI"))'
+#+END_SRC
+
+For more Lambda examples, check the [[file:/opt/homebrew/share/awscli/examples/lambda/][Lambda AWS CLI Examples]].
+
+** Amazon CloudWatch
+List metrics for SageMaker:
+
+#+BEGIN_SRC shell
+aws cloudwatch list-metrics --namespace "AWS/SageMaker" | jq .Metrics
+#+END_SRC
+
+For more CloudWatch examples, see the [[file:/opt/homebrew/share/awscli/examples/cloudwatch/][CloudWatch AWS CLI Examples]].
+
+** Amazon Kinesis
+List Kinesis streams:
+
+#+BEGIN_SRC shell
+aws kinesis list-streams | jq .StreamNames
+#+END_SRC
+
+For more Kinesis examples, refer to the [[file:/opt/homebrew/share/awscli/examples/kinesis/][Kinesis AWS CLI Examples]].
+
+** AWS Glue
+List Glue databases:
+
+#+BEGIN_SRC shell
+aws glue get-databases | jq .DatabaseList
+#+END_SRC
+
+For more Glue examples, check the [[file:/opt/homebrew/share/awscli/examples/glue/][Glue AWS CLI Examples]].
+
+** Amazon DynamoDB
+List DynamoDB tables:
+
+#+BEGIN_SRC shell
+aws dynamodb list-tables | jq -r '.TableNames[]'
+#+END_SRC
+
+For more DynamoDB examples, see the [[file:/opt/homebrew/share/awscli/examples/dynamodb/][DynamoDB AWS CLI Examples]].
+
+** Amazon Forecast
+List Forecast datasets:
+
+#+BEGIN_SRC shell
+aws forecast list-datasets | jq .Datasets
+#+END_SRC
+
+** Amazon Lex
+List Lex bots:
+
+#+BEGIN_SRC shell
+aws lexv2-models list-bots | jq .botSummaries
+#+END_SRC
+
+** Amazon Personalize
+List Personalize datasets:
+
+#+BEGIN_SRC shell
+aws personalize list-datasets | jq .datasets
+#+END_SRC
+
+** Amazon Textract
+Analyze a document (replace `YOUR_BUCKET_NAME` and `YOUR_DOCUMENT_NAME` with actual values):
+
+#+BEGIN_SRC shell
+aws textract analyze-document --document '{"S3Object":{"Bucket":"YOUR_BUCKET_NAME","Name":"YOUR_DOCUMENT_NAME"}}' --feature-types "TABLES" "FORMS"
+#+END_SRC
+
+** Amazon Comprehend Medical
+Detect entities in medical text:
+
+#+BEGIN_SRC shell
+aws comprehendmedical detect-entities --text "The patient was prescribed 500mg of acetaminophen for fever."
+#+END_SRC
+
+** AWS Security Services for AI/ML
+List IAM roles with "SageMaker" in the name:
+
+#+BEGIN_SRC shell
+aws iam list-roles | jq '.Roles[] | select(.RoleName | contains("SageMaker"))'
+#+END_SRC
+
+Describe EC2 instances with GPU (useful for ML workloads):
+
+#+BEGIN_SRC shell
+aws ec2 describe-instances --filters "Name=instance-type,Values=p*,g*" | jq .Reservations[].Instances[]
+#+END_SRC
 * Responsible AI
 
 A key focus of this project is on responsible AI practices. We cover:

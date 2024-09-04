@@ -84,10 +84,6 @@
 
 - https://pages.awscloud.com/GLOBAL-other-T2-Traincert-Power-Hour-ML-Assoc-2024-reg.html?sc_channel=ha&sc_icampaign=event_global_150_twitch_powerhour-mla_2up_tnc&sc_ichannel=ha&sc_icontent=awssm-1878301_event_tnc&sc_iplace=2up&trk=6d7900ce-02ec-49e3-b3fb-89534535e60b~ha_awssm-1878301_event_tnc
 
-** Services
-
-*** Amazon Q 
-
 ** AWS CLI
 
 - /opt/homebrew/share/awscli/examples
@@ -129,15 +125,17 @@ aws s3 ls s3://aif-c01
 [[file:/opt/homebrew/share/awscli/examples/s3/][S3 AWS CLI Examples]]
 
 
-*** SageMaker
+*** Bedrock 
+
 #+begin_src shell
-  aws sagemaker list-notebook-instances | jq -r '.NotebookInstances[]|.NotebookInstanceName'
+aws bedrock list-foundation-models | jq -r '.modelSummaries[]|.modelId' | head
 #+end_src
 
-#+RESULTS:
+*** Q Business
 
-[[file:/opt/homebrew/share/awscli/examples/sagemaker/][SageMaker AWS CLI Examples]]
-
+#+begin_src shell
+  aws qbusiness list-applications | jq .applications
+#+end_src
 *** Comprehend
 
 #+begin_src shell
@@ -145,39 +143,13 @@ aws s3 ls s3://aif-c01
 #+end_src
 [[file:/opt/homebrew/share/awscli/examples/comprehend/][
 Comprehend AWS CLI Examples]]
-
-*** Rekognition
-
-#+begin_src shell
-  aws rekognition detect-labels \
-      --image '{"S3Object":{"Bucket":"aif-c01","Name":"test-image.png"}}' \
-      --max-labels 10 \
-      --region us-east-1 \
-      --output json | jq -r '.Labels[]|.Name'
-#+end_src
-[[file:/opt/homebrew/share/awscli/examples/rekognition/][
-Rekognition AWS CLI Examples]]
-
-*** Kendra
+*** Translate
 
 #+begin_src shell
-  aws kendra list-indices | jq .IndexConfigurationSummaryItems
+  aws translate translate-text --text "Hello, world" --source-language-code en --target-language-code es | jq -r '.TranslatedText'
 #+end_src
-[[file:/opt/homebrew/share/awscli/examples/kendra/][
-Kendra AWS CLI Examples]]
-
-*** Polly
-
-#+begin_src shell
-  aws polly start-speech-synthesis-task --output-format mp3 --output-s3-bucket-name aif-c01 --text "Hello, welcome to AWS AI services" --voice-id Joanna
-#+end_src
-
-#+begin_src shell
-  aws polly list-speech-synthesis-tasks | jq .SynthesisTasks
-  aws s3 ls aif-c01
-#+end_src
-
-[[file:/opt/homebrew/share/awscli/examples/polly/][Polly AWS CLI Examples]]
+[[file:/opt/homebrew/share/awscli/examples/translate/][
+Translate AWS CLI Examples]]
 
 *** Transcribe
 
@@ -191,14 +163,53 @@ Kendra AWS CLI Examples]]
 [[file:/opt/homebrew/share/awscli/examples/transcribe/][
 Transcribe AWS CLI Examples]]
 
-*** Translate
+*** Polly
 
 #+begin_src shell
-  aws translate translate-text --text "Hello, world" --source-language-code en --target-language-code es
+  aws polly start-speech-synthesis-task --output-format mp3 --output-s3-bucket-name aif-c01 --text "Hello, welcome to AWS AI services" --voice-id Joanna
 #+end_src
-[[file:/opt/homebrew/share/awscli/examples/translate/][
-Translate AWS CLI Examples]]
 
+#+begin_src shell
+  aws polly list-speech-synthesis-tasks | jq .SynthesisTasks
+  aws s3 ls aif-c01
+#+end_src
+
+[[file:/opt/homebrew/share/awscli/examples/polly/][Polly AWS CLI Examples]]
+*** Rekognition
+
+#+begin_src shell
+  aws rekognition detect-labels \
+      --image '{"S3Object":{"Bucket":"aif-c01","Name":"test-image.png"}}' \
+      --max-labels 10 \
+      --region us-east-1 \
+      --output json | jq -r '.Labels[]|.Name'
+#+end_src
+[[file:/opt/homebrew/share/awscli/examples/rekognition/][
+Rekognition AWS CLI Examples]]
+*** TODO Forecast
+*** TODO Lex
+*** TODO Personalize
+*** TODO Textract
+*** Kendra
+
+#+begin_src shell
+  aws kendra list-indices | jq .IndexConfigurationSummaryItems
+#+end_src
+[[file:/opt/homebrew/share/awscli/examples/kendra/][
+Kendra AWS CLI Examples]]
+*** TODO Mechanical Turk
+*** TODO Augmented AI
+*** TODO DeepRacer
+*** SageMaker
+#+begin_src shell
+  aws sagemaker list-notebook-instances | jq -r '.NotebookInstances[]|.NotebookInstanceName'
+#+end_src
+
+#+RESULTS:
+
+[[file:/opt/homebrew/share/awscli/examples/sagemaker/][SageMaker AWS CLI Examples]]
+*** TODO IAM
+*** EC2
 *** Lambda
 
 #+begin_src shell
@@ -206,8 +217,13 @@ Translate AWS CLI Examples]]
 #+end_src
 [[file:/opt/homebrew/share/awscli/examples/lambda/][
 Lambda AWS CLI Examples]]
-
-
+*** TODO Macie
+*** TODO Config
+*** TODO Inspector
+*** TODO CloudTrail
+*** TODO Artifact
+*** TODO Trusted Advisor
+*** TODO Network Security
 *** CloudWatch
 
 #+begin_src shell
@@ -234,7 +250,7 @@ aws glue get-databases | jq .DatabaseList
 *** DynamoDB
 
 #+begin_src shell
-aws dynamodb list-tables | jq -r '.TableNames[]'
+aws dynamodb list-tables | jq -r '.TableNames[]'aws dynamodb list-tables
 #+end_src
 
 [[file:/opt/homebrew/share/awscli/examples/dynamodb/][DynamoDB AWS CLI Examples]]
