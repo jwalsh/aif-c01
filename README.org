@@ -46,6 +46,53 @@ graph TD
     Q --> R[End]
 #+END_SRC
 
+* Architecture 
+
+#+BEGIN_SRC mermaid :file project_architecture.png
+graph TD
+    A[macOS] --> B[Shell Environment zsh]
+    B --> C[direnv]
+    C --> D[Poetry Environment]
+    C --> E[AWS CLI]
+    D --> F[Python Dependencies]
+    B --> G[Leiningen]
+    G --> H[Clojure Project]
+    H --> I[Portal Data Viewer]
+    H --> J[REPL with rebel-readline]
+    B --> K[Docker]
+    K --> L[LocalStack]
+    L --> M[Simulated AWS Services]
+    M --> M1[SageMaker]
+    M --> M2[Bedrock]
+    M --> M3[Comprehend]
+    M --> M4[Kendra]
+    M --> M5[Others...]
+    B --> N[Squid Proxy]
+    N --> O[HTTP/HTTPS Traffic]
+    B --> P[Make Commands]
+    P --> P1[setup]
+    P --> P2[deps]
+    P --> P3[init]
+    P --> P4[run]
+    P --> P5[test]
+    P --> P6[lint]
+    P --> P7[clean]
+    P --> P8[localstack-up]
+    P --> P9[localstack-down]
+    C --> Q[AWS Profiles]
+    Q --> Q1[lcl Profile]
+    Q --> Q2[dev Profile]
+    Q2 --> R[Real AWS Services]
+    B --> S[Scripts]
+    S --> S1[setup.sh]
+    S --> S2[switch_profile.sh]
+    S --> S3[check_aws_profiles.sh]
+    S --> S4[project_alignment_checker.py]
+    S --> S5[cognitect_labs.sh]
+    S --> S6[test_proxy.clj]
+#+END_SRC
+
+
 
 * Setup
 :PROPERTIES:
