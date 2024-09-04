@@ -1,15 +1,24 @@
-#+TITLE: AIF-C01 Exam Prep
+#+TITLE: AWS Certified AI Practitioner (AIF-C01) Exam Preparation
 #+AUTHOR: Jason Walsh
 #+EMAIL: j@wal.sh
 
-This project contains study materials and code examples for the AWS Certified AI Practitioner (AIF-C01) exam announced in [[https://aws.amazon.com/blogs/training-and-certification/august-2024-new-offerings/][August 2024]]. By extension it will also include materials for AWS Certified Machine Learning Engineer – Associate but the initial scope just covers executive-level topics. 
+* Introduction
+
+This project provides comprehensive study materials, code examples, and a robust development environment for preparing for the AWS Certified AI Practitioner (AIF-C01) exam, announced in [[https://aws.amazon.com/blogs/training-and-certification/august-2024-new-offerings/][August 2024]]. While the primary focus is on the AIF-C01 exam, the project also lays groundwork for the AWS Certified Machine Learning Engineer – Associate certification.
+
+Key features of this project:
+- Structured learning paths covering all AIF-C01 exam domains
+- Hands-on code examples using AWS AI/ML services
+- Local development environment with LocalStack for AWS service simulation
+- Integration of Python and Clojure for a comprehensive learning experience
+- Emphasis on best practices in AI/ML development and responsible AI
+
+Whether you're an executive looking to understand AI/ML capabilities in AWS or a practitioner aiming for certification, this project provides the resources you need to succeed.
 
 [[file:resources/test-image-640x.png]]
 
 * Project Workflow
-:PROPERTIES:
-:CUSTOM_ID: project-workflow
-:END:
+
 
 The following diagram illustrates the main workflow and available commands in this project:
 
@@ -41,7 +50,9 @@ graph TD
     Q --> R[End]
 #+END_SRC
 
-* Architecture 
+
+* Architecture
+
 
 #+BEGIN_SRC mermaid :file project_architecture.png
 graph TD
@@ -71,12 +82,7 @@ graph TD
 
 #+END_SRC
 
-
-
 * Setup
-:PROPERTIES:
-:CUSTOM_ID: setup
-:END:
 
 1. Clone this repository
 2. Run the setup script:
@@ -111,9 +117,6 @@ make switch-profile-dev
 #+END_SRC
 
 * Usage
-:PROPERTIES:
-:CUSTOM_ID: usage
-:END:
 
 To start exploring the concepts:
 
@@ -131,6 +134,7 @@ make run
 #+END_SRC
 
 * Example Usage for Each Domain
+
 
 ** Domain 0: Environment Setup and Connection Checks
 
@@ -179,7 +183,7 @@ make run
 (d5/describe-data-governance-strategies)
 #+END_SRC
 
-* Development Commands
+* Development
 :PROPERTIES:
 :CUSTOM_ID: development-commands
 :END:
@@ -192,7 +196,7 @@ make help
 
 This will display a list of commands with inline descriptions, making it easy to understand and use the project's development workflow.
 
-* LocalStack Usage
+** LocalStack Usage
 :PROPERTIES:
 :CUSTOM_ID: localstack-usage
 :END:
@@ -205,7 +209,7 @@ This project supports LocalStack for local development and testing. To use Local
 4. Run the REPL: =make run=
 5. When finished, stop LocalStack: =make localstack-down=
 
-* Python Integration
+** Python Integration
 :PROPERTIES:
 :CUSTOM_ID: python-integration
 :END:
@@ -228,7 +232,7 @@ def list_s3_buckets():
 print(list_s3_buckets())
 #+END_SRC
 
-* Troubleshooting
+** Troubleshooting
 :PROPERTIES:
 :CUSTOM_ID: troubleshooting
 :END:
@@ -240,6 +244,48 @@ If you encounter issues:
 3. If REPL startup fails, try running =make deps= to ensure all dependencies are fetched.
 4. For Python-related issues, ensure you're in the Poetry shell (=poetry shell=) before running commands.
 
+
+
+* AWS Services Covered
+
+This project includes examples and study materials for the following AWS services relevant to the AIF-C01 exam:
+
+- Amazon SageMaker
+- Amazon Comprehend
+- Amazon Rekognition
+- Amazon Kendra
+- Amazon Bedrock
+- Amazon Polly
+- Amazon Transcribe
+- Amazon Translate
+- AWS Lambda
+- Amazon S3
+- Amazon CloudWatch
+- Amazon Kinesis
+- AWS Glue
+- Amazon DynamoDB
+
+Each service is explored in the context of AI/ML workflows and best practices.
+
+* Responsible AI
+
+A key focus of this project is on responsible AI practices. We cover:
+
+- Ethical considerations in AI/ML development
+- Bias detection and mitigation strategies
+- Fairness and inclusivity in AI systems
+- Robustness and safety measures
+- Compliance and governance in AI projects
+
+* Study Resources
+
+In addition to code examples, this project includes:
+
+- Curated lists of AWS documentation and whitepapers
+- Links to relevant AWS training materials
+- Practice questions for each exam domain
+- Glossary of key AI/ML terms in the context of AWS
+
 * License
 :PROPERTIES:
 :CUSTOM_ID: license
@@ -247,9 +293,7 @@ If you encounter issues:
 
 This project is licensed under the MIT License - see the [[file:LICENSE][LICENSE]] file for details.
 
-* Author
-:PROPERTIES:
-:CUSTOM_ID: author
-:END:
 
-Jason Walsh (GitHub: [[https://github.com/jwalsh][@jwalsh]])
+* Disclaimer
+
+This project is not affiliated with or endorsed by Amazon Web Services. All AWS service names and trademarks are property of Amazon.com, Inc. or its affiliates.
