@@ -53,9 +53,9 @@ graph TD
     A[macOS] --> B[Shell Environment zsh]
     B --> C[direnv]
     C --> D[Poetry Environment]
-    C --> E[AWS CLI]
-    D --> F[Python Dependencies]
-    B --> G[Leiningen]
+    D --> E[Python Dependencies]
+    D --> F[AWS CLI]
+    D --> G[Leiningen]
     G --> H[Clojure Project]
     H --> I[Portal Data Viewer]
     H --> J[REPL with rebel-readline]
@@ -69,11 +69,11 @@ graph TD
     M --> M5[Others...]
     B --> N[Squid Proxy]
     N --> O[HTTP/HTTPS Traffic]
-    B --> P[Make Commands]
-    C --> Q[AWS Profiles]
+    D --> Q[AWS Profiles]
     Q --> Q1[lcl Profile]
     Q --> Q2[dev Profile]
     Q2 --> R[Real AWS Services]
+
 #+END_SRC
 
 
