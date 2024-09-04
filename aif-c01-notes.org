@@ -87,3 +87,156 @@
 ** Services
 
 *** Amazon Q 
+
+** AWS CLI
+
+- /opt/homebrew/share/awscli/examples
+
+#+begin_example
+cloudwatch (for monitoring AI/ML workloads)
+comprehend (NLP service)
+dynamodb (can be used for storing ML model metadata)
+glue (for data preparation in ML workflows)
+kendra (intelligent search service)
+kinesis (for real-time data streaming in ML pipelines)
+lambda (for serverless ML inference)
+polly (text-to-speech)
+rekognition (image and video analysis)
+s3 (for storing datasets and models)
+sagemaker (core ML platform)
+transcribe (speech-to-text)
+translate (language translation)
+#+end_example
+
+*** Setup 
+
+#+begin_src shell
+  aws sts get-caller-identity | jq -r .Arn
+#+end_src
+
+#+RESULTS:
+*** S3
+
+#+begin_src shell
+  aws s3 mb s3://aif-c01
+  aws s3 cp resources/test-image.png  s3://aif-c01
+#+end_src
+
+#+begin_src shell
+aws s3 ls s3://aif-c01
+#+end_src
+
+[[file:/opt/homebrew/share/awscli/examples/s3/][S3 AWS CLI Examples]]
+
+
+*** SageMaker
+#+begin_src shell
+  aws sagemaker list-notebook-instances | jq -r '.NotebookInstances[]|.NotebookInstanceName'
+#+end_src
+
+#+RESULTS:
+
+[[file:/opt/homebrew/share/awscli/examples/sagemaker/][SageMaker AWS CLI Examples]]
+
+*** Comprehend
+
+#+begin_src shell
+  aws comprehend detect-sentiment --text "I love using AWS services" --language-code en | jq -r .Sentiment
+#+end_src
+[[file:/opt/homebrew/share/awscli/examples/comprehend/][
+Comprehend AWS CLI Examples]]
+
+*** Rekognition
+
+#+begin_src shell
+  aws rekognition detect-labels \
+      --image '{"S3Object":{"Bucket":"aif-c01","Name":"test-image.png"}}' \
+      --max-labels 10 \
+      --region us-east-1 \
+      --output json | jq -r '.Labels[]|.Name'
+#+end_src
+[[file:/opt/homebrew/share/awscli/examples/rekognition/][
+Rekognition AWS CLI Examples]]
+
+*** Kendra
+
+#+begin_src shell
+  aws kendra list-indices | jq .IndexConfigurationSummaryItems
+#+end_src
+[[file:/opt/homebrew/share/awscli/examples/kendra/][
+Kendra AWS CLI Examples]]
+
+*** Polly
+
+#+begin_src shell
+  aws polly start-speech-synthesis-task --output-format mp3 --output-s3-bucket-name aif-c01 --text "Hello, welcome to AWS AI services" --voice-id Joanna
+#+end_src
+
+#+begin_src shell
+  aws polly list-speech-synthesis-tasks | jq .SynthesisTasks
+  aws s3 ls aif-c01
+#+end_src
+
+[[file:/opt/homebrew/share/awscli/examples/polly/][Polly AWS CLI Examples]]
+
+*** Transcribe
+
+#+begin_src shell
+  aws transcribe list-transcription-jobs | jq -r  '.TranscriptionJobSummaries[]|.TranscriptionJobName'
+#+end_src
+
+#+begin_src shell
+  aws transcribe start-transcription-job --transcription-job-name "AIFC03TranscriptionJob$((RANDOM % 9000 + 1000))" --language-code en-US --media-format mp3 --media '{"MediaFileUri": "s3://aif-c01/test-audio.mp3"}' | jq
+#+end_src
+[[file:/opt/homebrew/share/awscli/examples/transcribe/][
+Transcribe AWS CLI Examples]]
+
+*** Translate
+
+#+begin_src shell
+  aws translate translate-text --text "Hello, world" --source-language-code en --target-language-code es
+#+end_src
+[[file:/opt/homebrew/share/awscli/examples/translate/][
+Translate AWS CLI Examples]]
+
+*** Lambda
+
+#+begin_src shell
+  aws lambda list-functions | jq -r '.Functions[]|.FunctionName'
+#+end_src
+[[file:/opt/homebrew/share/awscli/examples/lambda/][
+Lambda AWS CLI Examples]]
+
+
+*** CloudWatch
+
+#+begin_src shell
+aws cloudwatch list-metrics --namespace "AWS/SageMaker" | jq .Metrics
+#+end_src
+[[file:/opt/homebrew/share/awscli/examples/cloudwatch/][
+CloudWatch AWS CLI Examples]]
+
+*** Kinesis
+
+#+begin_src shell
+aws kinesis list-streams | jq .StreamNames
+#+end_src
+[[file:/opt/homebrew/share/awscli/examples/kinesis/][Kinesis AWS CLI Examples]]
+
+*** Glue
+
+#+begin_src shell
+aws glue get-databases | jq .DatabaseList
+#+end_src
+
+[[file:/opt/homebrew/share/awscli/examples/glue/][Glue AWS CLI Examples]]
+
+*** DynamoDB
+
+#+begin_src shell
+aws dynamodb list-tables | jq -r '.TableNames[]'
+#+end_src
+
+[[file:/opt/homebrew/share/awscli/examples/dynamodb/][DynamoDB AWS CLI Examples]]
+
+

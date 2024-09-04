@@ -43,11 +43,36 @@ run: poetry-shell
 	@lein with-profile +$(AWS_PROFILE) rebel
 
 # Clean up the project
-clean:
-	@echo "Cleaning up the project..."
-	@lein clean
-	@rm -rf target
-	@poetry env remove --all
+docker-cleanup:
+	@echo "Cleaning up Docker resources..."
+	docker system prune -f
+	docker volume prune -f
+
+localstack-down:
+	@echo "Stopping LocalStack..."
+	docker-compose down -v
+
+python-cleanup:
+	@echo "Cleaning up Python environment..."
+	poetry env remove --all
+
+clean: docker-cleanup localstack-down python-cleanup
+	@echo "Cleaning up project..."
+	rm -rf target
+	rm -rf .lein-*
+	rm -rf .nrepl-port
+	rm -rf .rebel_readline_history
+	rm -rf *.log
+
+clean-temp:
+	@echo "Cleaning up temporary files..."
+	find . -type f -name "*.tmp" -delete
+	find . -type f -name "*.swp" -delete
+
+reset-config:
+	@echo "Resetting configuration..."
+	git checkout -- .envrc
+	direnv allow
 
 # Run tests
 test: poetry-shell
@@ -69,20 +94,31 @@ uberjar: poetry-shell
 	@echo "Building uberjar..."
 	@lein uberjar
 
+set-proxy:
+	@echo "Setting proxy configuration..."
+	@export HTTP_PROXY="http://http.docker.internal:3128"
+	@export HTTPS_PROXY="http://http.docker.internal:3128"
+	@export NO_PROXY="hubproxy.docker.internal"
+
+unset-proxy:
+	@echo "Unsetting proxy configuration..."
+	@unset HTTP_PROXY
+	@unset HTTPS_PROXY
+	@unset NO_PROXY
+
 # Start LocalStack
 localstack-up:
 	@echo "Starting LocalStack..."
 	@docker-compose up -d localstack
 
-# Stop LocalStack
-localstack-down:
-	@echo "Stopping LocalStack..."
-	@docker-compose down
-
 # Start Emacs with the project-specific configuration
 emacs:
 	@echo "Starting Emacs..."
 	@emacs -q -l .emacs.d/init.el
+
+# Squid access logs
+access-logs:
+	@tail -f /opt/homebrew/var/logs/access.log
 
 # Show help
 help:

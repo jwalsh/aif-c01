@@ -22,6 +22,9 @@ brew install \
     openjdk \
     python \
     poetry \
+    docker-compose \
+    squid \
+    emacs \
     fzf \
     ripgrep \
     jq \

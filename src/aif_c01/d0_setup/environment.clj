@@ -2,6 +2,35 @@
   (:require [cognitect.aws.client.api :as aws]
             [cognitect.aws.credentials :as credentials]))
 
+(defn test-proxy []
+  (try
+    (let [response (client/get "http://httpbin.org/ip"
+                               {:proxy-host "localhost"
+                                :proxy-port 3128})]
+      {:status :success
+       :message "Proxy test successful"
+       :body (:body response)})
+    (catch Exception e
+      {:status :error
+       :message (str "Proxy test failed: " (.getMessage e))})))
+
+(defn check-proxy []
+  (println "Testing proxy configuration...")
+  (let [result (test-proxy)]
+    (println (if (= (:status result) :success) "✅" "❌") (:message result))
+    (when (= (:status result) :success)
+      (println "Response body:" (:body result)))
+    result))
+
+;; Add this to your existing check-environment function
+(defn check-environment []
+  (println "Checking AWS environment and services...")
+  (let [results (assoc (run-all-checks)
+                  :proxy (check-proxy))]
+    (display-check-results results)
+    results))
+
+
 (defn check-aws-credentials []
   (try
     (let [creds (credentials/default-credentials-provider)]
