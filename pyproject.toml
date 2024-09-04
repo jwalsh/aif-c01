@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "aif-c01"
 version = "0.1.0"
-description = ""
+description = "AWS Certified AI Practitioner (AIF-C01) exam preparation"
 authors = ["Jason Walsh <j@wal.sh>"]
 license = "MIT"
 readme = "README.md"

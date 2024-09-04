@@ -44,8 +44,6 @@ graph TD
     Q --> R[End]
 #+END_SRC
 
-#+RESULTS:
-[[file:workflow.png]]
 
 * Setup
 :PROPERTIES:

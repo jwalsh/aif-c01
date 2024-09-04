@@ -1,0 +1,28 @@
+# Check if Homebrew is installed and set up zsh-completions
+if type brew &>/dev/null; then
+  FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
+
+  autoload -Uz compinit
+  compinit
+fi
+
+# Force rebuild zcompdump if needed
+rm -f ~/.zcompdump; compinit
+
+# Fix insecure directories warnings
+chmod go-w '/opt/homebrew/share'
+chmod -R go-w '/opt/homebrew/share/zsh'
+
+# Source zsh-syntax-highlighting for syntax highlighting
+source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# Ensure highlighters directory is set correctly
+export ZSH_HIGHLIGHT_HIGHLIGHTERS_DIR=/opt/homebrew/share/zsh-syntax-highlighting/highlighters
+
+# Source zsh-autosuggestions for command autosuggestions
+source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+# Source fzf for fuzzy search
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# Apply changes by sourcing .zshrc or restarting the terminal
