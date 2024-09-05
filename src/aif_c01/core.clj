@@ -10,7 +10,7 @@
   "Entry point for AWS Certified AI Practitioner (AIF-C01) exam preparation"
   [& args]
   (println "AWS Certified AI Practitioner (AIF-C01) Exam Prep Overview")
-  
+
   (println "\nD1: Fundamentals of AI and ML")
   (println "AI explanation:" (d1/explain :ai))
   (println "ML types:" d1/ml-types)

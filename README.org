@@ -37,18 +37,21 @@ graph TD
     I --> J{Choose Action}
     J -->|Run Tests| K[make test]
     J -->|Lint Code| L[make lint]
-    J -->|Fix Lint Issues| M[make lint-fix]
-    J -->|Clean Project| N[make clean]
-    J -->|Build Uberjar| O[make uberjar]
-    J -->|Show Help| P[make help]
-    J -->|Stop LocalStack| Q[make localstack-down]
+    J -->|Fix All Lint Issues| M[make lint-fix-all]
+    J -->|Fix Python/Shell Issues| N[make lint-fix-scripts]
+    J -->|Fix Clojure Issues| O[make lint-fix-clojure]
+    J -->|Audit AWS Resources| P[make aws-audit]
+    J -->|Cleanup AWS Resources| Q[make aws-cleanup]
+    J -->|Stop LocalStack| R[make localstack-down]
     K --> J
     L --> J
     M --> J
     N --> J
     O --> J
     P --> J
-    Q --> R[End]
+    Q --> J
+    R --> S[End]
+    J --> S
 #+END_SRC
 
 * Architecture
@@ -509,10 +512,10 @@ List Lambda functions:
 aws lambda list-functions | jq -r '.Functions[]|.FunctionName'
 #+END_SRC
 
-List Lambda functions with "ML" or "AI" in the name:
+List Lambda functions with certification prefixes in the name: 
 
 #+BEGIN_SRC shell
-aws lambda list-functions | jq '.Functions[] | select(.FunctionName | test("MLA|AIF"))'
+aws lambda list-functions | jq '.Functions[] | select(.FunctionName | test("mla|aif"))'
 #+END_SRC
 
 #+RESULTS:

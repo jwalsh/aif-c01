@@ -26,10 +26,9 @@
 (defn check-environment []
   (println "Checking AWS environment and services...")
   (let [results (assoc (run-all-checks)
-                  :proxy (check-proxy))]
+                       :proxy (check-proxy))]
     (display-check-results results)
     results))
-
 
 (defn check-aws-credentials []
   (try
@@ -73,7 +72,7 @@
 
 (defn display-check-results [results]
   (doseq [[service result] results]
-    (println (str (name service) ":") 
+    (println (str (name service) ":")
              (case (:status result)
                :success "✅"
                :error "❌"

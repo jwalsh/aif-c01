@@ -11,7 +11,12 @@ python = "^3.11"
 click = "^8.1.7"
 anthropic = "^0.34.1"
 boto3 = "^1.35.11"
+pydantic = "^2.8.2"
 
+
+[tool.poetry.group.dev.dependencies]
+flake8 = "^7.1.1"
+black = "^24.8.0"
 
 [build-system]
 requires = ["poetry-core"]
