@@ -1,4 +1,4 @@
-.PHONY: help setup poetry-shell deps init switch-profile-lcl switch-profile-dev aws-audit aws-cleanup aws-manage run test lint lint-fix lint-fix-scripts lint-fix-clojure lint-fix-all uberjar localstack-up localstack-down clean clean-temp reset-config set-proxy unset-proxy emacs access-logs all
+.PHONY: help setup poetry-shell deps init switch-profile-lcl switch-profile-dev aws-audit aws-cleanup aws-manage run test lint lint-fix lint-fix-scripts lint-fix-clojure lint-fix-all uberjar localstack-up localstack-down clean clean-temp reset-config set-proxy unset-proxy emacs access-logs all dev
 
 # Default AWS profile
 AWS_PROFILE ?= dev
@@ -29,82 +29,83 @@ poetry-shell:
 	@echo "Creating and activating Poetry virtual environment..."
 	@poetry shell
 
-# Install project dependencies
-deps: poetry-shell
-	@echo "Installing project dependencies..."
+# Install dependencies
+deps:
+	@echo "Installing dependencies..."
 	@poetry install
-	@poetry run pip install awscli
 	@lein deps
 
-# Initialize the project environment
-init: deps
-	@echo "Initializing project environment..."
-	@lein run -m user
+# Initialize the project
+init: setup deps
 
 # Switch to LocalStack profile
 switch-profile-lcl:
 	@echo "Switching to LocalStack profile..."
-	@. ./scripts/switch_profile.sh lcl
+	@source scripts/switch_profile.sh lcl
 
 # Switch to AWS dev profile
 switch-profile-dev:
 	@echo "Switching to AWS dev profile..."
-	@. ./scripts/switch_profile.sh dev
+	@source scripts/switch_profile.sh dev
 
 # Audit AWS resources
 aws-audit:
 	@echo "Auditing AWS resources..."
-	poetry run python scripts/aws_resource_manager.py
+	@python scripts/aws_resource_manager.py audit
 
-# Audit and clean up AWS resources
+# Clean up AWS resources
 aws-cleanup:
-	@echo "Auditing and cleaning up AWS resources..."
-	poetry run python scripts/aws_resource_manager.py --clean
+	@echo "Cleaning up AWS resources..."
+	@python scripts/aws_resource_manager.py cleanup
 
-# Audit and manage AWS resources
-aws-manage: aws-audit
-	@echo "AWS resources audited. To clean up resources, run 'make aws-cleanup'"
+# Manage AWS resources
+aws-manage:
+	@echo "Managing AWS resources..."
+	@python scripts/aws_resource_manager.py manage
 
-# Start the Clojure REPL with rebel-readline
-run: poetry-shell
-	@echo "Starting the Clojure REPL with rebel-readline..."
-	@lein with-profile +$(AWS_PROFILE) rebel
+# Run the project
+run:
+	@echo "Running the project..."
+	@lein run
 
 # Run tests
-test: poetry-shell
+test:
 	@echo "Running tests..."
 	@lein test
 
-# Run linter
-lint: poetry-shell
-	@echo "Running linter..."
+# Lint the project
+lint:
+	@echo "Linting the project..."
 	@lein lint
+	@poetry run flake8
 
 # Fix linting issues
-lint-fix: poetry-shell
+lint-fix:
 	@echo "Fixing linting issues..."
-	@lein lint-fix
+	@make lint-fix-scripts
+	@make lint-fix-clojure
+	@make lint-fix-python
 
-# Lint and fix Python and Shell scripts
+# Fix linting issues in shell scripts
 lint-fix-scripts:
-	@echo "Linting and fixing Python scripts..."
-	-poetry run flake8 scripts/ || true
-	poetry run black scripts/
-	@echo "Linting and fixing Shell scripts..."
-	-find scripts/ -name "*.sh" -exec shellcheck {} + || true
-	find scripts/ -name "*.sh" -exec shfmt -w {} +
+	@echo "Fixing linting issues in shell scripts..."
+	@shfmt -w scripts/*.sh
 
-# Lint and fix Clojure code
+# Fix linting issues in Clojure files
 lint-fix-clojure:
-	@echo "Linting and fixing Clojure code..."
-	lein lint-fix
+	@echo "Fixing linting issues in Clojure files..."
+	@lein cljfmt fix
 
-# Lint and fix all code
-lint-fix-all: lint-fix-scripts lint-fix-clojure
-	@echo "All linting and fixing completed."
+# Fix linting issues in Python files
+lint-fix-python:
+	@echo "Fixing linting issues in Python files..."
+	@poetry run black .
+
+# Fix all linting issues
+lint-fix-all: lint-fix-scripts lint-fix-clojure lint-fix-python
 
 # Build uberjar
-uberjar: poetry-shell
+uberjar:
 	@echo "Building uberjar..."
 	@lein uberjar
 
@@ -116,28 +117,25 @@ localstack-up:
 # Stop LocalStack
 localstack-down:
 	@echo "Stopping LocalStack..."
-	docker-compose down -v
-
-# Clean up the project
-clean: docker-cleanup localstack-down python-cleanup
-	@echo "Cleaning up project..."
-	rm -rf target
-	rm -rf .lein-*
-	rm -rf .nrepl-port
-	rm -rf .rebel_readline_history
-	rm -rf *.log
+	@docker-compose down
 
 # Clean up temporary files
 clean-temp:
 	@echo "Cleaning up temporary files..."
-	find . -type f -name "*.tmp" -delete
-	find . -type f -name "*.swp" -delete
+	@find . -type f -name "*.tmp" -delete
+	@find . -type f -name "*.log" -delete
+
+# Clean up build artifacts
+clean: clean-temp
+	@echo "Cleaning up build artifacts..."
+	@lein clean
+	@rm -rf target
 
 # Reset configuration
 reset-config:
 	@echo "Resetting configuration..."
-	git checkout -- .envrc
-	direnv allow
+	@git checkout -- .envrc
+	@direnv allow
 
 # Set proxy configuration
 set-proxy:
@@ -162,15 +160,20 @@ emacs:
 access-logs:
 	@tail -f /opt/homebrew/var/logs/access.log
 
+# Start development environment
+dev: localstack-up
+	@echo "Starting development environment..."
+	@lein repl
+
 # All-in-one setup (kept for backwards compatibility)
 all: setup
 
 # Helper targets (not directly called by users)
 docker-cleanup:
 	@echo "Cleaning up Docker resources..."
-	docker system prune -f
-	docker volume prune -f
+	@docker system prune -f
+	@docker volume prune -f
 
 python-cleanup:
 	@echo "Cleaning up Python environment..."
-	poetry env remove --all
+	@poetry env remove --all
