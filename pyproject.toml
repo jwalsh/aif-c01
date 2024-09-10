@@ -12,6 +12,9 @@ click = "^8.1.7"
 anthropic = "^0.34.1"
 boto3 = "^1.35.11"
 pydantic = "^2.8.2"
+openai = "^1.44.1"
+chardet = "^5.2.0"
+orgparse = "^0.4.20231004"
 
 
 [tool.poetry.group.dev.dependencies]

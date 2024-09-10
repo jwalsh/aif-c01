@@ -5,7 +5,7 @@
 
 * Introduction
 
-This project provides comprehensive study materials, code examples, and a robust development environment for preparing for the AWS Certified AI Practitioner (AIF-C01) exam, announced in [[https://aws.amazon.com/blogs/training-and-certification/august-2024-new-offerings/][August 2024]]. While the primary focus is on the AIF-C01 exam, the project also lays groundwork for the AWS Certified Machine Learning Engineer – Associate certification.
+This project provides comprehensive study materials, code examples, and a robust development environment for preparing for the AWS Certified AI Practitioner (AIF-C01) exam, announced in [[https://aws.amazon.com/blogs/training-and-certification/august-2024-new-offerings/][August 2024]]. While the primary focus is on the AIF-C01 exam, the project also lays groundwork for the AWS Certified Machine Learning Engineer – Associate (MLA-C01) certification.
 
 Key features of this project:
 - Structured learning paths covering all AIF-C01 exam domains
@@ -360,18 +360,26 @@ aws s3 cp 2310.07064.pdf s3://$BUCKET/papers/
 : Completed 53.9 KiB/53.9 KiB (81.3 KiB/s) with 1 file(s) remainingupload: ./2310.07064.pdf to s3://aif-c01-jasonwalsh/papers/2310.07064.pdf
 
 #+BEGIN_SRC shell :var BUCKET=aif-c01-bucket
-aws s3api list-object-versions \
-    --bucket $BUCKET \
-    --prefix "papers/2310.07064.pdf" \
-    --query 'Versions[*].[VersionId, LastModified, Size]' \
-    --output text
+  aws s3api list-object-versions \
+      --bucket "$BUCKET" \
+      --prefix "papers/" \
+      --query 'Versions[*].[Key, VersionId, LastModified, Size, ETag, StorageClass, IsLatest]' \
+      --output json | jq -r '.[] | @tsv'
+
 #+END_SRC
 
 #+RESULTS:
-| xhTn96WWUZfiAwzUksu3ndTAjHKmYXu_ | 2024-09-04T23:39:33+00:00 |  55194 |
-| bJ3N8GQoB9NB9oMTFqYoKD.K_eSQ4_I1 | 2024-09-04T23:32:48+00:00 |     12 |
-| PxEPB7TjtHmzp2hYpTpmt7hcv2yK7BG0 | 2024-09-04T23:28:18+00:00 | 552884 |
-| null                             | 2024-09-04T23:25:17+00:00 |     12 |
+| papers/1706.03762.pdf                             | sgcRB7K2ikXnWS99TGBZaQuqhI7fDAI_ | 2024-09-04T23:28:18+00:00 | 2215244 | 17e362e7e5ba6ffb6248c4a2e923e63e | STANDARD | true  |
+| papers/2303.18223-LLM-survey.pdf                  | VrKZby_scHQQ9N6ktNAEfvDKT4OkE8hp | 2024-09-04T23:28:18+00:00 | 1834683 | 35b9d129038f08c331eea9299aadd382 | STANDARD | true  |
+| papers/2310.04562.pdf                             | ECAOSCbn88qHKptvz0OLkbpMr8rcxOEn | 2024-09-04T23:28:18+00:00 |  734098 | f2e2f551636e6b805d25f9928b056135 | STANDARD | true  |
+| papers/2310.07064.pdf                             | xhTn96WWUZfiAwzUksu3ndTAjHKmYXu_ | 2024-09-04T23:39:33+00:00 |   55194 | a6c4669a4478b600960d3fd44f3be5a1 | STANDARD | true  |
+| papers/2310.07064.pdf                             | bJ3N8GQoB9NB9oMTFqYoKD.K_eSQ4_I1 | 2024-09-04T23:32:48+00:00 |      12 | b0a88747e0fb531bc80d8f108d9412a0 | STANDARD | false |
+| papers/2310.07064.pdf                             | PxEPB7TjtHmzp2hYpTpmt7hcv2yK7BG0 | 2024-09-04T23:28:18+00:00 |  552884 | 86d5eaf379cf4efd39d33ac3adaa3828 | STANDARD | false |
+| papers/2310.07064.pdf                             | null                             | 2024-09-04T23:25:17+00:00 |      12 | b0a88747e0fb531bc80d8f108d9412a0 | STANDARD | false |
+| papers/resources/papers/1706.03762.pdf            | null                             | 2024-09-04T23:25:14+00:00 | 2215244 | 17e362e7e5ba6ffb6248c4a2e923e63e | STANDARD | true  |
+| papers/resources/papers/2303.18223-LLM-survey.pdf | null                             | 2024-09-04T23:25:14+00:00 | 1834683 | 35b9d129038f08c331eea9299aadd382 | STANDARD | true  |
+| papers/resources/papers/2310.04562.pdf            | null                             | 2024-09-04T23:25:14+00:00 |  734098 | f2e2f551636e6b805d25f9928b056135 | STANDARD | true  |
+| papers/resources/papers/2310.07064.pdf            | null                             | 2024-09-04T23:25:14+00:00 |  552884 | 86d5eaf379cf4efd39d33ac3adaa3828 | STANDARD | true  |
 
 ** Amazon Bedrock
 List available foundation models:
@@ -465,6 +473,16 @@ aws rekognition detect-labels \
     --output json | jq -r '.Labels[]|.Name'
 #+END_SRC
 
+#+BEGIN_SRC shell
+aws rekognition create-collection --collection-id mla-collection-01 | jq -r 'keys[]'
+#+END_SRC
+
+#+RESULTS:
+| CollectionArn    |
+| FaceModelVersion |
+| StatusCode       |
+
+
 For more Rekognition examples, check the [[file:/opt/homebrew/share/awscli/examples/rekognition/][Rekognition AWS CLI Examples]].
 
 ** Amazon Kendra
@@ -482,6 +500,44 @@ List notebook instances:
 #+BEGIN_SRC shell
 aws sagemaker list-notebook-instances | jq -r '.NotebookInstances[]| select(.NotebookInstanceName | test("AIF|MLA"))'
 #+END_SRC
+
+#+RESULTS:
+
+Create required roles: 
+
+#+begin_src json :tangle trust-policy-sagemaker.json
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Principal": {
+          "Service": "sagemaker.amazonaws.com"
+        },
+        "Action": "sts:AssumeRole"
+      }
+    ]
+  }
+#+end_src
+
+#+begin_src shell
+  cat trust-policy-sagemaker.json | jq -r 'keys[]'
+#+end_src
+
+#+RESULTS:
+| Statement |
+| Version   |
+
+Create IAM role and attach:
+
+#+begin_src shell
+  aws iam create-role --role-name mla-sagemaker-role --assume-role-policy-document file://trust-policy-sagemaker.json | jq -r 'keys[]'
+#+end_src
+
+#+begin_src shell
+  aws iam attach-role-policy --role-name mla-sagemaker-role --policy-arn arn:aws:iam::aws:policy/AmazonSageMakerFullAccess | jq -r 'keys[]'
+#+end_src
+
 
 #+RESULTS:
 
@@ -556,16 +612,142 @@ aws glue get-databases | jq .DatabaseList
 #+RESULTS:
 : []
 
+Create required roles:
+
+#+begin_src json :tangle trust-policy-glue.json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "glue.amazonaws.com" 
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+#+end_src
+
+#+begin_src shell
+cat trust-policy-glue.json | jq -r 'keys[]'
+#+end_src
+
+#+RESULTS:
+| Statement |
+| Version   |
+
+# Create IAM role and attach:
+
+#+begin_src shell
+aws iam create-role --role-name AWSGlueServiceRole --assume-role-policy-document file://trust-policy-glue.json | jq -r 'keys[]'
+#+end_src
+
+#+RESULTS:
+: Role
+
+#+begin_src shell
+aws iam attach-role-policy --role-name AWSGlueServiceRole --policy-arn arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole | jq -r 'keys[]'
+#+end_src
+
+#+begin_src shell :results output :exports none
+aws iam get-role --role-name AWSGlueServiceRole | jq -r '.Role.Arn' | tee /tmp/role_arn_glue.txt
+#+end_src
+
+#+RESULTS:
+: arn:aws:iam::107396990521:role/AWSGlueServiceRole
+
+
+#+begin_src emacs-lisp 
+(setq role_arn (org-babel-eval "sh" "cat /tmp/role_arn_glue.txt"))
+(message "role_arn value: %s" role_arn)
+#+end_src
+
+#+RESULTS:
+: role_arn value: arn:aws:iam::107396990521:role/AWSGlueServiceRole
+
+#+begin_src shell
+echo "$role_arn" 
+#+end_src
+
+#+RESULTS:
+
+#+begin_src python :tangle glue-script.py
+#+begin_src python :tangle glue-script.py
+from awsglue.context import GlueContext
+from awsglue.job import Job
+
+## @params: [JOB_NAME]
+args = getResolvedOptions(sys.argv, ['JOB_NAME'])
+
+sc = SparkContext()
+glueContext = GlueContext(sc)
+spark = glueContext.spark_session
+job = Job(glueContext)
+job.init(args['JOB_NAME'], args)
+
+## @type: DataSource
+## @args: [database = "default", table_name = "legislators", transformation_ctx = "datasource0"]
+## @return: datasource0
+## @inputs: []
+datasource0 = glueContext.create_dynamic_frame.from_catalog(database = "default", table_name = "legislators", transformation_ctx = "datasource0")
+
+## @type: ApplyMapping
+## @args: [mapping = [("leg_id", "long", "leg_id", "long"), ("full_name", "string", "full_name", "string"), ("first_name", "string", "first_name", "string"), ("last_name", "string", "last_name", "string"), ("gender", "string", "gender", "string"), ("type", "string", "type", "string"), ("state", "string", "state", "string"), ("party", "string", "party", "string")], transformation_ctx = "applymapping1"]
+## @return: applymapping1
+## @inputs: [frame = datasource0]
+applymapping1 = ApplyMapping.apply(frame = datasource0, mappings = [("leg_id", "long", "leg_id", "long"), ("full_name", "string", "full_name", "string"), ("first_name", "string", "first_name", "string"), ("last_name", "string", "last_name", "string"), ("gender", "string", "gender", "string"), ("type", "string", "type", "string"), ("state", "string", "state", "string"), ("party", "string", "party", "string")], transformation_ctx = "applymapping1")
+
+## @type: DataSink
+## @args: [connection_type = "s3", connection_options = {"path": "s3://aif-c01-jasonwalsh/legislators_data"}, format = "parquet", transformation_ctx = "datasink2"]
+## @return: datasink2
+## @inputs: [frame = applymapping1]
+datasink2 = glueContext.write_dynamic_frame.from_options(frame = applymapping1, connection_type = "s3", connection_options = {"path": "s3://aif-c01-jasonwalsh/legislators_data"}, format = "parquet", transformation_ctx = "datasink2")
+
+job.commit()
+#+end_src  
+#+end_src
+
+#+begin_src shell
+  aws s3 cp glue-script.py s3://aif-c01-jasonwalsh/scripts/glue-script.py
+#+end_src
+
+#+RESULTS:
+: Completed 2.0 KiB/2.0 KiB (2.5 KiB/s) with 1 file(s) remainingupload: ./glue-script.py to s3://aif-c01-jasonwalsh/scripts/glue-script.py
+
+# AWS Glue Job creation
+
+#+begin_src shell
+  aws glue create-job \
+    --name mla-job \
+    --role arn:aws:iam::107396990521:role/AWSGlueServiceRole \
+    --command Name=glueetl,ScriptLocation=s3://aif-c01-jasonwalsh/scripts/glue-script.py \
+    --output text
+#+END_SRC
+
+#+RESULTS:
+: mla-job
+
 For more Glue examples, check the [[file:/opt/homebrew/share/awscli/examples/glue/][Glue AWS CLI Examples]].
 
 ** Amazon DynamoDB
 List DynamoDB tables:
 
 #+BEGIN_SRC shell
-  aws dynamodb list-tables | jq -r '.TableNames[] | select(. | test("MLA|AIF"))'
+  aws dynamodb list-tables | jq -r '.TableNames[] | select(. | test("mla|aif"))'
 #+END_SRC
 
 #+RESULTS:
+| mla-test    |
+| mla-test-01 |
+
+#+BEGIN_SRC shell
+aws dynamodb create-table --table-name mla-test-01 --attribute-definitions AttributeName=Id,AttributeType=S --key-schema AttributeName=Id,KeyType=HASH --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5 | jq -r 'keys[]'
+#+END_SRC
+
+#+RESULTS:
+: TableDescription
+
 
 For more DynamoDB examples, see the [[file:/opt/homebrew/share/awscli/examples/dynamodb/][DynamoDB AWS CLI Examples]].
 
