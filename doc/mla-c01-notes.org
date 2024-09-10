@@ -1,0 +1,197 @@
+#+TITLE: AWS Certified Machine Learning - Specialty (MLA-C01) Exam Notes
+#+AUTHOR: Jason Walsh
+#+EMAIL: j@wal.sh
+#+PROPERTY: header-args :exports both :eval never-export
+
+* Course Overview
+
+** Introduction
+- Exam scope and format
+- Machine Learning on AWS
+- Prerequisites and recommended experience
+
+** Course Structure
+- Theoretical foundations
+- Hands-on labs and exercises
+- Practice questions and mock exams
+
+* Domain 1: Data Engineering
+
+** Data Collection
+- Data ingestion techniques
+- AWS data storage options (S3, RDS, DynamoDB)
+- Streaming data with Kinesis
+
+** Data Preparation
+- Data cleansing and transformation
+- Feature engineering
+- Handling missing data and outliers
+
+** Data Analysis
+- Exploratory Data Analysis (EDA)
+- Data visualization techniques
+- Statistical analysis in AWS
+
+** AWS Services for Data Engineering
+- AWS Glue for ETL
+- Amazon Athena for querying
+- AWS Data Pipeline
+- AWS Lake Formation
+
+* Domain 2: Exploratory Data Analysis
+
+** Data Distribution Analysis
+- Univariate and multivariate analysis
+- Probability distributions
+- Correlation and covariance
+
+** Feature Selection
+- Filter, wrapper, and embedded methods
+- Principal Component Analysis (PCA)
+- Feature importance techniques
+
+** Data Visualization
+- Using matplotlib, seaborn, and plotly
+- AWS QuickSight for BI
+- Creating dashboards and reports
+
+** Statistical Methods
+- Hypothesis testing
+- A/B testing
+- Time series analysis
+
+* Domain 3: Modeling
+
+** Machine Learning Algorithms
+- Supervised learning (Classification, Regression)
+- Unsupervised learning (Clustering, Dimensionality Reduction)
+- Ensemble methods
+
+** Deep Learning
+- Neural network architectures
+- Convolutional Neural Networks (CNN)
+- Recurrent Neural Networks (RNN)
+- Transfer learning
+
+** Model Training
+- Splitting data (train, validation, test)
+- Cross-validation techniques
+- Hyperparameter tuning
+- Avoiding overfitting and underfitting
+
+** Amazon SageMaker
+- SageMaker Studio
+- Built-in algorithms
+- Custom algorithms
+- SageMaker debugging and monitoring
+
+* Domain 4: Machine Learning Implementation and Operations
+
+** Model Deployment
+- SageMaker deployment options
+- A/B testing in production
+- Multi-model endpoints
+
+** Model Monitoring and Maintenance
+- Detecting model drift
+- Retraining strategies
+- Automated ML pipelines
+
+** MLOps Best Practices
+- Version control for ML
+- CI/CD for ML models
+- Infrastructure as Code (IaC) for ML projects
+
+** Scalability and Performance Optimization
+- Distributed training
+- GPU vs CPU considerations
+- Optimizing inference
+
+* Domain 5: Security, Governance, and Compliance
+
+** Data Security
+- Encryption at rest and in transit
+- IAM roles and policies for ML workloads
+- VPC configuration for ML instances
+
+** ML Governance
+- Model versioning and lineage tracking
+- Audit trails for ML processes
+- Bias detection and mitigation
+
+** Regulatory Compliance
+- GDPR considerations for ML
+- HIPAA compliance in healthcare ML
+- Model explainability and interpretability
+
+* AWS ML Services and Integrations
+
+** Amazon Rekognition
+- Image and video analysis
+- Custom labels
+
+** Amazon Comprehend
+- Natural Language Processing (NLP)
+- Custom entity recognition
+
+** Amazon Forecast
+- Time series forecasting
+- AutoML for time series
+
+** Amazon Personalize
+- Recommendation systems
+- Real-time personalization
+
+** Amazon Textract
+- OCR and document analysis
+- Forms and tables extraction
+
+** AWS DeepRacer
+- Reinforcement learning
+- Autonomous driving simulation
+
+** Integration with other AWS services
+- AWS Lambda for serverless ML
+- Amazon ECS/EKS for containerized ML workloads
+- AWS Step Functions for ML workflows
+
+* Exam Preparation Strategies
+
+** Study Plan
+- Review AWS documentation thoroughly
+- Complete hands-on labs and projects
+- Regular practice with sample questions
+
+** Key Concepts Review
+- Refresh statistical and ML fundamentals
+- Focus on AWS-specific implementations
+- Understand trade-offs between different approaches
+
+** Practice Exams
+- Time management during exams
+- Analyzing incorrect answers
+- Identifying knowledge gaps
+
+* TODO Tasks [0/6]
+- [ ] Complete all course modules and labs
+- [ ] Set up a personal AWS account for practice
+- [ ] Implement at least one end-to-end ML project on AWS
+- [ ] Review all AWS whitepapers related to ML
+- [ ] Take multiple full-length practice exams
+- [ ] Schedule and take the certification exam
+
+* Resources
+- [[https://aws.amazon.com/certification/certified-machine-learning-specialty/][AWS Certified Machine Learning - Specialty]]
+- [[https://docs.aws.amazon.com/sagemaker/latest/dg/whatis.html][Amazon SageMaker Developer Guide]]
+- [[https://aws.amazon.com/machine-learning/mlu/][AWS Machine Learning University]]
+- [[https://github.com/aws-samples][AWS Samples GitHub Repository]]
+- [[https://aws.amazon.com/blogs/machine-learning/][AWS Machine Learning Blog]]
+
+#+BEGIN_SRC emacs-lisp :results silent
+  (setq org-todo-keywords
+        '((sequence "TODO" "IN-PROGRESS" "REVIEW" "|" "DONE" "ARCHIVED")))
+#+END_SRC
+
+# Local Variables:
+# org-confirm-babel-evaluate: nil
+# End:

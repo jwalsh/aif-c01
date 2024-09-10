@@ -1,0 +1,56 @@
+# Created 2024-09-10 Tue 14:21
+#+title: AWS Certified AI Practitioner (AIF-C01) Exam Preparation AWS Certified AI Practitioner (AIF-C01) Exam Preparation
+#+author: Jason Walsh Jason Walsh
+#+property: AIF_C01_BUCKET aif-c01-jwalsh
+
+#+property: AIF_C01_BUCKET aif-c01-jwalsh
+* Introduction
+
+This project provides comprehensive study materials, code examples, and a robust development environment for preparing for the AWS Certified AI Practitioner (AIF-C01) exam.
+
+Key features of this project:
+- Structured learning paths covering all AIF-C01 exam domains
+- Hands-on code examples using AWS AI/ML services
+- Local development environment with LocalStack for AWS service simulation
+- Integration of Python and Clojure for a comprehensive learning experience
+- Emphasis on best practices in AI/ML development and responsible AI
+* Exam Preparation
+
+** Exam Overview
+** Study Resources
+** Exam Tips
+** Certification Path
+* Project Setup
+
+** Prerequisites
+** Installation
+** Environment Configuration
+** Project Structure
+* AWS Services
+
+** Core AI/ML Services
+** Supporting Services
+** Hands-on Examples
+* AI/ML Concepts
+
+** Fundamentals
+** Deep Learning and Neural Networks
+** Generative AI
+** Model Evaluation
+* Responsible AI
+
+** Ethical Considerations
+** Security and Privacy
+** Governance and Compliance
+** Environmental Impact
+* Development
+
+** Workflow
+** Makefile Commands
+** Best Practices
+* Conclusion
+
+** Next Steps
+** Contributing
+** License
+** Disclaimer

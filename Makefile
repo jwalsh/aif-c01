@@ -1,179 +1,154 @@
-.PHONY: help setup poetry-shell deps init switch-profile-lcl switch-profile-dev aws-audit aws-cleanup aws-manage run test lint lint-fix lint-fix-scripts lint-fix-clojure lint-fix-all uberjar localstack-up localstack-down clean clean-temp reset-config set-proxy unset-proxy emacs access-logs all dev
+# Makefile for AIF-C01 course (Student-focused with advanced features)
 
-# Default AWS profile
-AWS_PROFILE ?= dev
+# Variables
+ORG_FILES := $(wildcard doc/README/includes/*.org)
+MERMAID_ORG_FILES := $(wildcard doc/README/includes/*.org)
+EXPORT_DIR := doc/export
 
-# Default target: show help
+# Default target
 .DEFAULT_GOAL := help
 
-# Show help
+# Phony targets
+.PHONY: all help setup run test aws-practice localstack-up localstack-down \
+        switch-profile-lcl switch-profile-dev study-resources clean lint \
+        tangle generate-diagrams export-org install-emacs-packages deps \
+        aws-audit aws-cleanup
+
+# Auto-generated help target
 help:
-	@echo "Available commands:"
-	@awk '/^[a-zA-Z0-9_-]+:/ { \
-		helpMessage = match(lastLine, /^# (.*)/); \
-		if (helpMessage) { \
-			helpCommand = substr($$1, 0, index($$1, ":")-1); \
-			helpMessage = substr(lastLine, RSTART + 2, RLENGTH); \
-			printf "  %-20s %s\n", helpCommand, helpMessage; \
-		} \
-	} \
-	{ lastLine = $$0 }' $(MAKEFILE_LIST)
+	@echo "Available commands for AIF-C01 course:"
+	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
-# Set up the AIF-C01 project
-setup:
-	@echo "Setting up the AIF-C01 project..."
-	@./scripts/setup.sh
+all: setup study-resources ## Set up the environment and generate study resources
 
-# Create and activate Poetry virtual environment
-poetry-shell:
-	@echo "Creating and activating Poetry virtual environment..."
-	@poetry shell
-
-# Install dependencies
-deps:
-	@echo "Installing dependencies..."
-	@poetry install
+setup: ## Set up the project environment
+	@echo "Setting up the project environment..."
 	@lein deps
+	@poetry install
+	@make install-emacs-packages
+	@echo "Environment setup complete. You're ready to start learning!"
 
-# Initialize the project
-init: setup deps
-
-# Switch to LocalStack profile
-switch-profile-lcl:
-	@echo "Switching to LocalStack profile..."
-	@source scripts/switch_profile.sh lcl
-
-# Switch to AWS dev profile
-switch-profile-dev:
-	@echo "Switching to AWS dev profile..."
-	@source scripts/switch_profile.sh dev
-
-# Audit AWS resources
-aws-audit:
-	@echo "Auditing AWS resources..."
-	@python scripts/aws_resource_manager.py audit
-
-# Clean up AWS resources
-aws-cleanup:
-	@echo "Cleaning up AWS resources..."
-	@python scripts/aws_resource_manager.py cleanup
-
-# Manage AWS resources
-aws-manage:
-	@echo "Managing AWS resources..."
-	@python scripts/aws_resource_manager.py manage
-
-# Run the project
-run:
-	@echo "Running the project..."
+run: ## Run the main application
+	@echo "Running the main application..."
 	@lein run
 
-# Run tests
-test:
+test: ## Run test suite
 	@echo "Running tests..."
 	@lein test
 
-# Lint the project
-lint:
-	@echo "Linting the project..."
-	@lein lint
-	@poetry run flake8
+lint: ## Run linters
+	@echo "Running linters..."
+	@lein eastwood
+	@lein cljfmt check
+	@flake8 scripts
+	@black --check scripts
 
-# Fix linting issues
-lint-fix:
+lint-fix: ## Fix linting issues
 	@echo "Fixing linting issues..."
-	@make lint-fix-scripts
-	@make lint-fix-clojure
-	@make lint-fix-python
-
-# Fix linting issues in shell scripts
-lint-fix-scripts:
-	@echo "Fixing linting issues in shell scripts..."
-	@shfmt -w scripts/*.sh
-
-# Fix linting issues in Clojure files
-lint-fix-clojure:
-	@echo "Fixing linting issues in Clojure files..."
 	@lein cljfmt fix
+	@black scripts
 
-# Fix linting issues in Python files
-lint-fix-python:
-	@echo "Fixing linting issues in Python files..."
-	@poetry run black .
+aws-practice: ## Practice with AWS resources (audit and optionally clean up)
+	@echo "Starting AWS resource practice session..."
+	@echo "This will list your AWS resources related to the course."
+	@echo "To clean up resources, run 'make aws-practice-cleanup' instead."
+	@python scripts/aws_resource_manager.py
 
-# Fix all linting issues
-lint-fix-all: lint-fix-scripts lint-fix-clojure lint-fix-python
+aws-practice-cleanup: ## Clean up AWS resources used in practice
+	@echo "Cleaning up AWS resources..."
+	@echo "This will attempt to remove resources created during practice."
+	@echo "S3 buckets will not be deleted for safety reasons."
+	@python scripts/aws_resource_manager.py --clean
 
-# Build uberjar
-uberjar:
-	@echo "Building uberjar..."
-	@lein uberjar
-
-# Start LocalStack
-localstack-up:
+localstack-up: ## Start LocalStack for local AWS development
 	@echo "Starting LocalStack..."
 	@docker-compose up -d localstack
 
-# Stop LocalStack
-localstack-down:
+localstack-down: ## Stop LocalStack
 	@echo "Stopping LocalStack..."
 	@docker-compose down
 
-# Clean up temporary files
-clean-temp:
-	@echo "Cleaning up temporary files..."
-	@find . -type f -name "*.tmp" -delete
-	@find . -type f -name "*.log" -delete
+switch-profile-lcl: ## Switch to LocalStack profile
+	@echo "Switching to LocalStack profile..."
+	@source scripts/switch_profile.sh lcl
 
-# Clean up build artifacts
-clean: clean-temp
-	@echo "Cleaning up build artifacts..."
-	@lein clean
-	@rm -rf target
+switch-profile-dev: ## Switch to AWS dev profile
+	@echo "Switching to AWS dev profile..."
+	@source scripts/switch_profile.sh dev
 
-# Reset configuration
-reset-config:
-	@echo "Resetting configuration..."
-	@git checkout -- .envrc
-	@direnv allow
+study-resources: ## Generate study resources
+	@echo "Generating study resources..."
+	@emacs --batch --eval "(progn \
+		(require 'org) \
+		(find-file \"doc/README/index.org\") \
+		(org-babel-execute-buffer) \
+		(org-odt-export-to-odt))"
+	@echo "Study resources generated. Check doc/README/index.odt"
 
-# Set proxy configuration
-set-proxy:
-	@echo "Setting proxy configuration..."
-	@export HTTP_PROXY="http://http.docker.internal:3128"
-	@export HTTPS_PROXY="http://http.docker.internal:3128"
-	@export NO_PROXY="hubproxy.docker.internal"
+tangle: ## Tangle code blocks from org files
+	@echo "Tangling code blocks..."
+	@for file in $(ORG_FILES); do \
+		emacs --batch --eval "(progn \
+			(require 'org) \
+			(org-babel-tangle-file \"$$file\"))"; \
+	done
+	@echo "Tangling complete."
 
-# Unset proxy configuration
-unset-proxy:
-	@echo "Unsetting proxy configuration..."
-	@unset HTTP_PROXY
-	@unset HTTPS_PROXY
-	@unset NO_PROXY
+generate-diagrams: ## Generate diagrams from org files
+	@echo "Generating diagrams..."
+	@for file in $(MERMAID_ORG_FILES); do \
+		emacs --batch --eval "(progn \
+			(require 'org) \
+			(find-file \"$$file\") \
+			(org-babel-execute-buffer) \
+			(save-buffer) \
+			(kill-buffer))"; \
+	done
+	@echo "Diagram generation complete."
 
-# Start Emacs with the project-specific configuration
-emacs:
-	@echo "Starting Emacs..."
-	@emacs -q -l .emacs.d/init.el
+export-org: $(EXPORT_DIR) ## Export org files to HTML
+	@echo "Exporting org files to HTML..."
+	@for file in $(ORG_FILES); do \
+		basename=$$(basename $$file .org); \
+		emacs --batch --eval "(progn \
+			(require 'ox-html) \
+			(find-file \"$$file\") \
+			(org-html-export-to-html nil nil nil t) \
+			(rename-file \"$$basename.html\" \"$(EXPORT_DIR)/$$basename.html\" t))"; \
+	done
+	@echo "Org export complete. HTML files are in $(EXPORT_DIR) directory."
 
-# View Squid access logs
-access-logs:
-	@tail -f /opt/homebrew/var/logs/access.log
+$(EXPORT_DIR):
+	mkdir -p $(EXPORT_DIR)
 
-# Start development environment
-dev: localstack-up
-	@echo "Starting development environment..."
-	@lein repl
+clean: ## Clean up generated files
+	@echo "Cleaning up generated files..."
+	@rm -f doc/README/index.odt
+	@rm -f *.png
+	@rm -f $(EXPORT_DIR)/*.html
+	@echo "Cleanup complete."
 
-# All-in-one setup (kept for backwards compatibility)
-all: setup
+install-emacs-packages: ## Install required Emacs packages
+	@echo "Installing Emacs packages..."
+	@emacs --batch --eval "(progn \
+		(require 'package) \
+		(add-to-list 'package-archives '(\"melpa\" . \"https://melpa.org/packages/\") t) \
+		(package-initialize) \
+		(package-refresh-contents) \
+		(package-install 'org) \
+		(package-install 'htmlize))"
 
-# Helper targets (not directly called by users)
-docker-cleanup:
-	@echo "Cleaning up Docker resources..."
-	@docker system prune -f
-	@docker volume prune -f
+deps: ## Update project dependencies
+	@echo "Updating project dependencies..."
+	@lein deps
+	@poetry update
 
-python-cleanup:
-	@echo "Cleaning up Python environment..."
-	@poetry env remove --all
+aws-audit: ## Audit AWS resources (for advanced users)
+	@echo "Auditing AWS resources..."
+	@python scripts/aws_resource_manager.py audit
+
+aws-cleanup: ## Clean up AWS resources (for advanced users)
+	@echo "Cleaning up AWS resources..."
+	@python scripts/aws_resource_manager.py cleanup
+
+

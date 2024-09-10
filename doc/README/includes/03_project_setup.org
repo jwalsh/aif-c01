@@ -1,0 +1,6 @@
+* Project Setup
+
+** Prerequisites
+** Installation
+** Environment Configuration
+** Project Structure

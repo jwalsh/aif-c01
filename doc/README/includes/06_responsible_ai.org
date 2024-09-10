@@ -1,0 +1,6 @@
+* Responsible AI
+
+** Ethical Considerations
+** Security and Privacy
+** Governance and Compliance
+** Environmental Impact

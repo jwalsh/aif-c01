@@ -1,0 +1,6 @@
+* AI/ML Concepts
+
+** Fundamentals
+** Deep Learning and Neural Networks
+** Generative AI
+** Model Evaluation

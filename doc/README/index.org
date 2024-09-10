@@ -1,0 +1,14 @@
+#+TITLE: AWS Certified AI Practitioner (AIF-C01) Exam Preparation
+#+AUTHOR: Jason Walsh
+#+EMAIL: j@wal.sh
+#+PROPERTY: AIF_C01_BUCKET aif-c01-jwalsh
+
+#+INCLUDE: "includes/00_header.org"
+#+INCLUDE: "includes/01_introduction.org"
+#+INCLUDE: "includes/02_exam_preparation.org"
+#+INCLUDE: "includes/03_project_setup.org"
+#+INCLUDE: "includes/04_aws_services.org"
+#+INCLUDE: "includes/05_ai_ml_concepts.org"
+#+INCLUDE: "includes/06_responsible_ai.org"
+#+INCLUDE: "includes/07_development.org"
+#+INCLUDE: "includes/08_conclusion.org"

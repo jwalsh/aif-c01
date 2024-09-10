@@ -1,0 +1,222 @@
+#+TITLE: AWS Certified AI Practitioner (AIF-C01) Exam Notes
+#+AUTHOR: Jason Walsh
+#+EMAIL: j@wal.sh
+#+PROPERTY: header-args :exports both :eval never-export
+
+* Course Overview
+
+** Introduction
+- Course expectations
+- AI definition and importance
+- AWS Cloud overview
+
+** Course Structure
+- Theoretical concepts
+- Hands-on practice
+- Quizzes and assessments
+
+** AWS Account Setup
+- Creating an AWS account
+- Setting up budgets
+- Troubleshooting activation
+
+* Domain 1: Fundamentals of AI and ML
+
+** Key Concepts
+- Artificial Intelligence
+- Machine Learning
+- Deep Learning
+- Neural Networks
+
+** ML Types
+- Supervised Learning
+- Unsupervised Learning
+- Reinforcement Learning
+
+** Data Types and Handling
+- Labeled and Unlabeled data
+- Structured and Unstructured data
+- Time-series, Image, Text data
+- Training data characteristics
+
+** ML Project Lifecycle
+- Data collection and preparation
+- Model selection and training
+- Evaluation and deployment
+- Monitoring and maintenance
+
+* Domain 2: Fundamentals of Generative AI
+
+** Key Concepts
+- Tokens and Embeddings
+- Prompt Engineering
+- Transformer Architecture
+- Foundation Models
+
+** Amazon Bedrock
+- Overview and capabilities
+- Foundation Model (FM) selection
+- FM Evaluation techniques
+- RAG & Knowledge Base implementation
+
+** Use Cases
+- Image and Text Generation
+- Summarization and Translation
+- Chatbots and Customer Service
+
+** Advanced Concepts
+- Fine-tuning models
+- Agents in Bedrock
+- GuardRails implementation
+
+* Domain 3: Applications of Foundation Models
+
+** Selection Criteria
+- Cost considerations
+- Modality requirements
+- Latency expectations
+- Model Size and Complexity
+
+** Techniques
+- Retrieval Augmented Generation (RAG)
+- Prompt Engineering best practices
+- Fine-tuning methods and use cases
+
+** Evaluation Metrics
+- ROUGE for summarization
+- BLEU for translation
+- BERTScore for semantic similarity
+
+** Integration with AWS Services
+- SageMaker integration
+- Lambda function deployment
+- API Gateway setup
+
+* Domain 4: Guidelines for Responsible AI
+
+** Key Features
+- Bias detection and mitigation
+- Fairness in AI systems
+- Inclusivity considerations
+- Robustness and Safety measures
+
+** Ethical Considerations
+- Transparency in AI decision-making
+- Accountability frameworks
+- Privacy protection strategies
+
+** Legal and Compliance
+- Legal risks and mitigation
+- Dataset characteristics and implications
+- Bias effects and monitoring techniques
+
+** MLOps Best Practices
+- Continuous integration for ML
+- Deployment strategies
+- Monitoring and logging
+
+* Domain 5: Security, Compliance, and Governance
+
+** AWS Security Services
+- Identity and Access Management (IAM)
+- Key Management Service (KMS)
+- Amazon Macie for data discovery
+- CloudTrail for auditing
+
+** Shared Responsibility Model
+- AWS responsibilities
+- Customer responsibilities
+- Security best practices
+
+** Compliance Frameworks
+- ISO certifications
+- SOC compliance
+- GDPR considerations
+- Algorithm accountability
+
+** Data Governance
+- Data lifecycle management
+- Logging and monitoring strategies
+- Access control and encryption
+
+* AWS Managed AI Services
+
+** Amazon Comprehend
+- Natural Language Processing capabilities
+- Use cases and limitations
+
+** Amazon Translate
+- Machine translation features
+- Integration with other services
+
+** Amazon Transcribe
+- Speech-to-text capabilities
+- Customization options
+
+** Amazon Polly
+- Text-to-speech service
+- Voice selection and SSML
+
+** Amazon Rekognition
+- Image and video analysis
+- Face detection and comparison
+
+** Amazon Forecast
+- Time-series forecasting
+- Dataset types and model selection
+
+** Amazon Personalize
+- Recommendation systems
+- Integration and deployment
+
+** Amazon Textract
+- Document analysis and data extraction
+- Forms and tables processing
+
+** Amazon Kendra
+- Enterprise search service
+- Natural language querying
+
+** Amazon SageMaker
+- End-to-end ML platform
+- Built-in algorithms and custom models
+- Deployment and monitoring
+
+* Exam Preparation
+
+** Study Strategies
+- Review key concepts regularly
+- Practice with hands-on labs
+- Utilize AWS documentation
+
+** Practice Exams
+- Take multiple practice tests
+- Analyze and learn from mistakes
+- Time management strategies
+
+** Exam Tips
+- Read questions carefully
+- Eliminate obviously wrong answers
+- Manage time effectively during the exam
+
+* TODO Tasks [0/5]
+- [ ] Complete all course videos and hands-on labs
+- [ ] Review AWS documentation for all mentioned services
+- [ ] Take and review practice exams
+- [ ] Create flashcards for key concepts and services
+- [ ] Schedule and take the certification exam
+
+* Resources
+- [[https://aws.amazon.com/certification/certified-ai-ml-specialty/][AWS Certified AI Practitioner Certification]]
+- [[https://docs.aws.amazon.com/][AWS Documentation]]
+- [[https://aws.amazon.com/whitepapers/][AWS Whitepapers]]
+- Course materials and practice tests
+
+#+BEGIN_SRC emacs-lisp :results silent
+  (setq org-todo-keywords
+        '((sequence "TODO" "IN-PROGRESS" "REVIEW" "|" "DONE" "ARCHIVED")))
+#+END_SRC
+
+# Local Variables:
+# org-confirm-babel-evaluate: nil
+# End:

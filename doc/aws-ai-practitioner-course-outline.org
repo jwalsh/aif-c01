@@ -1,0 +1,197 @@
+#+TITLE: AWS Certified AI Practitioner (AIF-C01) Course Outline
+#+AUTHOR: Jason Walsh
+#+EMAIL: j@wal.sh
+#+PROPERTY: Course_URL https://www.udemy.com/course/aws-ai-practitioner-certified/
+
+* Artificial Intelligence & Course Introduction
+** What to expect from this course
+** Private Course Feedback Link
+** Important: Course Structure
+** Important Message: Udemy
+** What is Artificial Intelligence (AI)?
+** About your Instructor
+
+* Code & Slides Download
+** Code & Slides Download
+
+* Introduction to AWS & Cloud Computing
+** Section Introduction
+** Traditional IT - Overview
+** What is Cloud Computing?
+** The Different Types of Cloud Computing
+** AWS Cloud Overview
+** Creating an AWS Account
+** AWS Account Activation Troubleshooting
+** Tour of the Console & Services in AWS
+** Shared Responsibility Model & AWS Acceptable Policy
+** Quiz: Introduction to AWS & Cloud Computing
+
+* Course Cost & AWS Budget Setup
+** Course Cost
+** AWS Budget Setup
+
+* Amazon Bedrock and Generative AI (GenAI)
+** Section Introduction
+** What is Generative AI (GenAI)?
+** Amazon Bedrock - Overview
+** Amazon Bedrock - Hands On
+** Amazon Bedrock - Foundation Model (FM)
+** Amazon Bedrock - Foundation Model (FM) - Hands On
+** Amazon Bedrock - Fine-Tuning a Model
+** Amazon Bedrock - FM Evaluation
+** Amazon Bedrock - FM Evaluation - Hands On
+** Amazon Bedrock - RAG & Knowledge Base
+** Amazon Bedrock - RAG & Knowledge Base - Hands On
+** Amazon Bedrock - RAG & Knowledge Base - Complete Setup - Hands On
+** More GenAI Concepts
+** Amazon Bedrock - GuardRails
+** Amazon Bedrock - GuardRails - Hands On
+** Amazon Bedrock - Agents
+** Amazon Bedrock - Pricing & Other Features
+** Amazon Bedrock - AI Stylist - Hands On
+** Quiz: Amazon Bedrock and Generative AI (GenAI)
+
+* Prompt Engineering
+** Section Introduction
+** What is Prompt Engineering?
+** Prompt Engineering - Hands On
+** Prompt Performance Optimization
+** Prompt Performance Optimization - Hands On
+** Prompt Engineering Techniques
+** Prompt Templates
+** Quiz: Prompt Engineering
+
+* Amazon Q - Deep Dive
+** Section Introduction
+** Amazon Q Business
+** Amazon Q Business - Hands On
+** Amazon Q Apps
+** Amazon Q Apps - Hands On
+** Amazon Q Business - Hands On - Cleanup
+** Amazon Q Developer
+** Amazon Q Developer - Hands On
+** PartyRock
+** Quiz: Amazon Q
+
+* Artificial Intelligence (AI) & Machine Learning (ML)
+** Section Introduction
+** AI, ML, Deep Learning, and GenAI
+** Training Data
+** Supervised Learning
+** Unsupervised Learning
+** Reinforcement Learning
+** RLHF - Reinforcement Learning from Human Feedback
+** Model Fit, Bias, and Variance
+** Model Evaluation Metrics
+** Machine Learning - Inferencing
+** Phases of a Machine Learning Project
+** Quiz: Artificial Intelligence (AI) & Machine Learning (ML)
+
+* AWS Managed AI Services
+** Section Introduction
+** Why AWS Managed Services?
+** Amazon Comprehend
+** Amazon Comprehend - Hands On
+** Amazon Translate
+** Amazon Translate - Hands On
+** Amazon Transcribe
+** Amazon Polly
+** Amazon Polly - Hands On
+** Amazon Rekognition
+** Amazon Forecast
+** Amazon Lex
+** Amazon Lex - Hands On
+** Amazon Personalize
+** Amazon Textract
+** Amazon Textract - Hands On
+** Amazon Kendra
+** Amazon Mechanical Turk
+** Amazon Augmented AI
+** Amazon Augmented AI - Hands On
+** AWS DeepRacer
+** AWS DeepRacer - Hands On
+** Amazon Comprehend Medical & Transcribe Medical
+** Amazon Comprehend Medical & Transcribe Medical - Hands On
+** Amazon's Hardware for AI
+** Amazon's Hardware for AI - Hands On
+** Quiz: AWS Managed AI Services
+
+* Amazon SageMaker - Deep Dive
+** Section Introduction
+** Amazon SageMaker
+** Amazon SageMaker - Hands On
+** Amazon SageMaker - Data Tools
+** Amazon SageMaker - Models and Humans
+** Amazon SageMaker - Governance
+** Amazon SageMaker - Consoles
+** Amazon SageMaker - Summary
+** Quiz: Amazon SageMaker
+
+* AI Challenges and Responsibilities
+** Section Introduction
+** AI Challenges and Responsibilities - Overview
+** Responsible AI
+** GenAI Challenges
+** Compliance for AI
+** Governance for AI
+** Security and Privacy for AI
+** GenAI Security Scoping Matrix
+** MLOps
+** Quiz: AI Challenges and Responsibilities
+
+* AWS Security Services
+** Section Introduction
+** IAM Introduction: Users, Groups, Policies
+** IAM Users & Groups - Hands On
+** IAM Policies
+** IAM Policies - Hands On
+** IAM Roles
+** IAM Roles - Hands On
+** Amazon EC2
+** Create an EC2 Instance with EC2 User Data to have a Website - Hands On
+** AWS Lambda
+** AWS Lambda - Hands On
+** Amazon Macie
+** AWS Config
+** Amazon Inspector
+** AWS CloudTrail
+** AWS CloudTrail - Hands On
+** AWS Artifact
+** AWS Trusted Advisor
+** AWS Network Security
+** AWS Security Services - Summary
+** Quiz: AWS Security Services
+
+* Preparing for the Exam + Practice Exam - AWS Certified AI Practitioner
+** State of Learning Checkpoint
+** Example Sample Exam Questions Walkthrough
+** Exam Walkthrough and Signup
+** Save 50% on your AWS Exam Cost!
+** Get an Extra 30 Minutes on your AWS Exam - Non Native English Speakers only
+** Practice Exam - AWS Certified AI Practitioner
+** AWS Certification Paths
+
+* Congratulations
+** Congratulations
+** Bonus Lecture
+
+* TODO Tasks [0/5]
+- [ ] Complete all course videos and hands-on labs
+- [ ] Review AWS documentation for all mentioned services
+- [ ] Take and review practice exams
+- [ ] Schedule the certification exam
+- [ ] Review weak areas identified in practice exams
+
+* Resources
+- [[https://aws.amazon.com/certification/certified-ai-ml-specialty/][AWS Certified AI Practitioner Certification]]
+- [[https://docs.aws.amazon.com/][AWS Documentation]]
+- Course materials and practice tests
+
+#+BEGIN_SRC emacs-lisp :results silent
+  (setq org-todo-keywords
+        '((sequence "TODO" "IN-PROGRESS" "REVIEW" "|" "DONE" "ARCHIVED")))
+#+END_SRC
+
+# Local Variables:
+# org-confirm-babel-evaluate: nil
+# End:
