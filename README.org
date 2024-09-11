@@ -381,24 +381,96 @@ aws s3 cp 2310.07064.pdf s3://$BUCKET/papers/
 | papers/resources/papers/2310.04562.pdf            | null                             | 2024-09-04T23:25:14+00:00 |  734098 | f2e2f551636e6b805d25f9928b056135 | STANDARD | true  |
 | papers/resources/papers/2310.07064.pdf            | null                             | 2024-09-04T23:25:14+00:00 |  552884 | 86d5eaf379cf4efd39d33ac3adaa3828 | STANDARD | true  |
 
-** Amazon Bedrock
-List available foundation models:
 
+** Amazon Bedrock
+*** Getting Started
+**** Overview
+- Amazon Bedrock is a fully managed service that provides access to foundation models (FMs) from leading AI companies.
+- It offers a single API to work with various FMs for different use cases.
+
+**** Examples
+To list available foundation models:
 #+BEGIN_SRC shell
 aws bedrock list-foundation-models | jq -r '.modelSummaries[]|.modelId' | head
 #+END_SRC
 
+**** Providers
+- Amazon
+- AI21 Labs
+- Anthropic
+- Cohere
+- Meta
+- Stability AI
+
+*** Foundation Models
+**** Base Models
+To describe a specific base model:
+#+BEGIN_SRC shell
+aws bedrock get-foundation-model --model-id anthropic.claude-v2
+#+END_SRC
+
 #+RESULTS:
-| amazon.titan-tg1-large            |
-| amazon.titan-image-generator-v1:0 |
-| amazon.titan-image-generator-v1   |
-| amazon.titan-image-generator-v2:0 |
-| amazon.titan-text-premier-v1:0    |
-| amazon.titan-embed-g1-text-02     |
-| amazon.titan-text-lite-v1:0:4k    |
-| amazon.titan-text-lite-v1         |
-| amazon.titan-text-express-v1:0:8k |
-| amazon.titan-text-express-v1      |
+
+**** Custom Models
+Custom models are not directly supported in Bedrock. Users typically fine-tune base models for specific use cases.
+
+**** Imported Models
+Bedrock doesn't support direct model importing. It focuses on providing access to pre-trained models from various providers.
+
+*** Playgrounds
+**** Chat
+Bedrock provides a chat interface for interactive model testing, but this is primarily accessed through the AWS Console.
+
+**** Text
+For text generation using CLI:
+#+BEGIN_SRC shell
+aws bedrock invoke-model --model-id anthropic.claude-v2 --body '{"prompt": "Tell me a joke", "max_tokens_to_sample": 100}'
+#+END_SRC
+
+**** Image
+For image generation (example with Stable Diffusion):
+#+BEGIN_SRC shell
+aws bedrock invoke-model --model-id stability.stable-diffusion-xl-v0 --body '{"text_prompts":[{"text":"A serene landscape with mountains and a lake"}]}'
+#+END_SRC
+
+*** Builder Tools
+**** Prompt Management
+Prompt management is typically done through the AWS Console. CLI operations for this feature are limited.
+
+*** Safeguards
+**** Guardrails
+Guardrails are configured in the AWS Console. They help ensure responsible AI use.
+
+**** Watermark Detection
+Watermark detection helps identify AI-generated content. This feature is accessed through the AWS Console.
+
+*** Inference
+**** Provisioned Throughput
+To create a provisioned throughput configuration:
+#+BEGIN_SRC shell
+aws bedrock create-provisioned-model-throughput --model-id anthropic.claude-v2 --throughput-capacity 1
+#+END_SRC
+
+**** Batch Inference
+Batch inference jobs can be created using the AWS SDK or through integrations with services like AWS Batch.
+
+*** Assessment
+**** Model Evaluation
+Model evaluation is typically performed using custom scripts or through the AWS Console. There are no direct CLI commands for this in Bedrock.
+
+*** Bedrock Configurations
+**** Model Access
+To request access to a model:
+#+BEGIN_SRC shell
+aws bedrock create-model-access --model-id anthropic.claude-v2
+#+END_SRC
+
+**** Settings
+Bedrock settings are primarily managed through the AWS Console. CLI operations for general settings are limited.
+
+**** Note
+Some features like Bedrock Studio, Knowledge bases, Agents, Prompt flows, and Cross-region inference are marked as Preview or New. These features may have limited CLI support and are best accessed through the AWS Console.
+
 
 ** Amazon Q Business
 List applications:
