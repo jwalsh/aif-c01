@@ -898,6 +898,27 @@ In addition to code examples, this project includes:
 - Practice questions for each exam domain
 - Glossary of key AI/ML terms in the context of AWS
 
+
+* Workshops
+
+** TODO Best practices for prompt engineering with Meta Llama 3 for Text-to-SQL use cases
+
+https://aws.amazon.com/blogs/machine-learning/best-practices-for-prompt-engineering-with-meta-llama-3-for-text-to-sql-use-cases/
+
+
+** TODO Using Amazon Bedrock Agents to interactively generate infrastructure as code
+
+https://aws.amazon.com/blogs/machine-learning/using-agents-for-amazon-bedrock-to-interactively-generate-infrastructure-as-code/
+
+
+** TODO Evaluating prompts at scale with Prompt Management and Prompt Flows for Amazon Bedrock
+
+https://aws.amazon.com/blogs/machine-learning/evaluating-prompts-at-scale-with-prompt-management-and-prompt-flows-for-amazon-bedrock/
+
+** TODO Build an ecommerce product recommendation chatbot with Amazon Bedrock Agents
+
+https://aws.amazon.com/blogs/machine-learning/build-an-ecommerce-product-recommendation-chatbot-with-amazon-bedrock-agents/
+
 * License
 :PROPERTIES:
 :CUSTOM_ID: license
