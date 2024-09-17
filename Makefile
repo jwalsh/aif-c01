@@ -151,4 +151,9 @@ aws-cleanup: ## Clean up AWS resources (for advanced users)
 	@echo "Cleaning up AWS resources..."
 	@python scripts/aws_resource_manager.py cleanup
 
+aws-rekognition: ## Count people 
+	cat resources/rekognition-example.json | jq '.Labels[] | select(.Name == "Person") | .Instances | length'
+
+aws-polly: ## Create a story from 
+	python scripts/aws_polly_transcribe.py
 
