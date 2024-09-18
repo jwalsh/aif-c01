@@ -1,123 +1,80 @@
-#!/usr/bin/env python3
-"""
-Transcribe Evaluator: Generate, synthesize, and transcribe stories to evaluate Amazon Transcribe.
-
-This script uses a custom vocabulary to generate a story with AWS Bedrock,
-converts it to speech with Amazon Polly, and then transcribes it back to text
-using Amazon Transcribe. It creates a unique S3 bucket for the evaluation process.
-"""
-
 import json
 import time
 from pathlib import Path
-from typing import List, Optional
 import os
 import uuid
+import asyncio
+import csv
+import io
 
 import boto3
 import click
-import csv
 from botocore.exceptions import ClientError
 from pydantic import BaseModel, Field
 from functools import lru_cache
-from itertools import chain
+from typing import List
 
 class VocabularyTerm(BaseModel):
-    """Represents a term in the custom vocabulary."""
     phrase: str
-    sounds_like: Optional[str] = None
-    ipa: Optional[str] = None
-    display_as: str
-    notes: Optional[str] = None
+    sounds_like: str = None
+    ipa: str = None
+    display_as: str = None
 
 class StoryConfig(BaseModel):
-    """Configuration for story generation."""
     max_tokens: int = Field(default=500, ge=1, le=1000)
     temperature: float = Field(default=0.7, ge=0, le=1)
     top_p: float = Field(default=0.9, ge=0, le=1)
 
 @lru_cache(maxsize=1)
-def get_bedrock_client():
-    """Get a cached Bedrock client."""
-    return boto3.client('bedrock-runtime')
+def get_client(service_name):
+    return boto3.client(service_name)
 
-@lru_cache(maxsize=1)
-def get_polly_client():
-    """Get a cached Polly client."""
-    return boto3.client('polly')
-
-@lru_cache(maxsize=1)
-def get_transcribe_client():
-    """Get a cached Transcribe client."""
-    return boto3.client('transcribe')
-
-@lru_cache(maxsize=1)
-def get_s3_client():
-    """Get a cached S3 client."""
-    return boto3.client('s3')
-
-def create_unique_bucket(base_name: str) -> str:
-    """
-    Create a unique S3 bucket for the evaluation.
-
-    Args:
-        base_name (str): Base name for the bucket.
-
-    Returns:
-        str: Name of the created bucket.
-    """
-    s3 = get_s3_client()
-    bucket_name = f"{base_name}-{uuid.uuid4().hex[:8]}"
+def ensure_bucket_exists(bucket_name: str) -> None:
+    s3 = get_client('s3')
     try:
-        s3.create_bucket(Bucket=bucket_name)
-        click.echo(f"Created bucket: {bucket_name}")
-    except ClientError as e:
-        click.echo(f"Error creating bucket: {e}")
-        raise
-    return bucket_name
-
-def clean_up_bucket(bucket_name: str):
-    """
-    Remove all objects from the bucket and delete it.
-
-    Args:
-        bucket_name (str): Name of the bucket to clean up.
-    """
-    s3 = get_s3_client()
-    try:
-        bucket = boto3.resource('s3').Bucket(bucket_name)
-        bucket.objects.all().delete()
-        bucket.delete()
-        click.echo(f"Deleted bucket: {bucket_name}")
-    except ClientError as e:
-        click.echo(f"Error deleting bucket: {e}")
+        s3.head_bucket(Bucket=bucket_name)
+    except ClientError:
+        try:
+            s3.create_bucket(Bucket=bucket_name)
+            click.echo(f"Created bucket: {bucket_name}")
+        except ClientError as e:
+            click.echo(f"Error creating bucket: {e}")
+            raise
 
 def read_custom_vocabulary(file_path: Path) -> List[VocabularyTerm]:
-    """
-    Read the custom vocabulary from a CSV file.
+    with file_path.open('r') as file:
+        reader = csv.DictReader(file)
+        vocab_terms = []
+        for row in reader:
+            term = VocabularyTerm(
+                phrase=row['Phrase'],
+                sounds_like=row.get('SoundsLike'),
+                ipa=row.get('IPA'),
+                display_as=row.get('DisplayAs') or row['Phrase']  # Use Phrase if DisplayAs is empty
+            )
+            vocab_terms.append(term)
+    return vocab_terms
 
-    Args:
-        file_path (Path): Path to the CSV file.
+def create_processed_csv(vocab_terms: List[VocabularyTerm], bucket: str) -> str:
+    csv_buffer = io.StringIO()
+    writer = csv.DictWriter(csv_buffer, fieldnames=['Phrase', 'SoundsLike', 'IPA', 'DisplayAs'])
+    writer.writeheader()
+    for term in vocab_terms:
+        writer.writerow({
+            'Phrase': term.phrase,
+            'SoundsLike': term.sounds_like or '',
+            'IPA': term.ipa or '',
+            'DisplayAs': term.display_as
+        })
+    
+    s3 = get_client('s3')
+    file_name = f'processed_vocabulary_{int(time.time())}.csv'
+    s3.put_object(Bucket=bucket, Key=file_name, Body=csv_buffer.getvalue())
+    click.echo(f"Processed CSV uploaded to s3://{bucket}/{file_name}")
+    return file_name
 
-    Returns:
-        List[VocabularyTerm]: List of vocabulary terms.
-    """
-    with file_path.open('r') as csvfile:
-        reader = csv.DictReader(csvfile)
-        return [VocabularyTerm(**row) for row in reader]
-
-def generate_story_with_bedrock(terms: List[str], config: StoryConfig) -> str:
-    """
-    Generate a story using AWS Bedrock with the given terms.
-
-    Args:
-        terms (List[str]): List of terms to include in the story.
-        config (StoryConfig): Configuration for story generation.
-
-    Returns:
-        str: Generated story.
-    """
-    client = get_bedrock_client()
+def generate_story_with_bedrock(terms: list[str], config: StoryConfig) -> str:
+    client = get_client('bedrock-runtime')
     prompt = (
         f"Write a short story (two paragraphs) using as many of the following terms "
         f"as possible: {', '.join(terms)}. The story should be about a tech "
@@ -136,14 +93,7 @@ def generate_story_with_bedrock(terms: List[str], config: StoryConfig) -> str:
     return response_body['completion']
 
 def synthesize_speech(text: str, output_file: Path) -> None:
-    """
-    Synthesize speech from text using Amazon Polly.
-
-    Args:
-        text (str): Text to synthesize.
-        output_file (Path): Path to save the audio file.
-    """
-    client = get_polly_client()
+    client = get_client('polly')
     response = client.synthesize_speech(
         Text=text,
         OutputFormat='mp3',
@@ -153,91 +103,165 @@ def synthesize_speech(text: str, output_file: Path) -> None:
     with output_file.open('wb') as file:
         file.write(response['AudioStream'].read())
 
-def transcribe_audio(file_name: str, bucket: str) -> str:
-    """
-    Transcribe audio using Amazon Transcribe.
+async def create_custom_vocabulary(vocabulary_name: str, vocab_terms: List[VocabularyTerm]) -> None:
+    client = get_client('transcribe')
+    
+    phrases = []
+    for term in vocab_terms:
+        phrase_entry = {
+            'Phrase': term.phrase,
+            'DisplayAs': term.display_as
+        }
+        if term.sounds_like:
+            phrase_entry['SoundsLike'] = term.sounds_like.split('-')
+        if term.ipa:
+            phrase_entry['IPA'] = term.ipa
+        phrases.append(phrase_entry)
+    
+    try:
+        response = client.create_vocabulary(
+            VocabularyName=vocabulary_name,
+            LanguageCode='en-US',
+            Phrases=phrases
+        )
+        click.echo(f"Custom vocabulary creation initiated: {response['VocabularyName']}")
+        
+        while True:
+            status = client.get_vocabulary(VocabularyName=vocabulary_name)
+            if status['VocabularyState'] in ['READY', 'FAILED']:
+                break
+            await asyncio.sleep(5)
+        
+        if status['VocabularyState'] == 'READY':
+            click.echo(f"Custom vocabulary '{vocabulary_name}' is ready for use.")
+        else:
+            click.echo(f"Custom vocabulary creation failed: {status['FailureReason']}")
+    except ClientError as e:
+        click.echo(f"Error creating custom vocabulary: {e}")
+        raise
 
-    Args:
-        file_name (str): Name of the audio file in S3.
-        bucket (str): S3 bucket name.
+def send_sms_notification(phone_number: str, message: str):
+    sns = get_client('sns')
+    try:
+        response = sns.publish(
+            PhoneNumber=phone_number,
+            Message=message
+        )
+        click.echo(f"SMS sent successfully. Message ID: {response['MessageId']}")
+    except ClientError as e:
+        click.echo(f"Error sending SMS: {e}")
 
-    Returns:
-        str: Transcribed text.
-    """
-    client = get_transcribe_client()
-    job_name = f"Transcription-Job-{int(time.time())}"
-    job_uri = f"s3://{bucket}/{file_name}"
+async def transcribe_audio(file_name: str, input_bucket: str, output_bucket: str, vocabulary_name: str, phone_number: str) -> str:
+    client = get_client('transcribe')
+    sqs = get_client('sqs')
     
-    client.start_transcription_job(
-        TranscriptionJobName=job_name,
-        Media={'MediaFileUri': job_uri},
-        MediaFormat='mp3',
-        LanguageCode='en-US'
-    )
+    queue_name = f'aif-c01-transcribe-job-queue-{uuid.uuid4().hex[:8]}'
+    queue_url = sqs.create_queue(QueueName=queue_name)['QueueUrl']
     
-    while True:
-        status = client.get_transcription_job(TranscriptionJobName=job_name)
-        if status['TranscriptionJob']['TranscriptionJobStatus'] in ['COMPLETED', 'FAILED']:
-            break
-        time.sleep(5)
+    job_name = f"aif-c01-Transcription-Job-{int(time.time())}"
+    job_uri = f"s3://{input_bucket}/{file_name}"
     
-    if status['TranscriptionJob']['TranscriptionJobStatus'] == 'COMPLETED':
-        response = get_s3_client().get_object(Bucket=bucket, Key=f"{job_name}.json")
-        transcript = json.loads(response['Body'].read().decode('utf-8'))
-        return transcript['results']['transcripts'][0]['transcript']
-    else:
-        raise Exception("Transcription failed")
+    try:
+        client.start_transcription_job(
+            TranscriptionJobName=job_name,
+            Media={'MediaFileUri': job_uri},
+            MediaFormat='mp3',
+            LanguageCode='en-US',
+            Settings={'VocabularyName': vocabulary_name},
+            OutputBucketName=output_bucket,
+            OutputKey=f"{job_name}-output.json"
+        )
+        
+        while True:
+            response = sqs.receive_message(
+                QueueUrl=queue_url,
+                MaxNumberOfMessages=1,
+                WaitTimeSeconds=20
+            )
+            
+            if 'Messages' in response:
+                message = json.loads(response['Messages'][0]['Body'])
+                if message['detail']['TranscriptionJobStatus'] in ['COMPLETED', 'FAILED']:
+                    sqs.delete_message(
+                        QueueUrl=queue_url,
+                        ReceiptHandle=response['Messages'][0]['ReceiptHandle']
+                    )
+                    break
+            
+            await asyncio.sleep(5)
+        
+        if message['detail']['TranscriptionJobStatus'] == 'COMPLETED':
+            s3 = get_client('s3')
+            response = s3.get_object(Bucket=output_bucket, Key=f"{job_name}-output.json")
+            transcript = json.loads(response['Body'].read().decode('utf-8'))
+            send_sms_notification(phone_number, "Transcription job completed successfully.")
+            return transcript['results']['transcripts'][0]['transcript']
+        else:
+            send_sms_notification(phone_number, "Transcription job failed.")
+            raise Exception("Transcription failed")
+    finally:
+        sqs.delete_queue(QueueUrl=queue_url)
 
 @click.command()
 @click.option('--vocabulary-file', type=click.Path(exists=True), default='resources/aws-transcribe-custom-vocabulary.csv',
               help='Path to the custom vocabulary CSV file')
 @click.option('--output-dir', type=click.Path(), default='output',
               help='Directory to store output files')
-def main(vocabulary_file: str, output_dir: str):
-    """
-    Main function to orchestrate the story generation, synthesis, and transcription process.
-    """
+@click.option('--phone-number', type=str, default='+12064287778',
+              help='Phone number to receive SMS notifications')
+@click.option('--input-bucket', type=str, default='aif-c01-input',
+              help='Name of the S3 bucket for input files')
+@click.option('--output-bucket', type=str, default='aif-c01-output',
+              help='Name of the S3 bucket for output files')
+@click.option('--confirm-upload', is_flag=True, help='Only confirm bucket upload')
+def cli(vocabulary_file: str, output_dir: str, phone_number: str, input_bucket: str, output_bucket: str, confirm_upload: bool):
+    asyncio.run(main(vocabulary_file, output_dir, phone_number, input_bucket, output_bucket, confirm_upload))
+
+async def main(vocabulary_file: str, output_dir: str, phone_number: str, input_bucket: str, output_bucket: str, confirm_upload: bool):
     vocabulary_path = Path(vocabulary_file)
     output_path = Path(output_dir)
     output_path.mkdir(exist_ok=True)
 
-    # Create a unique S3 bucket
-    user = os.environ.get('USER', 'user')
-    bucket_name = create_unique_bucket(f"transcribe-eval-{user}")
+    ensure_bucket_exists(input_bucket)
+    ensure_bucket_exists(output_bucket)
+
+    if confirm_upload:
+        click.echo(f"Input bucket '{input_bucket}' and output bucket '{output_bucket}' are ready for use.")
+        return
 
     try:
-        # Read custom vocabulary
         vocab_terms = read_custom_vocabulary(vocabulary_path)
-        display_terms = list(set(chain.from_iterable(term.display_as.split() for term in vocab_terms)))
+        
+        # Create and upload processed CSV
+        processed_csv_file = create_processed_csv(vocab_terms, output_bucket)
+        click.echo(f"Processed CSV file uploaded to S3: s3://{output_bucket}/{processed_csv_file}")
+        
+        display_terms = [term.display_as for term in vocab_terms if term.display_as]
 
-        # Generate story
+        vocabulary_name = f"aif-c01-custom-vocab-{uuid.uuid4().hex[:8]}"
+        await create_custom_vocabulary(vocabulary_name, vocab_terms)
+
         story_config = StoryConfig()
         story = generate_story_with_bedrock(display_terms, story_config)
-        story_file = output_path / 'generated_story.txt'
+        story_file = output_path / 'aif-c01-generated_story.txt'
         story_file.write_text(story)
         click.echo(f"Original story saved to {story_file}")
 
-        # Synthesize speech
-        audio_file = output_path / 'story_audio.mp3'
+        audio_file = output_path / 'aif-c01-story_audio.mp3'
         synthesize_speech(story, audio_file)
         click.echo(f"Audio file saved to {audio_file}")
 
-        # Upload audio to S3
-        s3_client = get_s3_client()
-        s3_client.upload_file(str(audio_file), bucket_name, audio_file.name)
+        s3_client = get_client('s3')
+        s3_client.upload_file(str(audio_file), input_bucket, audio_file.name)
+        click.echo(f"Audio file uploaded to {input_bucket}/{audio_file.name}")
 
-        # Transcribe audio
-        try:
-            transcript = transcribe_audio(audio_file.name, bucket_name)
-            transcript_file = output_path / 'transcribed_story.txt'
-            transcript_file.write_text(transcript)
-            click.echo(f"Transcribed story saved to {transcript_file}")
-        except Exception as e:
-            click.echo(f"Transcription failed: {str(e)}")
+        transcript = await transcribe_audio(audio_file.name, input_bucket, output_bucket, vocabulary_name, phone_number)
+        transcript_file = output_path / 'aif-c01-transcribed_story.txt'
+        transcript_file.write_text(transcript)
+        click.echo(f"Transcribed story saved to {transcript_file}")
 
-    finally:
-        # Clean up the S3 bucket
-        clean_up_bucket(bucket_name)
+    except Exception as e:
+        click.echo(f"An error occurred: {str(e)}")
 
 if __name__ == "__main__":
-    main()
+    cli()

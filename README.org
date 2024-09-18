@@ -381,7 +381,6 @@ aws s3 cp 2310.07064.pdf s3://$BUCKET/papers/
 | papers/resources/papers/2310.04562.pdf            | null                             | 2024-09-04T23:25:14+00:00 |  734098 | f2e2f551636e6b805d25f9928b056135 | STANDARD | true  |
 | papers/resources/papers/2310.07064.pdf            | null                             | 2024-09-04T23:25:14+00:00 |  552884 | 86d5eaf379cf4efd39d33ac3adaa3828 | STANDARD | true  |
 
-
 ** Amazon Bedrock
 *** Getting Started
 **** Overview
@@ -470,7 +469,6 @@ Bedrock settings are primarily managed through the AWS Console. CLI operations f
 
 **** Note
 Some features like Bedrock Studio, Knowledge bases, Agents, Prompt flows, and Cross-region inference are marked as Preview or New. These features may have limited CLI support and are best accessed through the AWS Console.
-
 
 ** Amazon Q Business
 List applications:
@@ -567,71 +565,141 @@ aws kendra list-indices | jq .IndexConfigurationSummaryItems
 For more Kendra examples, see the [[file:/opt/homebrew/share/awscli/examples/kendra/][Kendra AWS CLI Examples]].
 
 ** Amazon SageMaker
-List notebook instances:
-
+*** List Resources
+**** List notebook instances
 #+BEGIN_SRC shell
-aws sagemaker list-notebook-instances | jq -r '.NotebookInstances[]| select(.NotebookInstanceName | test("AIF|MLA"))'
+aws sagemaker list-notebook-instances | jq -r '.NotebookInstances[] | select(.NotebookInstanceName | test("aif|mla|iacs")) | .NotebookInstanceName'
 #+END_SRC
 
 #+RESULTS:
+: iacs-jwalsh
 
-Create required roles: 
-
-#+begin_src json :tangle trust-policy-sagemaker.json
-  {
-    "Version": "2012-10-17",
-    "Statement": [
-      {
-        "Effect": "Allow",
-        "Principal": {
-          "Service": "sagemaker.amazonaws.com"
-        },
-        "Action": "sts:AssumeRole"
-      }
-    ]
-  }
-#+end_src
-
-#+begin_src shell
-  cat trust-policy-sagemaker.json | jq -r 'keys[]'
-#+end_src
+**** List training jobs
+#+BEGIN_SRC shell
+  aws sagemaker list-training-jobs | jq -r '.TrainingJobSummaries[] | .TrainingJobName'
+#+END_SRC
 
 #+RESULTS:
-| Statement |
-| Version   |
+| DEMO-imageclassification-2019-04-25-12-15-01 |
+| DEMO-imageclassification-2019-04-24-20-15-24 |
 
-Create IAM role and attach:
+**** List models
+#+BEGIN_SRC shell
+  aws sagemaker list-models | jq -r '.Models[]'
+#+END_SRC
 
-#+begin_src shell
-  aws iam create-role --role-name mla-sagemaker-role --assume-role-policy-document file://trust-policy-sagemaker.json | jq -r 'keys[]'
-#+end_src
-
-#+begin_src shell
-  aws iam attach-role-policy --role-name mla-sagemaker-role --policy-arn arn:aws:iam::aws:policy/AmazonSageMakerFullAccess | jq -r 'keys[]'
-#+end_src
-
+**** List endpoints
+#+BEGIN_SRC shell
+  aws sagemaker list-endpoints | jq -r '.Endpoints'
+#+END_SRC
 
 #+RESULTS:
+: []
 
-List SageMaker pipelines:
-
+**** List SageMaker pipelines
 #+BEGIN_SRC shell
 aws sagemaker list-pipelines | jq .PipelineSummaries
 #+END_SRC
 
-#+RESULTS:
-: []
-
-List SageMaker models:
-
-#+BEGIN_SRC shell
-aws sagemaker list-models | jq .Models
+*** Create and Manage Resources
+**** Create required roles
+#+BEGIN_SRC json :tangle trust-policy-sagemaker.json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "sagemaker.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
 #+END_SRC
 
-#+RESULTS:
-: []
+**** Create IAM role and attach policy
+#+BEGIN_SRC shell
+aws iam create-role --role-name mla-sagemaker-role --assume-role-policy-document file://trust-policy-sagemaker.json
+aws iam attach-role-policy --role-name mla-sagemaker-role --policy-arn arn:aws:iam::aws:policy/AmazonSageMakerFullAccess
+#+END_SRC
 
+**** Create a model
+#+BEGIN_SRC shell
+aws sagemaker create-model --model-name <model-name> --primary-container file://container-config.json --execution-role-arn <role-arn>
+#+END_SRC
+
+**** Create an endpoint configuration
+#+BEGIN_SRC shell
+aws sagemaker create-endpoint-config --endpoint-config-name <config-name> --production-variants file://production-variant.json
+#+END_SRC
+
+**** Create an endpoint
+#+BEGIN_SRC shell
+aws sagemaker create-endpoint --endpoint-name <endpoint-name> --endpoint-config-name <config-name>
+#+END_SRC
+
+*** Describe and Monitor
+**** Describe a specific endpoint
+#+BEGIN_SRC shell
+  aws sagemaker describe-endpoint --endpoint-name <endpoint-name>
+#+END_SRC
+
+**** Describe training job (includes logs)
+#+BEGIN_SRC shell
+  aws sagemaker describe-training-job --training-job-name <job-name>
+#+END_SRC
+
+**** Get CloudWatch logs for a training job
+#+BEGIN_SRC shell
+  aws logs get-log-events --log-group-name /aws/sagemaker/TrainingJobs --log-stream-name <training-job-name>/algo-1-<timestamp>
+#+END_SRC
+
+*** Batch Transform
+**** Create a batch transform job
+#+BEGIN_SRC shell
+aws sagemaker create-transform-job --transform-job-name <job-name> --model-name <model-name> --transform-input file://transform-input.json --transform-output file://transform-output.json --transform-resources file://transform-resources.json
+#+END_SRC
+
+**** Check batch transform job status
+#+BEGIN_SRC shell
+aws sagemaker describe-transform-job --transform-job-name <job-name>
+#+END_SRC
+
+*** Hyperparameter Tuning
+**** Create a hyperparameter tuning job
+#+BEGIN_SRC shell
+aws sagemaker create-hyper-parameter-tuning-job --hyper-parameter-tuning-job-name <job-name> --hyper-parameter-tuning-job-config file://tuning-job-config.json --training-job-definition file://training-job-definition.json
+#+END_SRC
+
+**** List hyperparameter tuning jobs
+#+BEGIN_SRC shell
+aws sagemaker list-hyper-parameter-tuning-jobs
+#+END_SRC
+
+*** SageMaker Pipeline
+**** Create a pipeline
+#+BEGIN_SRC shell
+aws sagemaker create-pipeline --pipeline-name <pipeline-name> --pipeline-definition file://pipeline-definition.json --role-arn <role-arn>
+#+END_SRC
+
+**** List pipeline executions
+#+BEGIN_SRC shell
+aws sagemaker list-pipeline-executions --pipeline-name <pipeline-name>
+#+END_SRC
+
+*** Cleanup
+**** Delete an endpoint
+#+BEGIN_SRC shell
+aws sagemaker delete-endpoint --endpoint-name <endpoint-name>
+#+END_SRC
+
+*** Additional Resources
 For more SageMaker examples, refer to the [[file:/opt/homebrew/share/awscli/examples/sagemaker/][SageMaker AWS CLI Examples]].
+
+#+BEGIN_COMMENT
+Remember to replace placeholders (e.g., <endpoint-name>, <role-arn>) with actual values and create the necessary JSON configuration files (e.g., container-config.json, production-variant.json) before running these commands.
+#+END_COMMENT
 
 ** AWS Lambda
 List Lambda functions:
@@ -879,6 +947,102 @@ Describe EC2 instances with GPU (useful for ML workloads):
 #+BEGIN_SRC shell
 aws ec2 describe-instances --filters "Name=instance-type,Values=p*,g*" | jq .Reservations[].Instances[]
 #+END_SRC
+
+** Amazon EKS
+*** Prerequisites
+**** Install and configure AWS CLI
+#+BEGIN_SRC shell
+aws --version
+aws configure
+#+END_SRC
+
+**** Install kubectl
+#+BEGIN_SRC shell
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+kubectl version --client
+#+END_SRC
+
+**** Install eksctl
+#+BEGIN_SRC shell
+curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+sudo mv /tmp/eksctl /usr/local/bin
+eksctl version
+#+END_SRC
+
+*** Create and Manage EKS Cluster
+**** Create EKS cluster
+#+BEGIN_SRC shell
+eksctl create cluster --name my-cluster --region us-west-2 --nodegroup-name standard-workers --node-type t3.medium --nodes 3 --nodes-min 1 --nodes-max 4
+#+END_SRC
+
+**** Get cluster information
+#+BEGIN_SRC shell
+eksctl get cluster --name my-cluster --region us-west-2
+#+END_SRC
+
+**** Update kubeconfig
+#+BEGIN_SRC shell
+aws eks update-kubeconfig --name my-cluster --region us-west-2
+#+END_SRC
+
+*** Manage Node Groups
+**** List node groups
+#+BEGIN_SRC shell
+eksctl get nodegroup --cluster my-cluster --region us-west-2
+#+END_SRC
+
+**** Scale node group
+#+BEGIN_SRC shell
+eksctl scale nodegroup --cluster my-cluster --name standard-workers --nodes 5 --region us-west-2
+#+END_SRC
+
+*** Deploy and Manage Applications
+**** Deploy a sample application
+#+BEGIN_SRC shell
+kubectl create deployment nginx --image=nginx
+kubectl get deployments
+#+END_SRC
+
+**** Expose the deployment
+#+BEGIN_SRC shell
+kubectl expose deployment nginx --port=80 --type=LoadBalancer
+kubectl get services
+#+END_SRC
+
+*** Monitor and Troubleshoot
+**** Get cluster health
+#+BEGIN_SRC shell
+eksctl utils describe-stacks --cluster my-cluster --region us-west-2
+#+END_SRC
+
+**** View cluster logs
+#+BEGIN_SRC shell
+eksctl utils write-kubeconfig --cluster my-cluster --region us-west-2
+kubectl logs deployment/nginx
+#+END_SRC
+
+*** Clean Up
+**** Delete the sample application
+#+BEGIN_SRC shell
+kubectl delete deployment nginx
+kubectl delete service nginx
+#+END_SRC
+
+**** Delete the EKS cluster
+#+BEGIN_SRC shell
+eksctl delete cluster --name my-cluster --region us-west-2
+#+END_SRC
+
+*** Additional Resources
+For more detailed information and advanced configurations, refer to the following resources:
+- [[https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html][Get started with Amazon EKS – eksctl]]
+- [[https://docs.aws.amazon.com/eks/latest/userguide/getting-started-console.html][Get started with Amazon EKS – AWS Management Console and AWS CLI]]
+- [[https://aws.amazon.com/getting-started/hands-on/eks-cluster-setup/][EKS Cluster Setup on AWS Community]]
+
+#+BEGIN_COMMENT
+Remember to replace placeholders (e.g., my-cluster, us-west-2) with your actual cluster name and preferred region. Always be cautious when deleting resources to avoid unintended data loss.
+#+END_COMMENT
 * Responsible AI
 
 A key focus of this project is on responsible AI practices. We cover:
