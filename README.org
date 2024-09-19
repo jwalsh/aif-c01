@@ -249,22 +249,7 @@ If you encounter issues:
 
 * AWS Services Covered
 
-This project includes examples and study materials for the following AWS services relevant to the AIF-C01 exam:
-
-- Amazon SageMaker
-- Amazon Comprehend
-- Amazon Rekognition
-- Amazon Kendra
-- Amazon Bedrock
-- Amazon Polly
-- Amazon Transcribe
-- Amazon Translate
-- AWS Lambda
-- Amazon S3
-- Amazon CloudWatch
-- Amazon Kinesis
-- AWS Glue
-- Amazon DynamoDB
+This project includes examples and study materials for the following AWS services relevant to the AIF-C01 exam.
 
 Each service is explored in the context of AI/ML workflows and best practices.
 
@@ -948,6 +933,116 @@ Describe EC2 instances with GPU (useful for ML workloads):
 aws ec2 describe-instances --filters "Name=instance-type,Values=p*,g*" | jq .Reservations[].Instances[]
 #+END_SRC
 
+** IAM (Identity and Access Management)
+
+*** List IAM users
+#+BEGIN_SRC shell
+aws iam list-users
+#+END_SRC
+
+*** Create a new IAM user
+#+BEGIN_SRC shell
+aws iam create-user --user-name newuser
+#+END_SRC
+
+*** Attach a policy to a user
+#+BEGIN_SRC shell
+aws iam attach-user-policy --user-name newuser --policy-arn arn:aws:iam::aws:policy/AmazonS3FullAccess
+#+END_SRC
+
+** Amazon Macie
+
+*** List Macie sessions
+#+BEGIN_SRC shell
+aws macie2 list-sessions
+#+END_SRC
+
+*** Create a custom data identifier
+#+BEGIN_SRC shell
+aws macie2 create-custom-data-identifier --name "Custom-PII" --regex "(\d{3}-\d{2}-\d{4})" --description "Identifies Social Security Numbers"
+#+END_SRC
+
+** Amazon Inspector
+
+*** List Inspector assessment targets
+#+BEGIN_SRC shell
+aws inspector list-assessment-targets
+#+END_SRC
+
+*** Create an assessment target
+#+BEGIN_SRC shell
+aws inspector create-assessment-target --assessment-target-name "MyTarget" --resource-group-arn arn:aws:inspector:us-west-2:123456789012:resourcegroup/0-AB6DMKnv
+#+END_SRC
+
+** AWS CloudTrail
+
+*** List trails
+#+BEGIN_SRC shell
+aws cloudtrail list-trails
+#+END_SRC
+
+*** Create a trail
+#+BEGIN_SRC shell
+aws cloudtrail create-trail --name my-trail --s3-bucket-name my-bucket
+#+END_SRC
+
+** AWS Artifact
+
+*** List agreement offers
+#+BEGIN_SRC shell
+aws artifact list-agreement-offers
+#+END_SRC
+
+*** Get an agreement
+#+BEGIN_SRC shell
+aws artifact get-agreement --agreement-type "ENTERPRISE" --agreement-id "agreement-id"
+#+END_SRC
+
+** AWS Audit Manager
+
+*** List assessments
+#+BEGIN_SRC shell
+aws auditmanager list-assessments
+#+END_SRC
+
+*** Create an assessment
+#+BEGIN_SRC shell
+aws auditmanager create-assessment --name "MyAssessment" --assessment-reports-destination "S3" --scope "AWS_ACCOUNT" --aws-account "123456789012"
+#+END_SRC
+
+** AWS Trusted Advisor
+
+*** List Trusted Advisor checks
+#+BEGIN_SRC shell
+aws support describe-trusted-advisor-checks --language en
+#+END_SRC
+
+*** Get results of a specific check
+#+BEGIN_SRC shell
+aws support describe-trusted-advisor-check-result --check-id checkId
+#+END_SRC
+
+** VPC (Virtual Private Cloud)
+
+*** List VPCs
+#+BEGIN_SRC shell
+aws ec2 describe-vpcs
+#+END_SRC
+
+*** Create a VPC
+#+BEGIN_SRC shell
+aws ec2 create-vpc --cidr-block 10.0.0.0/16
+#+END_SRC
+
+*** Create a subnet
+#+BEGIN_SRC shell
+aws ec2 create-subnet --vpc-id vpc-1234567890abcdef0 --cidr-block 10.0.1.0/24
+#+END_SRC
+
+#+BEGIN_COMMENT
+Remember to replace placeholder values (e.g., newuser, my-bucket, agreement-id, 123456789012, checkId, vpc-1234567890abcdef0) with actual values relevant to your AWS environment. Always be cautious when executing commands that create or modify resources to avoid unintended changes or costs.
+#+END_COMMENT
+
 ** Amazon EKS
 *** Prerequisites
 **** Install and configure AWS CLI
@@ -1043,6 +1138,7 @@ For more detailed information and advanced configurations, refer to the followin
 #+BEGIN_COMMENT
 Remember to replace placeholders (e.g., my-cluster, us-west-2) with your actual cluster name and preferred region. Always be cautious when deleting resources to avoid unintended data loss.
 #+END_COMMENT
+
 * Responsible AI
 
 A key focus of this project is on responsible AI practices. We cover:
