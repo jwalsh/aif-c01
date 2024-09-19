@@ -6,121 +6,296 @@
 ** EC2
 *** List Instances
 #+BEGIN_SRC shell
-aws ec2 describe-instances | jq -r '.Reservations[].Instances[].InstanceId'
+  aws ec2 describe-instances | jq -r '.Reservations[].Instances[].InstanceId'
 #+END_SRC
+
+#+RESULTS:
+| i-09a85540250dd5f7f |
+| i-0b6b20ba6db18df32 |
+| i-09ce4c8ebcfcff4cf |
 
 *** List Volumes
 #+BEGIN_SRC shell
-aws ec2 describe-volumes | jq -r '.Volumes[].VolumeId'
+  aws ec2 describe-volumes | jq -r '.Volumes[].VolumeId'
 #+END_SRC
+
+#+RESULTS:
+| vol-0e042966ec7cfd553 |
+| vol-010145d8448cad2a4 |
+| vol-0e1e871141f867720 |
 
 *** List VPCs
 #+BEGIN_SRC shell
-aws ec2 describe-vpcs | jq -r '.Vpcs[].VpcId'
+  aws ec2 describe-vpcs | jq -r '.Vpcs[].VpcId'
 #+END_SRC
+
+#+RESULTS:
+| vpc-0217a5e9b879a8c13 |
+| vpc-f0fc4e8a          |
 
 ** S3
 *** List Buckets
 #+BEGIN_SRC shell
-aws s3 ls
+  aws s3 ls | grep aif
 #+END_SRC
+
+#+RESULTS:
+| 2024-09-04 | 08:56:23 | aif-c01            |
+| 2024-09-17 | 12:39:43 | aif-c01-input      |
+| 2024-09-04 | 19:20:17 | aif-c01-jasonwalsh |
+| 2024-09-04 | 19:18:18 | aif-c01-jwalsh     |
+| 2024-09-17 | 12:39:44 | aif-c01-output     |
 
 *** List Buckets (API)
 #+BEGIN_SRC shell
-aws s3api list-buckets | jq -r '.Buckets[].Name'
+  aws s3api list-buckets | jq -r '.Buckets[].Name | select(startswith("aif") or startswith("mla"))'
 #+END_SRC
+
+#+RESULTS:
+| aif-c01            |
+| aif-c01-input      |
+| aif-c01-jasonwalsh |
+| aif-c01-jwalsh     |
+| aif-c01-output     |
 
 ** IAM
 *** List Users
 #+BEGIN_SRC shell
-aws iam list-users | jq -r '.Users[].UserName'
+  aws iam list-users | jq -r '.Users[].UserName'
 #+END_SRC
+
+#+RESULTS:
+| dev    |
+| jwalsh |
+| prod   |
+| qat    |
 
 *** List Roles
 #+BEGIN_SRC shell
-aws iam list-roles | jq -r '.Roles[].RoleName'
+aws iam list-roles | jq -r '.Roles[].RoleName | select(
+    startswith("aif-c01") or
+    startswith("mla-") or
+    contains("SageMaker") or
+    contains("Bedrock") or
+    contains("Comprehend") or
+    contains("Translate") or
+    contains("DeepLens") or
+    contains("RoboMaker") or
+    contains("MLWorkflow") or
+    contains("MLOps")
+)'
 #+END_SRC
+
+#+RESULTS:
+| A2ISageMaker-ExecutionRole-20240911T190545                       |
+| aif-c01-batch-role                                               |
+| aif-c01-bedrock-cloudwatch                                       |
+| AmazonBedrockExecutionRoleForAgentFlowEval                       |
+| AmazonBedrockExecutionRoleForAgents_6TYTN6S0PBE                  |
+| AmazonBedrockExecutionRoleForAgents_9RZ7WT2H7L9                  |
+| AmazonBedrockExecutionRoleForAgents_B2K8YVKZT9O                  |
+| AmazonBedrockExecutionRoleForAgents_G43OC4197X                   |
+| AmazonBedrockExecutionRoleForAgents_GJS4XAN7EQK                  |
+| AmazonBedrockExecutionRoleForAgents_IQYJI0VJ819                  |
+| AmazonBedrockExecutionRoleForAgents_JH1R5YCMQ                    |
+| AmazonBedrockExecutionRoleForAgents_JPXMYT1RME                   |
+| AmazonBedrockExecutionRoleForAgents_OENM3J46LQF                  |
+| AmazonBedrockExecutionRoleForAgents_OYF0TFY67C9                  |
+| AmazonBedrockExecutionRoleForAgents_ROL4TVUQ6ZK                  |
+| AmazonBedrockExecutionRoleForAgents_RQG76BFYU0Q                  |
+| AmazonBedrockExecutionRoleForAgents_YE04U6EGG7E                  |
+| AmazonBedrockExecutionRoleForFlows_81RENNE1Y5                    |
+| AmazonBedrockExecutionRoleForFlows_BIZVT5E45B                    |
+| AmazonBedrockExecutionRoleForKnowledgeBase_0odwt                 |
+| AmazonBedrockExecutionRoleForKnowledgeBase_4uy41                 |
+| AmazonBedrockExecutionRoleForKnowledgeBase_ci1wt                 |
+| AmazonBedrockExecutionRoleForKnowledgeBase_fatg9                 |
+| AmazonComprehendServiceRole-aif-cio                              |
+| AmazonComprehendServiceRole-aif-cio-outputer                     |
+| AmazonComprehendServiceRole-aif-cio-outputerj                    |
+| AmazonComprehendServiceRole-asdfasdf                             |
+| AmazonComprehendServiceRole-categories                           |
+| AmazonComprehendServiceRole-ClassifyProjects                     |
+| AmazonSageMaker-ExecutionRole-20190123T172234                    |
+| AmazonSageMaker-ExecutionRole-20240918T171879                    |
+| AmazonSagemakerCanvasBedrockRole-20240918T171879                 |
+| AmazonSageMakerCanvasEMRSExecutionAccess-20240918T171879         |
+| AmazonSageMakerServiceCatalogProductsApiGatewayRole              |
+| AmazonSageMakerServiceCatalogProductsCloudformationRole          |
+| AmazonSageMakerServiceCatalogProductsCodeBuildRole               |
+| AmazonSageMakerServiceCatalogProductsCodePipelineRole            |
+| AmazonSageMakerServiceCatalogProductsEventsRole                  |
+| AmazonSageMakerServiceCatalogProductsExecutionRole               |
+| AmazonSageMakerServiceCatalogProductsFirehoseRole                |
+| AmazonSageMakerServiceCatalogProductsGlueRole                    |
+| AmazonSageMakerServiceCatalogProductsLambdaRole                  |
+| AmazonSageMakerServiceCatalogProductsLaunchRole                  |
+| AmazonSageMakerServiceCatalogProductsUseRole                     |
+| AmazonTranslateServiceRole-localization                          |
+| AmazonTranslateServiceRole-localizationasfasdf                   |
+| AWSDeepLensGreengrassGroupRole                                   |
+| AWSDeepLensGreengrassRole                                        |
+| AWSDeepLensLambdaRole                                            |
+| AWSDeepLensServiceRole                                           |
+| AWSRoboMakerDeepRacer-15518159-LambdaExecutionRole-1U972HGKRIR1I |
+| AWSRoboMakerDeepRacer-1551815998-SimulationJobRole-11N5TFQ2YCT73 |
+| AWSServiceRoleForAmazonSageMakerNotebooks                        |
+| AWSServiceRoleForRoboMaker                                       |
+| ExecuteRoleMLWorkflow                                            |
+| mla-sagemaker-role                                               |
+| SageMaker-MLOpsEngineer                                          |
 
 *** List Groups
 #+BEGIN_SRC shell
-aws iam list-groups | jq -r '.Groups[].GroupName'
+  aws iam list-groups | jq -r '.Groups[].GroupName'
 #+END_SRC
+
+#+RESULTS:
+| MachineLearning |
+| Serverless      |
 
 ** Lambda
 *** List Functions
 #+BEGIN_SRC shell
-aws lambda list-functions | jq -r '.Functions[].FunctionName'
+  aws lambda list-functions | jq -r '.Functions[].FunctionName | select(startswith("mla-c01") or startswith("aif-c01"))'
 #+END_SRC
+
+#+RESULTS:
 
 ** CloudFormation
 *** List Stacks
 #+BEGIN_SRC shell
-aws cloudformation list-stacks | jq -r '.StackSummaries[].StackName'
+  aws cloudformation list-stacks | jq -r '.StackSummaries[].StackName | select(
+      contains("mla-c01") or
+      contains("aif-c01") or
+      contains("mla-") or
+      contains("aif-") or
+      contains("ml-") or
+      contains("ai-") or
+      contains("sagemaker") or
+      contains("bedrock") or
+      contains("comprehend") or
+      contains("rekognition")
+  )'
 #+END_SRC
+
+#+RESULTS:
 
 ** RDS
 *** List DB Instances
 #+BEGIN_SRC shell
-aws rds describe-db-instances | jq -r '.DBInstances[].DBInstanceIdentifier'
+  aws rds describe-db-instances | jq -r '.DBInstances[].DBInstanceIdentifier'
 #+END_SRC
+
+#+RESULTS:
+: database-1
 
 ** DynamoDB
 *** List Tables
 #+BEGIN_SRC shell
-aws dynamodb list-tables | jq -r '.TableNames[]'
+  aws dynamodb list-tables | jq -r '.TableNames[]'
 #+END_SRC
 
 ** CloudWatch
 *** List Metrics
 #+BEGIN_SRC shell
-aws cloudwatch list-metrics | jq -r '.Metrics[].MetricName' | sort | uniq
+  aws cloudwatch list-metrics | jq -r '.Metrics[].MetricName' | sort | uniq | grep -E 'AI|ML|Predict|Inference|SageMaker|Comprehend|Rekognition|Bedrock|Polly|Textract|Transcribe|Translate'
 #+END_SRC
+
+#+RESULTS:
+: PredictCount
 
 ** SQS
 *** List Queues
 #+BEGIN_SRC shell
-aws sqs list-queues | jq -r '.QueueUrls[]'
+  aws sqs list-queues | jq -r '.QueueUrls[] | select(
+      contains("aif-c01") or
+      contains("ml-") or
+      contains("ai-") or
+      contains("sagemaker") or
+      contains("comprehend") or
+      contains("rekognition") or
+      contains("textract") or
+      contains("polly") or
+      contains("transcribe") or
+      contains("translate") or
+      contains("bedrock") or
+      contains("inference") or
+      contains("prediction")
+  )'
 #+END_SRC
+
+#+RESULTS:
 
 ** SNS
 *** List Topics
 #+BEGIN_SRC shell
-aws sns list-topics | jq -r '.Topics[].TopicArn'
+  aws sns list-topics | jq -r '.Topics[].TopicArn | select(
+      contains("aif-c01") or
+      contains("mla-c01") or
+      contains("ml-") or
+      contains("ai-") or
+      contains("sagemaker") or
+      contains("comprehend") or
+      contains("rekognition") or
+      contains("textract") or
+      contains("polly") or
+      contains("transcribe") or
+      contains("translate") or
+      contains("bedrock") or
+      contains("inference") or
+      contains("prediction")
+  )'
 #+END_SRC
+
+#+RESULTS:
 
 ** ECS (Elastic Container Service)
 *** List Clusters
 #+BEGIN_SRC shell
-aws ecs list-clusters | jq -r '.clusterArns[]'
+  aws ecs list-clusters | jq -r '.clusterArns[]'
 #+END_SRC
+
+#+RESULTS:
 
 *** List Services
 #+BEGIN_SRC shell
-aws ecs list-services --cluster default | jq -r '.serviceArns[]'
+  aws ecs list-services --cluster default | jq -r '.serviceArns[]'
 #+END_SRC
+
+#+RESULTS:
 
 *** List Task Definitions
 #+BEGIN_SRC shell
-aws ecs list-task-definitions | jq -r '.taskDefinitionArns[]'
+  aws ecs list-task-definitions | jq -r '.taskDefinitionArns[]'
 #+END_SRC
+
+#+RESULTS:
 
 ** EKS (Elastic Kubernetes Service)
 *** List Clusters
 #+BEGIN_SRC shell
-aws eks list-clusters | jq -r '.clusters[]'
+  aws eks list-clusters | jq -r '.clusters[]'
 #+END_SRC
+
+#+RESULTS:
 
 ** ECR (Elastic Container Registry)
 *** List Repositories
 #+BEGIN_SRC shell
-aws ecr describe-repositories | jq -r '.repositories[].repositoryName'
+  aws ecr describe-repositories | jq -r '.repositories[].repositoryName'
 #+END_SRC
+
+#+RESULTS:
 
 ** Route 53
 *** List Hosted Zones
 #+BEGIN_SRC shell
-aws route53 list-hosted-zones | jq -r '.HostedZones[].Name'
+  aws route53 list-hosted-zones | jq -r '.HostedZones[].Name'
 #+END_SRC
+
+#+RESULTS:
+: watermid.com.
 
 *** List Health Checks
 #+BEGIN_SRC shell
@@ -130,127 +305,206 @@ aws route53 list-health-checks | jq -r '.HealthChecks[].Id'
 ** CloudFront
 *** List Distributions
 #+BEGIN_SRC shell
-aws cloudfront list-distributions | jq -r '.DistributionList.Items[].Id'
+  aws cloudfront list-distributions | jq -r '.DistributionList.Items[].Id'
 #+END_SRC
+
+#+RESULTS:
 
 ** Elastic Beanstalk
 *** List Applications
 #+BEGIN_SRC shell
-aws elasticbeanstalk describe-applications | jq -r '.Applications[].ApplicationName'
+  aws elasticbeanstalk describe-applications | jq -r '.Applications[].ApplicationName'
 #+END_SRC
+
+#+RESULTS:
 
 *** List Environments
 #+BEGIN_SRC shell
-aws elasticbeanstalk describe-environments | jq -r '.Environments[].EnvironmentName'
+  aws elasticbeanstalk describe-environments | jq -r '.Environments[].EnvironmentName'
 #+END_SRC
+
+#+RESULTS:
 
 ** API Gateway
 *** List APIs
 #+BEGIN_SRC shell
-aws apigateway get-rest-apis | jq -r '.items[].name'
+  aws apigateway get-rest-apis | jq -r '.items[].name'
 #+END_SRC
+
+#+RESULTS:
 
 ** Step Functions
 *** List State Machines
 #+BEGIN_SRC shell
-aws stepfunctions list-state-machines | jq -r '.stateMachines[].name'
+  aws stepfunctions list-state-machines | jq -r '.stateMachines[].name'
 #+END_SRC
+
+#+RESULTS:
+: jwalsh-ml-states
 
 ** Kinesis
 *** List Streams
 #+BEGIN_SRC shell
-aws kinesis list-streams | jq -r '.StreamNames[]'
+  aws kinesis list-streams | jq -r '.StreamNames[]'
 #+END_SRC
+
+#+RESULTS:
 
 ** Elasticsearch Service
 *** List Domains
 #+BEGIN_SRC shell
-aws es list-domain-names | jq -r '.DomainNames[].DomainName'
+  aws es list-domain-names | jq -r '.DomainNames[].DomainName'
 #+END_SRC
+
+#+RESULTS:
 
 ** ElastiCache
 *** List Cache Clusters
 #+BEGIN_SRC shell
-aws elasticache describe-cache-clusters | jq -r '.CacheClusters[].CacheClusterId'
+  aws elasticache describe-cache-clusters | jq -r '.CacheClusters[].CacheClusterId'
 #+END_SRC
+
+#+RESULTS:
 
 ** Redshift
 *** List Clusters
 #+BEGIN_SRC shell
-aws redshift describe-clusters | jq -r '.Clusters[].ClusterIdentifier'
+  aws redshift describe-clusters | jq -r '.Clusters[].ClusterIdentifier'
 #+END_SRC
+
+#+RESULTS:
 
 ** Athena
 *** List Work Groups
 #+BEGIN_SRC shell
-aws athena list-work-groups | jq -r '.WorkGroups[].Name'
+  aws athena list-work-groups | jq -r '.WorkGroups[].Name'
 #+END_SRC
+
+#+RESULTS:
+: primary
 
 *** List Named Queries
 #+BEGIN_SRC shell
-aws athena list-named-queries | jq -r '.NamedQueries[].Name'
+  aws athena list-named-queries | jq -r '.NamedQueries'
 #+END_SRC
+
+#+RESULTS:
+: null
 
 ** Glue
 *** List Databases
 #+BEGIN_SRC shell
-aws glue get-databases | jq -r '.DatabaseList[].Name'
+  aws glue get-databases | jq -r '.DatabaseList[].Name'
 #+END_SRC
+
+#+RESULTS:
 
 *** List Tables
 #+BEGIN_SRC shell
-aws glue get-tables --database-name default | jq -r '.TableList[].Name'
+  aws glue get-tables --database-name default | jq -r '.TableList[].Name'
 #+END_SRC
+
+#+RESULTS:
 
 *** List Jobs
 #+BEGIN_SRC shell
-aws glue get-jobs | jq -r '.Jobs[].Name'
+  aws glue get-jobs | jq -r '.Jobs[].Name'
 #+END_SRC
+
+#+RESULTS:
+: mla-job
 
 ** EMR (Elastic MapReduce)
 *** List Clusters
 #+BEGIN_SRC shell
-aws emr list-clusters | jq -r '.Clusters[].Id'
+  aws emr list-clusters | jq -r '.Clusters[].Id'
 #+END_SRC
+
+#+RESULTS:
 
 ** Systems Manager
 *** List Parameters
 #+BEGIN_SRC shell
-aws ssm describe-parameters | jq -r '.Parameters[].Name'
+  aws ssm describe-parameters | jq -r '.Parameters[].Name | select(
+      startswith("/aif-c01/") or
+      startswith("/mla-c01/") or
+      contains("ml-") or
+      contains("ai-") or
+      contains("sagemaker") or
+      contains("comprehend") or
+      contains("rekognition") or
+      contains("textract") or
+      contains("polly") or
+      contains("transcribe") or
+      contains("translate") or
+      contains("bedrock") or
+      contains("inference") or
+      contains("prediction")
+  )'
 #+END_SRC
+
+#+RESULTS:
 
 *** List Documents
 #+BEGIN_SRC shell
-aws ssm list-documents | jq -r '.DocumentIdentifiers[].Name'
+  aws ssm list-documents | jq -r '.DocumentIdentifiers[].Name | select(
+      contains("AI") or
+      contains("ML") or
+      contains("SageMaker") or
+      contains("Comprehend") or
+      contains("Rekognition") or
+      contains("Textract") or
+      contains("Polly") or
+      contains("Transcribe") or
+      contains("Translate") or
+      contains("Bedrock") or
+      contains("Inference") or
+      contains("Prediction") or
+      contains("MachineLearning")
+  )'
 #+END_SRC
+
+#+RESULTS:
+| AWS-DisableSageMakerNotebookRootAccess                 |
+| AWSConformancePacks-OperationalBestPracticesforAIandML |
 
 ** Secrets Manager
 *** List Secrets
 #+BEGIN_SRC shell
-aws secretsmanager list-secrets | jq -r '.SecretList[].Name'
+  aws secretsmanager list-secrets | jq -r '.SecretList[].Name'
 #+END_SRC
+
+#+RESULTS:
 
 ** KMS (Key Management Service)
 *** List Keys
 #+BEGIN_SRC shell
-aws kms list-keys | jq -r '.Keys[].KeyId'
+  aws kms list-keys | jq -r '.Keys[].KeyId' | wc -l
 #+END_SRC
+
+#+RESULTS:
+: 7
 
 *** List Aliases
 #+BEGIN_SRC shell
-aws kms list-aliases | jq -r '.Aliases[].AliasName'
+  aws kms list-aliases | jq -r '.Aliases[].AliasName' | wc -l 
 #+END_SRC
+
+#+RESULTS:
+: 15
 
 ** CloudTrail
 *** List Trails
 #+BEGIN_SRC shell
-aws cloudtrail describe-trails | jq -r '.trailList[].Name'
+  aws cloudtrail describe-trails | jq -r '.trailList[].Name'
 #+END_SRC
+
+#+RESULTS:
 
 ** Config
 *** List Config Rules
 #+BEGIN_SRC shell
-aws configservice describe-config-rules | jq -r '.ConfigRules[].ConfigRuleName'
+  aws configservice describe-config-rules | jq -r '.ConfigRules[].ConfigRuleName'
 #+END_SRC
 
 ** WAF (Web Application Firewall)
