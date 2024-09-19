@@ -1,0 +1,1439 @@
+#+TITLE: AWS Services Overview
+#+PROPERTY: header-args :results output :exports both
+
+* AWS Services Overview
+
+** EC2
+*** List Instances
+#+BEGIN_SRC shell
+aws ec2 describe-instances | jq -r '.Reservations[].Instances[].InstanceId'
+#+END_SRC
+
+*** List Volumes
+#+BEGIN_SRC shell
+aws ec2 describe-volumes | jq -r '.Volumes[].VolumeId'
+#+END_SRC
+
+*** List VPCs
+#+BEGIN_SRC shell
+aws ec2 describe-vpcs | jq -r '.Vpcs[].VpcId'
+#+END_SRC
+
+** S3
+*** List Buckets
+#+BEGIN_SRC shell
+aws s3 ls
+#+END_SRC
+
+*** List Buckets (API)
+#+BEGIN_SRC shell
+aws s3api list-buckets | jq -r '.Buckets[].Name'
+#+END_SRC
+
+** IAM
+*** List Users
+#+BEGIN_SRC shell
+aws iam list-users | jq -r '.Users[].UserName'
+#+END_SRC
+
+*** List Roles
+#+BEGIN_SRC shell
+aws iam list-roles | jq -r '.Roles[].RoleName'
+#+END_SRC
+
+*** List Groups
+#+BEGIN_SRC shell
+aws iam list-groups | jq -r '.Groups[].GroupName'
+#+END_SRC
+
+** Lambda
+*** List Functions
+#+BEGIN_SRC shell
+aws lambda list-functions | jq -r '.Functions[].FunctionName'
+#+END_SRC
+
+** CloudFormation
+*** List Stacks
+#+BEGIN_SRC shell
+aws cloudformation list-stacks | jq -r '.StackSummaries[].StackName'
+#+END_SRC
+
+** RDS
+*** List DB Instances
+#+BEGIN_SRC shell
+aws rds describe-db-instances | jq -r '.DBInstances[].DBInstanceIdentifier'
+#+END_SRC
+
+** DynamoDB
+*** List Tables
+#+BEGIN_SRC shell
+aws dynamodb list-tables | jq -r '.TableNames[]'
+#+END_SRC
+
+** CloudWatch
+*** List Metrics
+#+BEGIN_SRC shell
+aws cloudwatch list-metrics | jq -r '.Metrics[].MetricName' | sort | uniq
+#+END_SRC
+
+** SQS
+*** List Queues
+#+BEGIN_SRC shell
+aws sqs list-queues | jq -r '.QueueUrls[]'
+#+END_SRC
+
+** SNS
+*** List Topics
+#+BEGIN_SRC shell
+aws sns list-topics | jq -r '.Topics[].TopicArn'
+#+END_SRC
+
+** ECS (Elastic Container Service)
+*** List Clusters
+#+BEGIN_SRC shell
+aws ecs list-clusters | jq -r '.clusterArns[]'
+#+END_SRC
+
+*** List Services
+#+BEGIN_SRC shell
+aws ecs list-services --cluster default | jq -r '.serviceArns[]'
+#+END_SRC
+
+*** List Task Definitions
+#+BEGIN_SRC shell
+aws ecs list-task-definitions | jq -r '.taskDefinitionArns[]'
+#+END_SRC
+
+** EKS (Elastic Kubernetes Service)
+*** List Clusters
+#+BEGIN_SRC shell
+aws eks list-clusters | jq -r '.clusters[]'
+#+END_SRC
+
+** ECR (Elastic Container Registry)
+*** List Repositories
+#+BEGIN_SRC shell
+aws ecr describe-repositories | jq -r '.repositories[].repositoryName'
+#+END_SRC
+
+** Route 53
+*** List Hosted Zones
+#+BEGIN_SRC shell
+aws route53 list-hosted-zones | jq -r '.HostedZones[].Name'
+#+END_SRC
+
+*** List Health Checks
+#+BEGIN_SRC shell
+aws route53 list-health-checks | jq -r '.HealthChecks[].Id'
+#+END_SRC
+
+** CloudFront
+*** List Distributions
+#+BEGIN_SRC shell
+aws cloudfront list-distributions | jq -r '.DistributionList.Items[].Id'
+#+END_SRC
+
+** Elastic Beanstalk
+*** List Applications
+#+BEGIN_SRC shell
+aws elasticbeanstalk describe-applications | jq -r '.Applications[].ApplicationName'
+#+END_SRC
+
+*** List Environments
+#+BEGIN_SRC shell
+aws elasticbeanstalk describe-environments | jq -r '.Environments[].EnvironmentName'
+#+END_SRC
+
+** API Gateway
+*** List APIs
+#+BEGIN_SRC shell
+aws apigateway get-rest-apis | jq -r '.items[].name'
+#+END_SRC
+
+** Step Functions
+*** List State Machines
+#+BEGIN_SRC shell
+aws stepfunctions list-state-machines | jq -r '.stateMachines[].name'
+#+END_SRC
+
+** Kinesis
+*** List Streams
+#+BEGIN_SRC shell
+aws kinesis list-streams | jq -r '.StreamNames[]'
+#+END_SRC
+
+** Elasticsearch Service
+*** List Domains
+#+BEGIN_SRC shell
+aws es list-domain-names | jq -r '.DomainNames[].DomainName'
+#+END_SRC
+
+** ElastiCache
+*** List Cache Clusters
+#+BEGIN_SRC shell
+aws elasticache describe-cache-clusters | jq -r '.CacheClusters[].CacheClusterId'
+#+END_SRC
+
+** Redshift
+*** List Clusters
+#+BEGIN_SRC shell
+aws redshift describe-clusters | jq -r '.Clusters[].ClusterIdentifier'
+#+END_SRC
+
+** Athena
+*** List Work Groups
+#+BEGIN_SRC shell
+aws athena list-work-groups | jq -r '.WorkGroups[].Name'
+#+END_SRC
+
+*** List Named Queries
+#+BEGIN_SRC shell
+aws athena list-named-queries | jq -r '.NamedQueries[].Name'
+#+END_SRC
+
+** Glue
+*** List Databases
+#+BEGIN_SRC shell
+aws glue get-databases | jq -r '.DatabaseList[].Name'
+#+END_SRC
+
+*** List Tables
+#+BEGIN_SRC shell
+aws glue get-tables --database-name default | jq -r '.TableList[].Name'
+#+END_SRC
+
+*** List Jobs
+#+BEGIN_SRC shell
+aws glue get-jobs | jq -r '.Jobs[].Name'
+#+END_SRC
+
+** EMR (Elastic MapReduce)
+*** List Clusters
+#+BEGIN_SRC shell
+aws emr list-clusters | jq -r '.Clusters[].Id'
+#+END_SRC
+
+** Systems Manager
+*** List Parameters
+#+BEGIN_SRC shell
+aws ssm describe-parameters | jq -r '.Parameters[].Name'
+#+END_SRC
+
+*** List Documents
+#+BEGIN_SRC shell
+aws ssm list-documents | jq -r '.DocumentIdentifiers[].Name'
+#+END_SRC
+
+** Secrets Manager
+*** List Secrets
+#+BEGIN_SRC shell
+aws secretsmanager list-secrets | jq -r '.SecretList[].Name'
+#+END_SRC
+
+** KMS (Key Management Service)
+*** List Keys
+#+BEGIN_SRC shell
+aws kms list-keys | jq -r '.Keys[].KeyId'
+#+END_SRC
+
+*** List Aliases
+#+BEGIN_SRC shell
+aws kms list-aliases | jq -r '.Aliases[].AliasName'
+#+END_SRC
+
+** CloudTrail
+*** List Trails
+#+BEGIN_SRC shell
+aws cloudtrail describe-trails | jq -r '.trailList[].Name'
+#+END_SRC
+
+** Config
+*** List Config Rules
+#+BEGIN_SRC shell
+aws configservice describe-config-rules | jq -r '.ConfigRules[].ConfigRuleName'
+#+END_SRC
+
+** WAF (Web Application Firewall)
+*** List Web ACLs
+#+BEGIN_SRC shell
+aws waf list-web-acls | jq -r '.WebACLs[].Name'
+#+END_SRC
+
+** Cognito
+*** List User Pools
+#+BEGIN_SRC shell
+aws cognito-idp list-user-pools --max-results 60 | jq -r '.UserPools[].Name'
+#+END_SRC
+
+** SageMaker
+*** List Notebook Instances
+#+BEGIN_SRC shell
+aws sagemaker list-notebook-instances | jq -r '.NotebookInstances[].NotebookInstanceName'
+#+END_SRC
+
+*** List Training Jobs
+#+BEGIN_SRC shell
+aws sagemaker list-training-jobs | jq -r '.TrainingJobSummaries[].TrainingJobName'
+#+END_SRC
+
+*** List Models
+#+BEGIN_SRC shell
+aws sagemaker list-models | jq -r '.Models[].ModelName'
+#+END_SRC
+
+** Comprehend
+*** List Document Classification Jobs
+#+BEGIN_SRC shell
+aws comprehend list-document-classification-jobs | jq -r '.DocumentClassificationJobPropertiesList[].JobName'
+#+END_SRC
+
+*** List Entity Recognizers
+#+BEGIN_SRC shell
+aws comprehend list-entity-recognizers | jq -r '.EntityRecognizerPropertiesList[].EntityRecognizerArn'
+#+END_SRC
+
+** Rekognition
+*** List Collections
+#+BEGIN_SRC shell
+aws rekognition list-collections | jq -r '.CollectionIds[]'
+#+END_SRC
+
+** Translate
+*** List Translation Jobs
+#+BEGIN_SRC shell
+aws translate list-text-translation-jobs | jq -r '.TextTranslationJobPropertiesList[].JobName'
+#+END_SRC
+
+** Polly
+*** List Voices
+#+BEGIN_SRC shell
+aws polly describe-voices | jq -r '.Voices[].Id'
+#+END_SRC
+
+** Lex
+*** List Bots
+#+BEGIN_SRC shell
+aws lex-models get-bots | jq -r '.bots[].name'
+#+END_SRC
+
+** Forecast
+*** List Datasets
+#+BEGIN_SRC shell
+aws forecast list-datasets | jq -r '.Datasets[].DatasetArn'
+#+END_SRC
+
+*** List Predictors
+#+BEGIN_SRC shell
+aws forecast list-predictors | jq -r '.Predictors[].PredictorArn'
+#+END_SRC
+
+** IoT Core
+*** List Things
+#+BEGIN_SRC shell
+aws iot list-things | jq -r '.things[].thingName'
+#+END_SRC
+
+*** List Policies
+#+BEGIN_SRC shell
+aws iot list-policies | jq -r '.policies[].policyName'
+#+END_SRC
+
+** AppSync
+*** List GraphQL APIs
+#+BEGIN_SRC shell
+aws appsync list-graphql-apis | jq -r '.graphqlApis[].name'
+#+END_SRC
+
+** Neptune
+*** List DB Clusters
+#+BEGIN_SRC shell
+aws neptune describe-db-clusters | jq -r '.DBClusters[].DBClusterIdentifier'
+#+END_SRC
+
+** DocumentDB
+*** List DB Clusters
+#+BEGIN_SRC shell
+aws docdb describe-db-clusters | jq -r '.DBClusters[].DBClusterIdentifier'
+#+END_SRC
+
+** Elastic Beanstalk
+*** List Applications
+#+BEGIN_SRC shell
+aws elasticbeanstalk list-applications | jq -r '.Applications[].ApplicationName'
+#+END_SRC
+
+*** List Environments
+#+BEGIN_SRC shell
+aws elasticbeanstalk list-environments | jq -r '.Environments[].EnvironmentName'
+#+END_SRC
+
+** AWS Batch
+*** List Job Definitions
+#+BEGIN_SRC shell
+aws batch list-job-definitions | jq -r '.jobDefinitions[].jobDefinitionName'
+#+END_SRC
+
+*** List Job Queues
+#+BEGIN_SRC shell
+aws batch list-job-queues | jq -r '.jobQueues[].jobQueueName'
+#+END_SRC
+
+*** List Compute Environments
+#+BEGIN_SRC shell
+aws batch list-compute-environments | jq -r '.computeEnvironments[]'
+#+END_SRC
+
+** AWS Transfer Family
+*** List Servers
+#+BEGIN_SRC shell
+aws transfer list-servers | jq -r '.Servers[].ServerId'
+#+END_SRC
+
+** AWS Backup
+*** List Backup Vaults
+#+BEGIN_SRC shell
+aws backup list-backup-vaults | jq -r '.BackupVaultList[].BackupVaultName'
+#+END_SRC
+
+*** List Backup Plans
+#+BEGIN_SRC shell
+aws backup list-backup-plans | jq -r '.BackupPlansList[].BackupPlanName'
+#+END_SRC
+
+** AWS DataSync
+*** List Tasks
+#+BEGIN_SRC shell
+aws datasync list-tasks | jq -r '.Tasks[].TaskArn'
+#+END_SRC
+
+*** List Locations
+#+BEGIN_SRC shell
+aws datasync list-locations | jq -r '.Locations[].LocationArn'
+#+END_SRC
+
+** AWS Direct Connect
+*** List Connections
+#+BEGIN_SRC shell
+aws directconnect describe-connections | jq -r '.connections[].connectionName'
+#+END_SRC
+
+*** List Virtual Interfaces
+#+BEGIN_SRC shell
+aws directconnect describe-virtual-interfaces | jq -r '.virtualInterfaces[].virtualInterfaceName'
+#+END_SRC
+
+** AWS Global Accelerator
+*** List Accelerators
+#+BEGIN_SRC shell
+aws globalaccelerator list-accelerators | jq -r '.Accelerators[].Name'
+#+END_SRC
+
+** AWS App Mesh
+*** List Meshes
+#+BEGIN_SRC shell
+aws appmesh list-meshes | jq -r '.meshes[].meshName'
+#+END_SRC
+
+** AWS Cloud Map
+*** List Namespaces
+#+BEGIN_SRC shell
+aws servicediscovery list-namespaces | jq -r '.Namespaces[].Name'
+#+END_SRC
+
+** AWS CodeBuild
+*** List Projects
+#+BEGIN_SRC shell
+aws codebuild list-projects | jq -r '.projects[]'
+#+END_SRC
+
+** AWS CodeCommit
+*** List Repositories
+#+BEGIN_SRC shell
+aws codecommit list-repositories | jq -r '.repositories[].repositoryName'
+#+END_SRC
+
+** AWS CodeDeploy
+*** List Applications
+#+BEGIN_SRC shell
+aws deploy list-applications | jq -r '.applications[]'
+#+END_SRC
+
+** AWS CodePipeline
+*** List Pipelines
+#+BEGIN_SRC shell
+aws codepipeline list-pipelines | jq -r '.pipelines[].name'
+#+END_SRC
+
+** AWS X-Ray
+*** List Groups
+#+BEGIN_SRC shell
+aws xray get-groups | jq -r '.Groups[].GroupName'
+#+END_SRC
+
+** AWS Certificate Manager (ACM)
+*** List Certificates
+#+BEGIN_SRC shell
+aws acm list-certificates | jq -r '.CertificateSummaryList[].DomainName'
+#+END_SRC
+
+** AWS CloudHSM
+*** List Clusters
+#+BEGIN_SRC shell
+aws cloudhsm describe-clusters | jq -r '.Clusters[].ClusterId'
+#+END_SRC
+
+** AWS Fargate
+*** List Task Definitions
+#+BEGIN_SRC shell
+aws ecs list-task-definitions | jq -r '.taskDefinitionArns[]'
+#+END_SRC
+
+** AWS Amplify
+*** List Apps
+#+BEGIN_SRC shell
+aws amplify list-apps | jq -r '.apps[].name'
+#+END_SRC
+
+** Amazon MQ
+*** List Brokers
+#+BEGIN_SRC shell
+aws mq list-brokers | jq -r '.BrokerSummaries[].BrokerName'
+#+END_SRC
+
+** Amazon Managed Streaming for Apache Kafka (MSK)
+*** List Clusters
+#+BEGIN_SRC shell
+aws kafka list-clusters | jq -r '.ClusterInfoList[].ClusterName'
+#+END_SRC
+
+** Amazon Managed Workflows for Apache Airflow (MWAA)
+*** List Environments
+#+BEGIN_SRC shell
+aws mwaa list-environments | jq -r '.Environments[]'
+#+END_SRC
+
+** AWS Lake Formation
+*** List Data Lake Settings
+#+BEGIN_SRC shell
+aws lakeformation list-data-lake-settings | jq -r '.DataLakeSettings.DataLakeAdmins[].DataLakePrincipalIdentifier'
+#+END_SRC
+
+** Amazon Managed Blockchain
+*** List Networks
+#+BEGIN_SRC shell
+aws managedblockchain list-networks | jq -r '.Networks[].Name'
+#+END_SRC
+
+** AWS Elemental MediaLive
+*** List Channels
+#+BEGIN_SRC shell
+aws medialive list-channels | jq -r '.Channels[].Name'
+#+END_SRC
+
+** AWS Elemental MediaConvert
+*** List Queues
+#+BEGIN_SRC shell
+aws mediaconvert list-queues | jq -r '.Queues[].Name'
+#+END_SRC
+
+** AWS Elemental MediaPackage
+*** List Channels
+#+BEGIN_SRC shell
+aws mediapackage list-channels | jq -r '.Channels[].Id'
+#+END_SRC
+
+** AWS Elemental MediaStore
+*** List Containers
+#+BEGIN_SRC shell
+aws mediastore list-containers | jq -r '.Containers[].Name'
+#+END_SRC
+
+** Amazon Timestream
+*** List Databases
+#+BEGIN_SRC shell
+aws timestream-write list-databases | jq -r '.Databases[].DatabaseName'
+#+END_SRC
+
+** AWS IoT Analytics
+*** List Datasets
+#+BEGIN_SRC shell
+aws iotanalytics list-datasets | jq -r '.datasetSummaries[].datasetName'
+#+END_SRC
+
+** AWS IoT Events
+*** List Detector Models
+#+BEGIN_SRC shell
+aws iotevents list-detector-models | jq -r '.detectorModelSummaries[].detectorModelName'
+#+END_SRC
+
+** AWS IoT SiteWise
+*** List Assets
+#+BEGIN_SRC shell
+aws iotsitewise list-assets | jq -r '.assetSummaries[].name'
+#+END_SRC
+
+** Amazon Kendra
+*** List Indices
+#+BEGIN_SRC shell
+aws kendra list-indices | jq -r '.IndexConfigurationSummaryItems[].Name'
+#+END_SRC
+
+** Amazon Managed Grafana
+*** List Workspaces
+#+BEGIN_SRC shell
+aws grafana list-workspaces | jq -r '.workspaces[].name'
+#+END_SRC
+
+** Amazon Managed Service for Prometheus
+*** List Workspaces
+#+BEGIN_SRC shell
+aws amp list-workspaces | jq -r '.workspaces[].alias'
+#+END_SRC
+** AWS Outposts
+*** List Outposts
+#+BEGIN_SRC shell
+aws outposts list-outposts | jq -r '.Outposts[].OutpostId'
+#+END_SRC
+
+** AWS Wavelength
+*** List Wavelength Zones
+#+BEGIN_SRC shell
+aws ec2 describe-availability-zones --filters Name=opt-in-status,Values=opted-in --query 'AvailabilityZones[?GroupName==`Wavelength`].ZoneName' | jq -r '.[]'
+#+END_SRC
+
+** AWS Local Zones
+*** List Local Zones
+#+BEGIN_SRC shell
+aws ec2 describe-availability-zones --filters Name=opt-in-status,Values=opted-in --query 'AvailabilityZones[?GroupName==`Local Zones`].ZoneName' | jq -r '.[]'
+#+END_SRC
+
+** AWS Snowball
+*** List Jobs
+#+BEGIN_SRC shell
+aws snowball list-jobs | jq -r '.JobListEntries[].JobId'
+#+END_SRC
+
+** AWS Storage Gateway
+*** List Gateways
+#+BEGIN_SRC shell
+aws storagegateway list-gateways | jq -r '.Gateways[].GatewayARN'
+#+END_SRC
+
+** AWS DataSync
+*** List Tasks
+#+BEGIN_SRC shell
+aws datasync list-tasks | jq -r '.Tasks[].TaskArn'
+#+END_SRC
+
+** AWS Elastic Disaster Recovery (DRS)
+*** List Recovery Instances
+#+BEGIN_SRC shell
+aws drs describe-recovery-instances | jq -r '.items[].recoveryInstanceID'
+#+END_SRC
+
+** Amazon Managed Blockchain
+*** List Networks
+#+BEGIN_SRC shell
+aws managedblockchain list-networks | jq -r '.Networks[].Id'
+#+END_SRC
+
+** AWS Amplify
+*** List Apps
+#+BEGIN_SRC shell
+aws amplify list-apps | jq -r '.apps[].name'
+#+END_SRC
+
+** AWS App Runner
+*** List Services
+#+BEGIN_SRC shell
+aws apprunner list-services | jq -r '.ServiceSummaryList[].ServiceName'
+#+END_SRC
+
+** AWS AppConfig
+*** List Applications
+#+BEGIN_SRC shell
+aws appconfig list-applications | jq -r '.Items[].Id'
+#+END_SRC
+
+** AWS AppFlow
+*** List Flows
+#+BEGIN_SRC shell
+aws appflow list-flows | jq -r '.flows[].flowName'
+#+END_SRC
+
+** AWS Application Discovery Service
+*** List Configurations
+#+BEGIN_SRC shell
+aws discovery list-configurations --configuration-type SERVER | jq -r '.configurations[].configurationId'
+#+END_SRC
+
+** AWS CodeArtifact
+*** List Domains
+#+BEGIN_SRC shell
+aws codeartifact list-domains | jq -r '.domains[].name'
+#+END_SRC
+
+** AWS CodeStar
+*** List Projects
+#+BEGIN_SRC shell
+aws codestar list-projects | jq -r '.projects[].projectId'
+#+END_SRC
+
+** AWS Compute Optimizer
+*** List Recommendations
+#+BEGIN_SRC shell
+aws compute-optimizer get-ec2-instance-recommendations | jq -r '.instanceRecommendations[].instanceName'
+#+END_SRC
+
+** AWS Data Exchange
+*** List Data Sets
+#+BEGIN_SRC shell
+aws dataexchange list-data-sets | jq -r '.DataSets[].Name'
+#+END_SRC
+
+** AWS Data Pipeline
+*** List Pipelines
+#+BEGIN_SRC shell
+aws datapipeline list-pipelines | jq -r '.pipelineIdList[].name'
+#+END_SRC
+
+** AWS DataBrew
+*** List Jobs
+#+BEGIN_SRC shell
+aws databrew list-jobs | jq -r '.Jobs[].Name'
+#+END_SRC
+
+** AWS DeepComposer
+*** List Compositions
+#+BEGIN_SRC shell
+aws deepcomposer list-compositions | jq -r '.compositions[].compositionName'
+#+END_SRC
+
+** AWS DeepLens
+*** List Projects
+#+BEGIN_SRC shell
+aws deeplens list-projects | jq -r '.Projects[].Name'
+#+END_SRC
+
+** AWS DeepRacer
+*** List Models
+#+BEGIN_SRC shell
+aws deepracer list-models | jq -r '.Models[].ModelName'
+#+END_SRC
+
+** AWS Device Farm
+*** List Projects
+#+BEGIN_SRC shell
+aws devicefarm list-projects | jq -r '.projects[].name'
+#+END_SRC
+
+** AWS Direct Connect
+*** List Connections
+#+BEGIN_SRC shell
+aws directconnect describe-connections | jq -r '.connections[].connectionName'
+#+END_SRC
+
+** AWS Fault Injection Simulator
+*** List Experiments
+#+BEGIN_SRC shell
+aws fis list-experiments | jq -r '.experiments[].id'
+#+END_SRC
+
+** AWS Global Accelerator
+*** List Accelerators
+#+BEGIN_SRC shell
+aws globalaccelerator list-accelerators | jq -r '.Accelerators[].Name'
+#+END_SRC
+
+** AWS Glue DataBrew
+*** List Datasets
+#+BEGIN_SRC shell
+aws databrew list-datasets | jq -r '.Datasets[].Name'
+#+END_SRC
+
+** AWS Ground Station
+*** List Satellites
+#+BEGIN_SRC shell
+aws groundstation list-satellites | jq -r '.satellites[].satelliteId'
+#+END_SRC
+
+** AWS Health
+*** List Events
+#+BEGIN_SRC shell
+aws health describe-events | jq -r '.events[].eventTypeCode'
+#+END_SRC
+
+** AWS IoT 1-Click
+*** List Devices
+#+BEGIN_SRC shell
+aws iot1click-devices list-devices | jq -r '.Devices[].DeviceId'
+#+END_SRC
+
+** AWS IoT Analytics
+*** List Channels
+#+BEGIN_SRC shell
+aws iotanalytics list-channels | jq -r '.channelSummaries[].channelName'
+#+END_SRC
+
+** AWS IoT Core Device Advisor
+*** List Suite Definitions
+#+BEGIN_SRC shell
+aws iotdeviceadvisor list-suite-definitions | jq -r '.suiteDefinitionInformationList[].suiteDefinitionId'
+#+END_SRC
+
+** AWS IoT Events
+*** List Inputs
+#+BEGIN_SRC shell
+aws iotevents list-inputs | jq -r '.inputs[].inputName'
+#+END_SRC
+
+** AWS IoT FleetWise
+*** List Campaigns
+#+BEGIN_SRC shell
+aws iotfleetwise list-campaigns | jq -r '.campaigns[].name'
+#+END_SRC
+
+** AWS IoT Greengrass V2
+*** List Core Devices
+#+BEGIN_SRC shell
+aws greengrassv2 list-core-devices | jq -r '.coreDevices[].coreDeviceThingName'
+#+END_SRC
+
+** AWS IoT RoboRunner
+*** List Destinations
+#+BEGIN_SRC shell
+aws iotroborunner list-destinations | jq -r '.destinations[].id'
+#+END_SRC
+
+** AWS IoT SiteWise
+*** List Asset Models
+#+BEGIN_SRC shell
+aws iotsitewise list-asset-models | jq -r '.assetModelSummaries[].id'
+#+END_SRC
+
+** AWS IoT TwinMaker
+*** List Workspaces
+#+BEGIN_SRC shell
+aws iottwinmaker list-workspaces | jq -r '.workspaceSummaries[].workspaceId'
+#+END_SRC
+** AWS Proton
+*** List Environments
+#+BEGIN_SRC shell
+aws proton list-environments | jq -r '.environments[].name'
+#+END_SRC
+
+*** List Services
+#+BEGIN_SRC shell
+aws proton list-services | jq -r '.services[].name'
+#+END_SRC
+
+** AWS App Mesh
+*** List Meshes
+#+BEGIN_SRC shell
+aws appmesh list-meshes | jq -r '.meshes[].meshName'
+#+END_SRC
+
+*** List Virtual Services
+#+BEGIN_SRC shell
+aws appmesh list-virtual-services --mesh-name your-mesh-name | jq -r '.virtualServices[].virtualServiceName'
+#+END_SRC
+
+** AWS Cloud Map
+*** List Namespaces
+#+BEGIN_SRC shell
+aws servicediscovery list-namespaces | jq -r '.Namespaces[].Name'
+#+END_SRC
+
+*** List Services
+#+BEGIN_SRC shell
+aws servicediscovery list-services | jq -r '.Services[].Name'
+#+END_SRC
+
+** AWS Cloud9
+*** List Environments
+#+BEGIN_SRC shell
+aws cloud9 list-environments | jq -r '.environmentIds[]'
+#+END_SRC
+
+** AWS CloudShell
+*** List Environments
+#+BEGIN_SRC shell
+aws cloudshell get-environment | jq -r '.environment.environmentId'
+#+END_SRC
+
+** AWS CodeGuru Reviewer
+*** List Repository Associations
+#+BEGIN_SRC shell
+aws codeguru-reviewer list-repository-associations | jq -r '.RepositoryAssociationSummaries[].Name'
+#+END_SRC
+
+** AWS CodeGuru Profiler
+*** List Profiling Groups
+#+BEGIN_SRC shell
+aws codeguruprofiler list-profiling-groups | jq -r '.profilingGroups[].name'
+#+END_SRC
+
+** AWS Compute Optimizer
+*** List Enrollment Statuses
+#+BEGIN_SRC shell
+aws compute-optimizer get-enrollment-statuses | jq -r '.statuses[].status'
+#+END_SRC
+
+** AWS Control Tower
+*** List Enabled Controls
+#+BEGIN_SRC shell
+aws controltower list-enabled-controls | jq -r '.enabledControls[].controlIdentifier'
+#+END_SRC
+
+** AWS Data Exchange
+*** List Data Sets
+#+BEGIN_SRC shell
+aws dataexchange list-data-sets | jq -r '.DataSets[].Name'
+#+END_SRC
+
+** AWS DataSync
+*** List Locations
+#+BEGIN_SRC shell
+aws datasync list-locations | jq -r '.Locations[].LocationArn'
+#+END_SRC
+
+** AWS DeepRacer
+*** List Models
+#+BEGIN_SRC shell
+aws deepracer list-models | jq -r '.Models[].ModelName'
+#+END_SRC
+
+** AWS Elemental MediaTailor
+*** List Configurations
+#+BEGIN_SRC shell
+aws mediatailor list-playback-configurations | jq -r '.Items[].Name'
+#+END_SRC
+
+** AWS Fault Injection Simulator
+*** List Experiment Templates
+#+BEGIN_SRC shell
+aws fis list-experiment-templates | jq -r '.experimentTemplates[].id'
+#+END_SRC
+
+** AWS Glue DataBrew
+*** List Projects
+#+BEGIN_SRC shell
+aws databrew list-projects | jq -r '.Projects[].Name'
+#+END_SRC
+
+** AWS Ground Station
+*** List Missions
+#+BEGIN_SRC shell
+aws groundstation list-missions | jq -r '.missionList[].missionId'
+#+END_SRC
+
+** AWS Health
+*** List Event Types
+#+BEGIN_SRC shell
+aws health describe-event-types | jq -r '.eventTypes[].eventTypeCode'
+#+END_SRC
+
+** AWS IAM Identity Center (successor to AWS Single Sign-On)
+*** List Instances
+#+BEGIN_SRC shell
+aws sso-admin list-instances | jq -r '.Instances[].InstanceArn'
+#+END_SRC
+
+** AWS IoT Core Device Advisor
+*** List Suite Runs
+#+BEGIN_SRC shell
+aws iotdeviceadvisor list-suite-runs | jq -r '.suiteRunsList[].suiteRunId'
+#+END_SRC
+
+** AWS IoT FleetWise
+*** List Signal Catalogs
+#+BEGIN_SRC shell
+aws iotfleetwise list-signal-catalogs | jq -r '.signalCatalogSummaries[].name'
+#+END_SRC
+
+** AWS IoT RoboRunner
+*** List Sites
+#+BEGIN_SRC shell
+aws iotroborunner list-sites | jq -r '.sites[].id'
+#+END_SRC
+
+** AWS IoT TwinMaker
+*** List Entities
+#+BEGIN_SRC shell
+aws iottwinmaker list-entities --workspace-id your-workspace-id | jq -r '.entitySummaries[].entityName'
+#+END_SRC
+
+** AWS Lake Formation
+*** List Resources
+#+BEGIN_SRC shell
+aws lakeformation list-resources | jq -r '.ResourceInfoList[].ResourceArn'
+#+END_SRC
+
+** AWS License Manager
+*** List License Configurations
+#+BEGIN_SRC shell
+aws license-manager list-license-configurations | jq -r '.LicenseConfigurations[].LicenseConfigurationId'
+#+END_SRC
+
+** AWS Mainframe Modernization
+*** List Applications
+#+BEGIN_SRC shell
+aws m2 list-applications | jq -r '.applications[].applicationId'
+#+END_SRC
+
+** AWS Managed Services
+*** List AWS Managed Services Operations
+#+BEGIN_SRC shell
+aws managedservices list-operations | jq -r '.operationList[].id'
+#+END_SRC
+
+** AWS Network Firewall
+*** List Firewalls
+#+BEGIN_SRC shell
+aws network-firewall list-firewalls | jq -r '.Firewalls[].FirewallName'
+#+END_SRC
+
+** AWS Network Manager
+*** List Global Networks
+#+BEGIN_SRC shell
+aws networkmanager list-global-networks | jq -r '.GlobalNetworks[].GlobalNetworkId'
+#+END_SRC
+
+** AWS Private 5G
+*** List Network Resources
+#+BEGIN_SRC shell
+aws private-networks list-network-resources | jq -r '.networkResources[].name'
+#+END_SRC
+
+** AWS Resilience Hub
+*** List Apps
+#+BEGIN_SRC shell
+aws resiliencehub list-apps | jq -r '.appSummaries[].name'
+#+END_SRC
+
+** AWS Resource Access Manager (RAM)
+*** List Resources
+#+BEGIN_SRC shell
+aws ram list-resources | jq -r '.resources[].arn'
+#+END_SRC
+
+** AWS RoboMaker
+*** List Robot Applications
+#+BEGIN_SRC shell
+aws robomaker list-robot-applications | jq -r '.robotApplicationSummaries[].name'
+#+END_SRC
+
+** AWS Amplify UI Builder
+*** List Components
+#+BEGIN_SRC shell
+aws amplifyuibuilder list-components --app-id YOUR_APP_ID --environment-name YOUR_ENV_NAME | jq -r '.entities[].name'
+#+END_SRC
+
+** AWS AppConfig
+*** List Environments
+#+BEGIN_SRC shell
+aws appconfig list-environments --application-id YOUR_APP_ID | jq -r '.Items[].Name'
+#+END_SRC
+
+** AWS Application Cost Profiler
+*** List Report Definitions
+#+BEGIN_SRC shell
+aws application-cost-profiler list-report-definitions | jq -r '.reportDefinitions[].reportName'
+#+END_SRC
+
+** AWS Audit Manager
+*** List Assessments
+#+BEGIN_SRC shell
+aws auditmanager list-assessments | jq -r '.assessmentMetadata[].name'
+#+END_SRC
+
+** AWS Backup Gateway
+*** List Gateways
+#+BEGIN_SRC shell
+aws backup-gateway list-gateways | jq -r '.Gateways[].GatewayArn'
+#+END_SRC
+
+** AWS Billing Conductor
+*** List Billing Groups
+#+BEGIN_SRC shell
+aws billingconductor list-billing-groups | jq -r '.BillingGroups[].Name'
+#+END_SRC
+
+** AWS Chatbot
+*** List Slack Channel Configurations
+#+BEGIN_SRC shell
+aws chatbot list-slack-channel-configurations | jq -r '.slackChannelConfigurations[].configurationName'
+#+END_SRC
+
+** AWS Clean Rooms
+*** List Collaborations
+#+BEGIN_SRC shell
+aws cleanrooms list-collaborations | jq -r '.collaborations[].name'
+#+END_SRC
+
+** AWS Cloud Control API
+*** List Resources
+#+BEGIN_SRC shell
+aws cloudcontrol list-resources --type-name AWS::EC2::Instance | jq -r '.ResourceDescriptions[].Identifier'
+#+END_SRC
+
+** AWS Cloud WAN
+*** List Global Networks
+#+BEGIN_SRC shell
+aws networkmanager list-global-networks | jq -r '.GlobalNetworks[].GlobalNetworkId'
+#+END_SRC
+
+** AWS CodeCatalyst
+*** List Projects
+#+BEGIN_SRC shell
+aws codecatalyst list-projects --space-name YOUR_SPACE_NAME | jq -r '.projects[].name'
+#+END_SRC
+
+** AWS Compute Optimizer
+*** List Auto Scaling Group Recommendations
+#+BEGIN_SRC shell
+aws compute-optimizer get-auto-scaling-group-recommendations | jq -r '.autoScalingGroupRecommendations[].autoScalingGroupArn'
+#+END_SRC
+
+** AWS Connect
+*** List Phone Numbers
+#+BEGIN_SRC shell
+aws connect list-phone-numbers --instance-id YOUR_INSTANCE_ID | jq -r '.PhoneNumberSummaryList[].PhoneNumber'
+#+END_SRC
+
+** AWS Control Tower
+*** List Enabled Controls
+#+BEGIN_SRC shell
+aws controltower list-enabled-controls | jq -r '.enabledControls[].controlIdentifier'
+#+END_SRC
+
+** AWS Data Exchange
+*** List Data Sets
+#+BEGIN_SRC shell
+aws dataexchange list-data-sets | jq -r '.DataSets[].Name'
+#+END_SRC
+
+** AWS DataZone
+*** List Domains
+#+BEGIN_SRC shell
+aws datazone list-domains | jq -r '.domains[].name'
+#+END_SRC
+
+** AWS DevOps Guru
+*** List Insights
+#+BEGIN_SRC shell
+aws devops-guru list-insights | jq -r '.proactiveInsights[].Id'
+#+END_SRC
+
+** AWS Directory Service
+*** List Directories
+#+BEGIN_SRC shell
+aws ds list-directories | jq -r '.DirectoryDescriptions[].DirectoryId'
+#+END_SRC
+
+** AWS Elastic Disaster Recovery
+*** List Source Servers
+#+BEGIN_SRC shell
+aws drs describe-source-servers | jq -r '.items[].sourceServerID'
+#+END_SRC
+
+** AWS Elemental Appliances and Software
+*** List Activations
+#+BEGIN_SRC shell
+aws elemental-appliances-software list-activations | jq -r '.activations[].id'
+#+END_SRC
+
+** AWS Elemental MediaConnect
+*** List Flows
+#+BEGIN_SRC shell
+aws mediaconnect list-flows | jq -r '.Flows[].Name'
+#+END_SRC
+
+** AWS Fault Injection Simulator
+*** List Experiment Templates
+#+BEGIN_SRC shell
+aws fis list-experiment-templates | jq -r '.experimentTemplates[].id'
+#+END_SRC
+
+** AWS FinSpace
+*** List Environments
+#+BEGIN_SRC shell
+aws finspace list-environments | jq -r '.environments[].name'
+#+END_SRC
+
+** AWS Global Accelerator
+*** List Accelerators
+#+BEGIN_SRC shell
+aws globalaccelerator list-accelerators | jq -r '.Accelerators[].Name'
+#+END_SRC
+
+** AWS Glue
+*** List Workflows
+#+BEGIN_SRC shell
+aws glue list-workflows | jq -r '.Workflows[]'
+#+END_SRC
+
+** AWS Ground Station
+*** List Ground Stations
+#+BEGIN_SRC shell
+aws groundstation list-ground-stations | jq -r '.groundStationList[].groundStationId'
+#+END_SRC
+
+** AWS Health
+*** List Events
+#+BEGIN_SRC shell
+aws health describe-events | jq -r '.events[].arn'
+#+END_SRC
+
+** AWS IoT 1-Click
+*** List Devices
+#+BEGIN_SRC shell
+aws iot1click-devices list-devices | jq -r '.Devices[].DeviceId'
+#+END_SRC
+
+** AWS IoT Analytics
+*** List Datasets
+#+BEGIN_SRC shell
+aws iotanalytics list-datasets | jq -r '.datasetSummaries[].datasetName'
+#+END_SRC
+
+** AWS IoT Events
+*** List Detector Models
+#+BEGIN_SRC shell
+aws iotevents list-detector-models | jq -r '.detectorModelSummaries[].detectorModelName'
+#+END_SRC
+
+** AWS IoT Fleet Hub
+*** List Applications
+#+BEGIN_SRC shell
+aws iotfleethub list-applications | jq -r '.applicationSummaries[].applicationName'
+#+END_SRC
+
+** AWS IoT Greengrass V2
+*** List Core Devices
+#+BEGIN_SRC shell
+aws greengrassv2 list-core-devices | jq -r '.coreDevices[].coreDeviceThingName'
+#+END_SRC
+
+** AWS IoT TwinMaker
+*** List Workspaces
+#+BEGIN_SRC shell
+aws iottwinmaker list-workspaces | jq -r '.workspaceSummaries[].workspaceId'
+#+END_SRC
+
+** AWS IoT Wireless
+*** List Wireless Devices
+#+BEGIN_SRC shell
+aws iotwireless list-wireless-devices | jq -r '.WirelessDeviceList[].Id'
+#+END_SRC
+
+** AWS Kendra
+*** List Data Sources
+#+BEGIN_SRC shell
+aws kendra list-data-sources --index-id YOUR_INDEX_ID | jq -r '.SummaryItems[].Name'
+#+END_SRC
+
+** AWS Key Management Service (KMS)
+*** List Keys
+#+BEGIN_SRC shell
+aws kms list-keys | jq -r '.Keys[].KeyId'
+#+END_SRC
+
+** AWS Lambda
+*** List Layers
+#+BEGIN_SRC shell
+aws lambda list-layers | jq -r '.Layers[].LayerName'
+#+END_SRC
+
+** AWS License Manager
+*** List License Configurations
+#+BEGIN_SRC shell
+aws license-manager list-license-configurations | jq -r '.LicenseConfigurations[].LicenseConfigurationArn'
+#+END_SRC
+
+** AWS Managed Blockchain
+*** List Networks
+#+BEGIN_SRC shell
+aws managedblockchain list-networks | jq -r '.Networks[].Name'
+#+END_SRC
+
+** AWS Marketplace Catalog
+*** List Entities
+#+BEGIN_SRC shell
+aws marketplace-catalog list-entities --entity-type AWSMarketplace::CloudFormation | jq -r '.EntitySummaryList[].Name'
+#+END_SRC
+
+** AWS Migration Hub
+*** List Application States
+#+BEGIN_SRC shell
+aws mgh list-application-states | jq -r '.ApplicationStateList[].ApplicationId'
+#+END_SRC
+
+** AWS Network Firewall
+*** List Firewall Policies
+#+BEGIN_SRC shell
+aws network-firewall list-firewall-policies | jq -r '.FirewallPolicies[].Name'
+#+END_SRC
+
+** AWS OpsWorks CM
+*** List Servers
+#+BEGIN_SRC shell
+aws opsworks-cm list-servers | jq -r '.Servers[].ServerName'
+#+END_SRC
+
+** AWS Organizations
+*** List Accounts
+#+BEGIN_SRC shell
+aws organizations list-accounts | jq -r '.Accounts[].Name'
+#+END_SRC
+
+** AWS Outposts
+*** List Sites
+#+BEGIN_SRC shell
+aws outposts list-sites | jq -r '.Sites[].SiteId'
+#+END_SRC
+
+** AWS Panorama
+*** List Devices
+#+BEGIN_SRC shell
+aws panorama list-devices | jq -r '.Devices[].DeviceId'
+#+END_SRC
+
+** AWS Private Certificate Authority
+*** List Certificate Authorities
+#+BEGIN_SRC shell
+aws acm-pca list-certificate-authorities | jq -r '.CertificateAuthorities[].Arn'
+#+END_SRC
+
+** AWS Proton
+*** List Environments
+#+BEGIN_SRC shell
+aws proton list-environments | jq -r '.environments[].name'
+#+END_SRC
+
+** AWS Purchase Orders Console
+*** List Purchase Orders
+#+BEGIN_SRC shell
+aws purchase-orders list-purchase-orders | jq -r '.PurchaseOrders[].PurchaseOrderId'
+#+END_SRC
+
+** AWS Resource Access Manager (RAM)
+*** List Resources
+#+BEGIN_SRC shell
+aws ram list-resources | jq -r '.resources[].resourceShareArn'
+#+END_SRC
+
+** AWS Resource Groups
+*** List Groups
+#+BEGIN_SRC shell
+aws resource-groups list-groups | jq -r '.GroupIdentifiers[].GroupName'
+#+END_SRC
+
+** AWS RoboMaker
+*** List Robot Applications
+#+BEGIN_SRC shell
+aws robomaker list-robot-applications | jq -r '.robotApplicationSummaries[].name'
+#+END_SRC
+
+** AWS Secrets Manager
+*** List Secrets
+#+BEGIN_SRC shell
+aws secretsmanager list-secrets | jq -r '.SecretList[].Name'
+#+END_SRC
+
+** AWS Security Hub
+*** List Findings
+#+BEGIN_SRC shell
+aws securityhub get-findings | jq -r '.Findings[].Title'
+#+END_SRC
+
+** AWS Service Catalog
+*** List Portfolios
+#+BEGIN_SRC shell
+aws servicecatalog list-portfolios | jq -r '.PortfolioDetails[].DisplayName'
+#+END_SRC
+
+** AWS Service Quotas
+*** List Services
+#+BEGIN_SRC shell
+aws service-quotas list-services | jq -r '.Services[].ServiceName'
+#+END_SRC
+
+** AWS Shield
+*** List Protections
+#+BEGIN_SRC shell
+aws shield list-protections | jq -r '.Protections[].Name'
+#+END_SRC
+
+** AWS Signer
+*** List Signing Profiles
+#+BEGIN_SRC shell
+aws signer list-signing-profiles | jq -r '.profiles[].profileName'
+#+END_SRC
+
+** AWS Step Functions
+*** List State Machines
+#+BEGIN_SRC shell
+aws stepfunctions list-state-machines | jq -r '.stateMachines[].name'
+#+END_SRC
+
+** AWS Storage Gateway
+*** List Gateways
+#+BEGIN_SRC shell
+aws storagegateway list-gateways | jq -r '.Gateways[].GatewayARN'
+#+END_SRC
+
+** AWS Systems Manager
+*** List Documents
+#+BEGIN_SRC shell
+aws ssm list-documents | jq -r '.DocumentIdentifiers[].Name'
+#+END_SRC
+
+** AWS Transfer Family
+*** List Servers
+#+BEGIN_SRC shell
+aws transfer list-servers | jq -r '.Servers[].ServerId'
+#+END_SRC
+
+** AWS Trusted Advisor
+*** List Checks
+#+BEGIN_SRC shell
+aws trustedadvisor describe-trusted-advisor-checks --language en | jq -r '.checks[].name'
+#+END_SRC
+
+** AWS VPC Lattice
+*** List Service Networks
+#+BEGIN_SRC shell
+aws vpc-lattice list-service-networks | jq -r '.items[].name'
+#+END_SRC
+
+** AWS WAF
+*** List Web ACLs
+#+BEGIN_SRC shell
+aws waf list-web-acls | jq -r '.WebACLs[].Name'
+#+END_SRC
+
+** AWS Well-Architected Tool
+*** List Workloads
+#+BEGIN_SRC shell
+aws wellarchitected list-workloads | jq -r '.WorkloadSummaries[].WorkloadName'
+#+END_SRC
+
+** AWS X-Ray
+*** List Groups
+#+BEGIN_SRC shell
+aws xray get-groups | jq -r '.Groups[].GroupName'
+#+END_SRC
+
+* Execute All Commands
+To execute all the commands at once, you can use:
+
+#+BEGIN_SRC emacs-lisp
+(org-babel-execute-buffer)
+#+END_SRC
+
+#+BEGIN_COMMENT
+Note: Ensure you have the necessary AWS CLI permissions and configurations set up before running these commands.
+Some commands may take a while to execute depending on the number of resources in your AWS account.
+Some commands require specific parameters (like YOUR_INDEX_ID) which you need to replace with actual values from your AWS environment.
+#+END_COMMENT

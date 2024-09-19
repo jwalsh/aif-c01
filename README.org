@@ -1139,6 +1139,322 @@ For more detailed information and advanced configurations, refer to the followin
 Remember to replace placeholders (e.g., my-cluster, us-west-2) with your actual cluster name and preferred region. Always be cautious when deleting resources to avoid unintended data loss.
 #+END_COMMENT
 
+** AWS Step Functions
+
+*** List state machines
+#+BEGIN_SRC shell
+aws stepfunctions list-state-machines | jq -r '.stateMachines[]|.name'
+#+END_SRC
+
+#+RESULTS:
+: jwalsh-ml-states
+
+*** Create a state machine
+#+BEGIN_SRC shell
+aws stepfunctions create-state-machine \
+    --name "MyStateMachine" \
+    --definition '{"Comment":"A Hello World example of the Amazon States Language using a Pass state","StartAt":"HelloWorld","States":{"HelloWorld":{"Type":"Pass","Result":"Hello World!","End":true}}}' \
+    --role-arn arn:aws:iam::123456789012:role/service-role/StepFunctions-MyStateMachine-role-0123456789
+#+END_SRC
+
+*** Start execution of a state machine
+#+BEGIN_SRC shell
+aws stepfunctions start-execution \
+    --state-machine-arn arn:aws:states:us-west-2:123456789012:stateMachine:MyStateMachine \
+    --input '{"key1": "value1", "key2": "value2"}'
+#+END_SRC
+
+** Amazon Athena
+
+*** List workgroups
+#+BEGIN_SRC shell
+aws athena list-work-groups | jq '.WorkGroups[]|.Name'
+#+END_SRC
+
+#+RESULTS:
+: primary
+
+*** Create a workgroup
+#+BEGIN_SRC shell
+aws athena create-work-group \
+    --name "MyWorkGroup" \
+    --configuration '{"ResultConfiguration":{"OutputLocation":"s3://my-athena-results/"}}'
+#+END_SRC
+
+*** Run a query
+#+BEGIN_SRC shell
+aws athena start-query-execution \
+    --query-string "SELECT * FROM my_database.my_table LIMIT 10" \
+    --query-execution-context Database=my_database \
+    --result-configuration OutputLocation=s3://my-athena-results/
+#+END_SRC
+
+*** Get query results
+#+BEGIN_SRC shell
+aws athena get-query-results --query-execution-id QueryExecutionId
+#+END_SRC
+
+** Amazon QuickSight
+
+*** List users
+#+BEGIN_SRC shell
+aws quicksight list-users --aws-account-id 123456789012 --namespace default
+#+END_SRC
+
+#+RESULTS:
+
+*** Create a dataset
+#+BEGIN_SRC shell
+aws quicksight create-data-set \
+    --aws-account-id 123456789012 \
+    --data-set-id MyDataSet \
+    --name "My Data Set" \
+    --physical-table-map file://physical-table-map.json \
+    --logical-table-map file://logical-table-map.json \
+    --import-mode SPICE
+#+END_SRC
+
+*** Create an analysis
+#+BEGIN_SRC shell
+aws quicksight create-analysis \
+    --aws-account-id 123456789012 \
+    --analysis-id MyAnalysis \
+    --name "My Analysis" \
+    --source-entity file://source-entity.json
+#+END_SRC
+
+** Amazon Neptune
+
+*** List Neptune clusters
+#+BEGIN_SRC shell
+aws neptune describe-db-clusters | jq .DBClusters
+#+END_SRC
+
+#+RESULTS:
+: []
+
+*** Create a Neptune cluster
+#+BEGIN_SRC shell
+aws neptune create-db-cluster \
+    --db-cluster-identifier my-neptune-cluster \
+    --engine neptune \
+    --vpc-security-group-ids sg-1234567890abcdef0 \
+    --db-subnet-group-name my-db-subnet-group
+#+END_SRC
+
+*** Create a Neptune instance
+#+BEGIN_SRC shell
+aws neptune create-db-instance \
+    --db-instance-identifier my-neptune-instance \
+    --db-instance-class db.r5.large \
+    --engine neptune \
+    --db-cluster-identifier my-neptune-cluster
+#+END_SRC
+
+*** Run a Gremlin query (using curl)
+#+BEGIN_SRC shell
+curl -X POST \
+     -H 'Content-Type: application/json' \
+     https://your-neptune-endpoint:8182/gremlin \
+     -d '{"gremlin": "g.V().limit(1)"}'
+#+END_SRC
+
+#+BEGIN_COMMENT
+Remember to replace placeholder values (e.g., 123456789012, arn:aws:iam::123456789012:role/service-role/StepFunctions-MyStateMachine-role-0123456789, QueryExecutionId, sg-1234567890abcdef0, your-neptune-endpoint) with actual values relevant to your AWS environment. Always be cautious when executing commands that create or modify resources to avoid unintended changes or costs.
+#+END_COMMENT
+
+** AWS Data Exchange
+
+*** List data sets
+#+BEGIN_SRC shell
+aws dataexchange list-data-sets | jq .DataSets
+#+END_SRC
+
+*** Create a data set
+#+BEGIN_SRC shell
+aws dataexchange create-data-set \
+    --asset-type "S3_SNAPSHOT" \
+    --description "My sample data set" \
+    --name "My Data Set"
+#+END_SRC
+
+*** Create a revision
+#+BEGIN_SRC shell
+aws dataexchange create-revision \
+    --data-set-id "data-set-id" \
+    --comment "Initial revision"
+#+END_SRC
+
+** Amazon Neptune (Additional Examples)
+
+*** Load data into Neptune
+#+BEGIN_SRC shell
+aws neptune-db load-from-s3 \
+    --source s3://bucket-name/object-key-name \
+    --format csv \
+    --region us-west-2 \
+    --endpoint https://your-cluster-endpoint:8182
+#+END_SRC
+
+*** Run a SPARQL query (using curl)
+#+BEGIN_SRC shell
+curl -X POST \
+     -H 'Content-Type: application/x-www-form-urlencoded' \
+     https://your-neptune-endpoint:8182/sparql \
+     -d 'query=SELECT ?s ?p ?o WHERE { ?s ?p ?o } LIMIT 10'
+#+END_SRC
+
+** AWS DeepLens
+
+*** List DeepLens projects
+#+BEGIN_SRC shell
+aws deeplens list-projects
+#+END_SRC
+
+#+RESULTS:
+
+*** Create a DeepLens project
+#+BEGIN_SRC shell
+aws deeplens create-project \
+    --project-name "MyProject" \
+    --project-description "My DeepLens project"
+#+END_SRC
+
+** Amazon CodeGuru
+
+*** Create a CodeGuru Reviewer association
+#+BEGIN_SRC shell
+aws codeguru-reviewer associate-repository \
+    --repository CodeCommit={Name=my-repo}
+#+END_SRC
+
+*** List CodeGuru Profiler profiling groups
+#+BEGIN_SRC shell
+aws codeguruprofiler list-profiling-groups
+#+END_SRC
+
+** AWS IoT Greengrass
+
+*** List Greengrass groups
+#+BEGIN_SRC shell
+aws greengrass list-groups
+#+END_SRC
+
+*** Create a Greengrass group
+#+BEGIN_SRC shell
+aws greengrass create-group --name "MyGreengrassGroup"
+#+END_SRC
+
+*** Create a Greengrass core definition
+#+BEGIN_SRC shell
+aws greengrass create-core-definition --name "MyCoreDefinition"
+#+END_SRC
+
+** Amazon Forecast (Expanded)
+
+*** Create a dataset group
+#+BEGIN_SRC shell
+aws forecast create-dataset-group \
+    --dataset-group-name my-dataset-group \
+    --domain CUSTOM \
+    --dataset-arns arn:aws:forecast:us-west-2:123456789012:dataset/my-dataset
+#+END_SRC
+
+*** Create a predictor
+#+BEGIN_SRC shell
+aws forecast create-predictor \
+    --predictor-name my-predictor \
+    --algorithm-arn arn:aws:forecast:::algorithm/ARIMA \
+    --forecast-horizon 10 \
+    --input-data-config '{"DatasetGroupArn":"arn:aws:forecast:us-west-2:123456789012:dataset-group/my-dataset-group"}' \
+    --featurization-config '{"ForecastFrequency": "D"}'
+#+END_SRC
+
+*** Create a forecast
+#+BEGIN_SRC shell
+aws forecast create-forecast \
+    --forecast-name my-forecast \
+    --predictor-arn arn:aws:forecast:us-west-2:123456789012:predictor/my-predictor
+#+END_SRC
+
+** Amazon Personalize (Expanded)
+
+*** Create a dataset group
+#+BEGIN_SRC shell
+aws personalize create-dataset-group --name my-dataset-group
+#+END_SRC
+
+*** Create a solution
+#+BEGIN_SRC shell
+aws personalize create-solution \
+    --name my-solution \
+    --dataset-group-arn arn:aws:personalize:us-west-2:123456789012:dataset-group/my-dataset-group \
+    --recipe-arn arn:aws:personalize:::recipe/aws-user-personalization
+#+END_SRC
+
+*** Create a campaign
+#+BEGIN_SRC shell
+aws personalize create-campaign \
+    --name my-campaign \
+    --solution-version-arn arn:aws:personalize:us-west-2:123456789012:solution/my-solution/1 \
+    --min-provisioned-tps 1
+#+END_SRC
+
+*** Get recommendations
+#+BEGIN_SRC shell
+aws personalize-runtime get-recommendations \
+    --campaign-arn arn:aws:personalize:us-west-2:123456789012:campaign/my-campaign \
+    --user-id user123
+#+END_SRC
+
+** AWS Lake Formation
+
+*** List data lake settings
+#+BEGIN_SRC shell
+aws lakeformation list-data-lake-settings
+#+END_SRC
+
+*** Grant permissions
+#+BEGIN_SRC shell
+aws lakeformation grant-permissions \
+    --principal DataLakePrincipalIdentifier=arn:aws:iam::123456789012:user/data-analyst \
+    --resource '{"Table":{"DatabaseName":"my_database","Name":"my_table"}}' \
+    --permissions SELECT
+#+END_SRC
+
+*** Register a new location
+#+BEGIN_SRC shell
+aws lakeformation register-resource \
+    --resource-arn arn:aws:s3:::my-bucket \
+    --use-service-linked-role
+#+END_SRC
+
+** Amazon Managed Streaming for Apache Kafka (MSK)
+
+*** List MSK clusters
+#+BEGIN_SRC shell
+aws kafka list-clusters
+#+END_SRC
+
+*** Create an MSK cluster
+#+BEGIN_SRC shell
+aws kafka create-cluster \
+    --cluster-name MyMSKCluster \
+    --kafka-version 2.6.2 \
+    --number-of-broker-nodes 3 \
+    --broker-node-group-info file://broker-node-group-info.json \
+    --encryption-info file://encryption-info.json
+#+END_SRC
+
+*** Describe a cluster
+#+BEGIN_SRC shell
+aws kafka describe-cluster --cluster-arn ClusterArn
+#+END_SRC
+
+#+BEGIN_COMMENT
+Remember to replace placeholder values (e.g., 123456789012, your-neptune-endpoint, ClusterArn) with actual values relevant to your AWS environment. Always be cautious when executing commands that create or modify resources to avoid unintended changes or costs. Some commands may require additional setup or file preparation not shown here.
+#+END_COMMENT
+
 * Responsible AI
 
 A key focus of this project is on responsible AI practices. We cover:
