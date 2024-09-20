@@ -919,6 +919,10 @@ https://aws.amazon.com/blogs/machine-learning/evaluating-prompts-at-scale-with-p
 
 https://aws.amazon.com/blogs/machine-learning/build-an-ecommerce-product-recommendation-chatbot-with-amazon-bedrock-agents/
 
+** TODO [#A] Secure RAG applications using prompt engineering on Amazon Bedrock
+
+https://aws.amazon.com/blogs/machine-learning/secure-rag-applications-using-prompt-engineering-on-amazon-bedrock/
+
 * License
 :PROPERTIES:
 :CUSTOM_ID: license
