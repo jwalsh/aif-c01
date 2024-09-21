@@ -1,0 +1,194 @@
+# RAG with AWS Bedrock Tutorial
+
+This tutorial will walk you through creating a Retrieval Augmented Generation (RAG) system using AWS Bedrock. We will leverage the capabilities of Bedrock to build a knowledge base from your GitHub repositories and demonstrate how to use it for powerful, context-aware responses. The resulting RAG system will allow you to interact with your code and documentation in a more intelligent and insightful way, enhancing your development workflow.
+
+**Duration:** 4 hours
+
+**Project Name:** aws-bedrock-rag
+
+**References:**
+
+* AWS Bedrock Documentation: https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base-create.html
+* Anthropic Cookbook - Retrieval Augmented Generation: https://github.com/anthropics/anthropic-cookbook/blob/main/skills/retrieval_augmented_generation/guide.ipynb
+* Anthropic Cookbook - Contextual Embeddings: https://github.com/anthropics/anthropic-cookbook/blob/main/skills/contextual-embeddings/guide.ipynb
+
+**Prerequisites:**
+
+* An AWS account with Bedrock access
+* Python 3.x
+* `boto3` library installed (`pip install boto3`)
+* Your GitHub Personal Access Token (GITHUB_TOKEN)
+
+**Steps:**
+
+1. **Project Setup:**
+   * Navigate to the project directory: `cd aws-bedrock-rag`
+   * Initialize a Git repository (if not already done): `git init`
+   * Create/update this README.org file
+
+2. **GitHub Repository Data Retrieval:**
+
+   * We'll use your GITHUB_TOKEN to fetch data from your organization's repositories.
+
+   * **Tangle to Python (retrieve_github_data.py):**
+   #+begin_src python :tangle retrieve_github_data.py
+   import os
+   import requests
+
+   GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN')
+
+   def get_org_repos(org_name):
+       headers = {'Authorization': f'token {GITHUB_TOKEN}'}
+       url = f'https://api.github.com/orgs/{org_name}/repos'
+       response = requests.get(url, headers=headers)
+       response.raise_for_status()  # Raise an exception for bad responses
+       return response.json()
+
+   def get_repo_contents(repo_owner, repo_name):
+       headers = {'Authorization': f'token {GITHUB_TOKEN}'}
+       url = f'https://api.github.com/repos/{repo_owner}/{repo_name}/contents'
+       response = requests.get(url, headers=headers)
+       response.raise_for_status()
+       return response.json()
+
+   def download_file(download_url, local_path):
+       headers = {'Authorization': f'token {GITHUB_TOKEN}'}
+       response = requests.get(download_url, headers=headers)
+       response.raise_for_status()
+       with open(local_path, 'wb') as f:
+           f.write(response.content)
+
+   if __name__ == "__main__":
+       org_name = "your-organization-name"  # Replace with your organization name
+       repos = get_org_repos(org_name)
+
+       for repo in repos:
+           repo_owner = repo['owner']['login']
+           repo_name = repo['name']
+           contents = get_repo_contents(repo_owner, repo_name)
+
+           for item in contents:
+               if item['type'] == 'file':
+                   download_url = item['download_url']
+                   local_path = os.path.join('repo_data', repo_name, item['path'])
+                   os.makedirs(os.path.dirname(local_path), exist_ok=True)
+                   download_file(download_url, local_path)
+                   print(f"Downloaded {local_path}")
+   #+end_src
+
+3. **AWS Bedrock Integration:**
+
+   * Set up your Bedrock client using `boto3`.
+
+   * **Tangle to Python (bedrock_integration.py):**
+   #+begin_src python :tangle bedrock_integration.py
+   import boto3
+
+   bedrock = boto3.client('bedrock')
+
+   def create_knowledge_base(kb_name, data_source):
+       # Implement logic to create a knowledge base in Bedrock
+       # using the provided data_source (from GitHub repo data)
+       pass
+
+   def query_knowledge_base(kb_name, query):
+       # Implement logic to query the Bedrock knowledge base
+       # and retrieve relevant information
+       pass
+   #+end_src
+
+4. **RAG Implementation:**
+
+   * Combine Bedrock's knowledge base with a language model for RAG.
+
+   * **Tangle to Python (rag_implementation.py):**
+   #+begin_src python :tangle rag_implementation.py
+   from bedrock_integration import query_knowledge_base
+
+   def generate_response(query):
+       # Retrieve relevant context from the knowledge base
+       context = query_knowledge_base('your_kb_name', query)
+
+       # Use a language model (e.g., from Bedrock or Hugging Face)
+       # to generate a response incorporating the retrieved context
+       response = language_model.generate(query, context)
+
+       return response
+   #+end_src
+
+5. **Testing and Refinement:**
+
+   * Thoroughly test your RAG system with various queries related to your GitHub repositories
+   * Refine your implementation based on the results to improve accuracy and relevance
+
+* Retrieval Augmented Generation
+
+Claude excels at a wide range of tasks, but it may struggle with queries specific to your unique business context. This is where Retrieval Augmented Generation (RAG) becomes invaluable. RAG enables Claude to leverage your internal knowledge bases or customer support documents, significantly enhancing its ability to answer domain-specific questions. Enterprises are increasingly building RAG applications to improve workflows in customer support, Q&A over internal company documents, financial & legal analysis, and much more.
+
+In this guide, we'll demonstrate how to build and optimize a RAG system using the Anthropic documentation as our knowledge base. We'll walk you through:
+
+* Setting up a basic RAG system using an in-memory vector database and embeddings from Voyage AI.
+* Building a robust evaluation suite. We'll go beyond 'vibes' based evals and show you how to measure the retrieval pipeline & end to end performance independently.
+* Implementing advanced techniques to improve RAG including summary indexing and re-ranking with Claude.
+
+Through a series of targeted improvements, we achieved significant performance gains on the following metrics compared to a basic RAG pipeline (we'll explain what all these metrics mean in a bit):
+
+* Avg Precision: 0.43 --> 0.46
+* Avg Recall: 0.66 --> 0.74
+* Avg F1 Score: 0.52 --> 0.57
+* Avg Mean Reciprocal Rank (MRR): 0.74 --> 0.93
+* End-to-End Accuracy: 70% --> 83%
+
+**Note:**
+
+The evaluations in this cookbook are meant to mirror a production evaluation system, and you should keep in mind that they can take a while to run. Also of note: if you run the evaluations in full, you may come up against rate limits unless you are in Tier 2 and above. Consider skipping the full end to end eval if you're trying to conserve token usage.
+
+* Table of Contents
+
+* Setup
+* Level 1 - Basic RAG
+* Building an Evaluation System
+* Level 2 - Summary Indexing
+* Level 3 - Summary Indexing and Re-Ranking
+
+* Setup
+
+We'll need a few libraries, including:
+
+* `anthropic` - to interact with Claude
+* `voyageai` - to generate high quality embeddings
+* `pandas`, `numpy`, `matplotlib`, and `scikit-learn` for data manipulation and visualization
+
+You'll also need API keys from Anthropic and Voyage AI
+
+#+begin_src python :tangle setup.py
+!pip install anthropic
+!pip install voyageai
+!pip install pandas
+!pip install numpy
+!pip install matplotlib
+!pip install seaborn
+!pip install -U scikit-learn
+
+import os
+os.environ['VOYAGE_API_KEY'] = "VOYAGE KEY HERE"
+os.environ['ANTHROPIC_API_KEY'] = "ANTHROPIC KEY HERE"
+
+import anthropic
+import os
+client = anthropic.Anthropic(
+    # This is the default and can be omitted
+    api_key=os.getenv("ANTHROPIC_API_KEY"),)
+#+end_src
+
+* Initialize a Vector DB Class
+
+In this example, we're using an in-memory vector DB, but for a production application, you may want to use a hosted solution.
+
+#+begin_src python :tangle vector_db.py
+import os
+import pickle
+import json
+import numpy as np
+import voyageai
+#+end_src
