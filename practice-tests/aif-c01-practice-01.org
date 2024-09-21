@@ -1,7 +1,84 @@
 #+TITLE: AWS Certification Preparation: AWS Certified AI Practitioner : Practice Exam 1
-#+AUTHOR: John Doe
+#+AUTHOR: Jason Walsh
 #+DATE: 2024-09-21
 #+OPTIONS: toc:nil
 #+LANGUAGE: en
-#+DESCRIPTION: Study guide for AWS AWS Certified AI Practitioner certification practice exam.
+#+DESCRIPTION: Practice exam for AWS AWS Certified AI Practitioner certification.
 
+* AIF-C01 Practice Test 01
+** Question 1: What is Amazon SageMaker?
+   :PROPERTIES:
+   :ANSWER: A fully managed machine learning platform
+   :EXPLANATION: Amazon SageMaker is a fully managed platform that enables developers and data scientists to quickly and easily build, train, and deploy machine learning models at any scale.
+   :LAST_ANSWERED: 2024-09-21 11:34:00
+   :END:
+   - [ ] A database service
+   - [ ] A fully managed machine learning platform
+   - [ ] A content delivery network
+   - [ ] An email service
+
+** Question 2: What does Amazon Rekognition do?
+   :PROPERTIES:
+   :ANSWER: Provides image and video analysis
+   :EXPLANATION: Amazon Rekognition makes it easy to add image and video analysis to your applications using proven, highly scalable, deep learning technology that requires no machine learning expertise to use.
+   :LAST_ANSWERED: 2024-09-21 11:28:57
+   :END:
+   - [ ] Provides image and video analysis
+   - [ ] Manages databases
+   - [ ] Handles email routing
+   - [ ] Processes payments
+
+** Question 3: What is the primary function of Amazon Comprehend?
+   :PROPERTIES:
+   :ANSWER: Natural Language Processing (NLP)
+   :EXPLANATION: Amazon Comprehend is a natural language processing (NLP) service that uses machine learning to find insights and relationships in text.
+   :LAST_ANSWERED: 2024-09-21 11:29:49
+   :END:
+   - [ ] Image recognition
+   - [ ] Natural Language Processing (NLP)
+   - [ ] Database management
+   - [ ] Server hosting
+
+** Question 4: What does Amazon Transcribe do?
+   :PROPERTIES:
+   :ANSWER: Converts speech to text
+   :EXPLANATION: Amazon Transcribe uses advanced machine learning technologies to recognize speech in audio files and transcribe them into text.
+   :LAST_ANSWERED: 2024-09-21 11:30:13
+   :END:
+   - [ ] Converts text to speech
+   - [ ] Translates text between languages
+   - [ ] Converts speech to text
+   - [ ] Analyzes sentiment in text
+
+** Question 5: What is Amazon Polly used for?
+   :PROPERTIES:
+   :ANSWER: Text-to-speech conversion
+   :EXPLANATION: Amazon Polly is a service that turns text into lifelike speech, allowing you to create applications that talk, and build entirely new categories of speech-enabled products.
+   :LAST_ANSWERED: 2024-09-21 11:30:30
+   :END:
+   - [ ] Speech-to-text conversion
+   - [ ] Text-to-speech conversion
+   - [ ] Language translation
+   - [ ] Sentiment analysis
+
+** Question 6: What is the primary purpose of Amazon Lex?
+   :PROPERTIES:
+   :ANSWER: Building conversational interfaces
+   :EXPLANATION: Amazon Lex is a service for building conversational interfaces into any application using voice and text. It provides the advanced deep learning functionalities of automatic speech recognition (ASR) for converting speech to text, and natural language understanding (NLU) to recognize the intent of the text.
+   :LAST_ANSWERED: 2024-09-21 11:34:29
+   :END:
+   - [ ] Data warehousing
+   - [ ] Building conversational interfaces
+   - [ ] Content delivery
+   - [ ] Database management
+
+** Question 7: Which AWS service is designed for time series forecasting?
+   :PROPERTIES:
+   :ANSWER: Amazon Forecast
+   :EXPLANATION: Amazon Forecast is a fully managed service that uses machine learning to deliver highly accurate forecasts. It's designed specifically for time series data, making it ideal for predicting metrics such as product demand, resource needs, and financial performance.
+   :LAST_ANSWERED: 2024-09-21 11:34:38
+   :END:
+   - [ ] Amazon QuickSight
+   - [ ] Amazon Forecast
+   - [ ] Amazon Redshift
+   - [ ] Amazon CloudWatch
