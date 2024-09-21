@@ -1,84 +1,55 @@
-#+TITLE: AWS Certification Preparation: AWS Certified AI Practitioner : Practice Exam 1
-#+AUTHOR: Jason Walsh
-#+DATE: 2024-09-21
-#+OPTIONS: toc:nil
-#+LANGUAGE: en
-#+DESCRIPTION: Practice exam for AWS AWS Certified AI Practitioner certification.
+#+TITLE: AWS Certified AI Practitioner (AIF-C01): Practice Exam 1 - Fundamentals of AI and ML
+#+AUTHOR: [Your Name]
+#+DATE: [Current Date]
 
-* AIF-C01 Practice Test 01
-** Question 1: What is Amazon SageMaker?
-   :PROPERTIES:
-   :ANSWER: A fully managed machine learning platform
-   :EXPLANATION: Amazon SageMaker is a fully managed platform that enables developers and data scientists to quickly and easily build, train, and deploy machine learning models at any scale.
-   :LAST_ANSWERED: 2024-09-21 11:34:00
-   :END:
-   - [ ] A database service
-   - [ ] A fully managed machine learning platform
-   - [ ] A content delivery network
-   - [ ] An email service
+* Domain 1: Fundamentals of AI and ML
 
-** Question 2: What does Amazon Rekognition do?
+** Question 1: What is the primary difference between AI and Machine Learning?
    :PROPERTIES:
-   :ANSWER: Provides image and video analysis
-   :EXPLANATION: Amazon Rekognition makes it easy to add image and video analysis to your applications using proven, highly scalable, deep learning technology that requires no machine learning expertise to use.
-   :LAST_ANSWERED: 2024-09-21 11:28:57
+   :ANSWER: Machine Learning is a subset of AI that focuses on systems that can learn from data
+   :EXPLANATION: AI is a broader concept of machines being able to carry out tasks in a way that we would consider "smart". Machine Learning is a specific subset of AI that trains a machine how to learn, focusing on the development of computer programs that can access data and use it to learn for themselves.
    :END:
-   - [ ] Provides image and video analysis
-   - [ ] Manages databases
-   - [ ] Handles email routing
-   - [ ] Processes payments
+   - [ ] AI is data-driven while Machine Learning is rule-based
+   - [X] Machine Learning is a subset of AI that focuses on systems that can learn from data
+   - [ ] AI requires supervised learning while Machine Learning can be unsupervised
+   - [ ] There is no significant difference between AI and Machine Learning
 
-** Question 3: What is the primary function of Amazon Comprehend?
+** Question 2: Which of the following is an example of unsupervised learning?
    :PROPERTIES:
-   :ANSWER: Natural Language Processing (NLP)
-   :EXPLANATION: Amazon Comprehend is a natural language processing (NLP) service that uses machine learning to find insights and relationships in text.
-   :LAST_ANSWERED: 2024-09-21 11:29:49
+   :ANSWER: Clustering customer data to identify market segments
+   :EXPLANATION: Unsupervised learning involves finding patterns or structures in data without pre-existing labels. Clustering is a common unsupervised learning technique used to group similar data points together, such as identifying market segments from customer data.
    :END:
-   - [ ] Image recognition
-   - [ ] Natural Language Processing (NLP)
-   - [ ] Database management
-   - [ ] Server hosting
+   - [ ] Predicting house prices based on historical sales data
+   - [ ] Classifying emails as spam or not spam
+   - [X] Clustering customer data to identify market segments
+   - [ ] Recognizing handwritten digits in images
 
-** Question 4: What does Amazon Transcribe do?
+** Question 3: Which AWS service is most appropriate for natural language processing tasks?
    :PROPERTIES:
-   :ANSWER: Converts speech to text
-   :EXPLANATION: Amazon Transcribe uses advanced machine learning technologies to recognize speech in audio files and transcribe them into text.
-   :LAST_ANSWERED: 2024-09-21 11:30:13
+   :ANSWER: Amazon Comprehend
+   :EXPLANATION: Amazon Comprehend is a natural language processing (NLP) service that uses machine learning to find insights and relationships in text. It's specifically designed for tasks such as sentiment analysis, entity recognition, and key phrase extraction.
    :END:
-   - [ ] Converts text to speech
-   - [ ] Translates text between languages
-   - [ ] Converts speech to text
-   - [ ] Analyzes sentiment in text
+   - [ ] Amazon Rekognition
+   - [X] Amazon Comprehend
+   - [ ] Amazon SageMaker
+   - [ ] Amazon Polly
 
-** Question 5: What is Amazon Polly used for?
+** Question 4: What is the primary purpose of feature engineering in the ML development lifecycle?
    :PROPERTIES:
-   :ANSWER: Text-to-speech conversion
-   :EXPLANATION: Amazon Polly is a service that turns text into lifelike speech, allowing you to create applications that talk, and build entirely new categories of speech-enabled products.
-   :LAST_ANSWERED: 2024-09-21 11:30:30
+   :ANSWER: To create new input features that better represent the underlying problem to predictive models
+   :EXPLANATION: Feature engineering is the process of using domain knowledge to extract features from raw data. This process helps to create new input features that can better represent the underlying problem to predictive models, potentially improving their performance and interpretability.
    :END:
-   - [ ] Speech-to-text conversion
-   - [ ] Text-to-speech conversion
-   - [ ] Language translation
-   - [ ] Sentiment analysis
+   - [ ] To reduce the number of features in the dataset
+   - [X] To create new input features that better represent the underlying problem to predictive models
+   - [ ] To normalize all features to the same scale
+   - [ ] To remove outliers from the dataset
 
-** Question 6: What is the primary purpose of Amazon Lex?
+** Question 5: Which of the following is a key component of MLOps?
    :PROPERTIES:
-   :ANSWER: Building conversational interfaces
-   :EXPLANATION: Amazon Lex is a service for building conversational interfaces into any application using voice and text. It provides the advanced deep learning functionalities of automatic speech recognition (ASR) for converting speech to text, and natural language understanding (NLU) to recognize the intent of the text.
-   :LAST_ANSWERED: 2024-09-21 11:34:29
+   :ANSWER: Continuous integration and continuous delivery (CI/CD) for ML models
+   :EXPLANATION: MLOps (Machine Learning Operations) aims to streamline the process of taking machine learning models to production and maintaining them. Continuous integration and continuous delivery (CI/CD) for ML models is a key component of MLOps, ensuring that models can be reliably and efficiently updated and deployed.
    :END:
-   - [ ] Data warehousing
-   - [ ] Building conversational interfaces
-   - [ ] Content delivery
-   - [ ] Database management
-
-** Question 7: Which AWS service is designed for time series forecasting?
-   :PROPERTIES:
-   :ANSWER: Amazon Forecast
-   :EXPLANATION: Amazon Forecast is a fully managed service that uses machine learning to deliver highly accurate forecasts. It's designed specifically for time series data, making it ideal for predicting metrics such as product demand, resource needs, and financial performance.
-   :LAST_ANSWERED: 2024-09-21 11:34:38
-   :END:
-   - [ ] Amazon QuickSight
-   - [ ] Amazon Forecast
-   - [ ] Amazon Redshift
-   - [ ] Amazon CloudWatch
+   - [ ] Manual data cleansing
+   - [ ] One-time model deployment
+   - [X] Continuous integration and continuous delivery (CI/CD) for ML models
+   - [ ] Ad-hoc model retraining

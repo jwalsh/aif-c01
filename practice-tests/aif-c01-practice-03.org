@@ -1,7 +1,55 @@
-#+TITLE: AWS Certification Preparation: AWS Certified AI Practitioner : Practice Exam 3
-#+AUTHOR: John Doe
-#+DATE: 2024-09-21
-#+OPTIONS: toc:nil
-#+LANGUAGE: en
-#+DESCRIPTION: Study guide for AWS AWS Certified AI Practitioner certification practice exam.
+#+TITLE: AWS Certified AI Practitioner (AIF-C01): Practice Exam 3 - Applications of Foundation Models
+#+AUTHOR: [Your Name]
+#+DATE: [Current Date]
 
+* Domain 3: Applications of Foundation Models
+
+** Question 1: What is Retrieval Augmented Generation (RAG) in the context of foundation models?
+   :PROPERTIES:
+   :ANSWER: A technique that combines information retrieval with text generation to produce more accurate and contextually relevant responses
+   :EXPLANATION: Retrieval Augmented Generation (RAG) is a technique that enhances language models by retrieving relevant information from an external knowledge base before generating a response. This allows the model to access up-to-date or domain-specific information, improving the accuracy and relevance of its outputs.
+   :END:
+   - [ ] A method for compressing large language models
+   - [ ] A technique that combines information retrieval with text generation to produce more accurate and contextually relevant responses
+   - [ ] A type of generative adversarial network
+   - [ ] A way to visualize the internal workings of a neural network
+
+** Question 2: Which AWS service is suitable for storing embeddings within a vector database for use with foundation models?
+   :PROPERTIES:
+   :ANSWER: Amazon OpenSearch Service
+   :EXPLANATION: Amazon OpenSearch Service supports vector search capabilities, making it suitable for storing and querying embeddings. This can be particularly useful in applications using foundation models, such as implementing efficient similarity search or enhancing retrieval for RAG systems.
+   :END:
+   - [ ] Amazon DynamoDB
+   - [ ] Amazon S3
+   - [ ] Amazon OpenSearch Service
+   - [ ] Amazon RDS for MySQL
+
+** Question 3: What is the purpose of the 'temperature' parameter in text generation with foundation models?
+   :PROPERTIES:
+   :ANSWER: To control the randomness and creativity of the generated text
+   :EXPLANATION: The 'temperature' parameter in text generation controls the randomness of the model's output. A higher temperature results in more diverse and creative outputs, while a lower temperature makes the output more focused and deterministic. This allows users to balance between creativity and consistency in generated text.
+   :END:
+   - [ ] To set the maximum length of the generated text
+   - [ ] To control the processing speed of the model
+   - [ ] To control the randomness and creativity of the generated text
+   - [ ] To adjust the model's learning rate
+
+** Question 4: What is 'few-shot learning' in the context of prompt engineering?
+   :PROPERTIES:
+   :ANSWER: A technique where a small number of examples are provided in the prompt to guide the model's response
+   :EXPLANATION: Few-shot learning in prompt engineering involves providing a small number of examples (typically 2-5) within the prompt to demonstrate the desired task or output format. This technique helps guide the model's understanding and can improve performance on specific tasks without fine-tuning the model.
+   :END:
+   - [ ] A method for training models on very small datasets
+   - [ ] A technique where a small number of examples are provided in the prompt to guide the model's response
+   - [ ] A way to reduce the size of the model
+   - [ ] A process for rapidly fine-tuning a model
+
+** Question 5: What is a key consideration when fine-tuning a foundation model for a specific task?
+   :PROPERTIES:
+   :ANSWER: The quality and relevance of the fine-tuning dataset
+   :EXPLANATION: When fine-tuning a foundation model, the quality and relevance of the fine-tuning dataset is crucial. The dataset should be representative of the target task, free from biases, and of high quality. Poor quality or irrelevant data can lead to degraded performance or unintended behaviors in the fine-tuned model.
+   :END:
+   - [ ] The size of the original pre-training dataset
+   - [ ] The quality and relevance of the fine-tuning dataset
+   - [ ] The number of parameters in the model
+   - [ ] The hardware used for training

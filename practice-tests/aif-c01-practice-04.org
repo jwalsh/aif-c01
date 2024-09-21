@@ -1,7 +1,56 @@
-#+TITLE: AWS Certification Preparation: AWS Certified AI Practitioner : Practice Exam 4
-#+AUTHOR: John Doe
-#+DATE: 2024-09-21
-#+OPTIONS: toc:nil
-#+LANGUAGE: en
-#+DESCRIPTION: Study guide for AWS AWS Certified AI Practitioner certification practice exam.
+#+TITLE: AWS Certified AI Practitioner (AIF-C01): Practice Exam 4 - Responsible AI and Security
+#+AUTHOR: [Your Name]
+#+DATE: [Current Date]
 
+* Domain 4: Guidelines for Responsible AI
+* Domain 5: Security, Compliance, and Governance for AI Solutions
+
+** Question 1: What is a key principle of responsible AI development?
+   :PROPERTIES:
+   :ANSWER: Fairness and non-discrimination in AI system outputs
+   :EXPLANATION: Fairness and non-discrimination are crucial principles in responsible AI development. This involves ensuring that AI systems do not perpetuate or amplify biases based on characteristics such as race, gender, age, or other protected attributes. It's important to assess and mitigate biases in training data and model outputs.
+   :END:
+   - [ ] Maximizing model complexity
+   - [ ] Prioritizing speed over accuracy
+   - [ ] Fairness and non-discrimination in AI system outputs
+   - [ ] Keeping AI development processes secret
+
+** Question 2: Which AWS service can help detect and monitor bias in machine learning models?
+   :PROPERTIES:
+   :ANSWER: Amazon SageMaker Clarify
+   :EXPLANATION: Amazon SageMaker Clarify provides tools for detecting bias in machine learning models. It can help identify potential biases in training data and model predictions, and provide explanations for model decisions, supporting the development of fair and transparent AI systems.
+   :END:
+   - [ ] Amazon Rekognition
+   - [ ] Amazon SageMaker Clarify
+   - [ ] Amazon Comprehend
+   - [ ] AWS CloudTrail
+
+** Question 3: What is a key benefit of using explainable AI models?
+   :PROPERTIES:
+   :ANSWER: They provide transparency in decision-making processes, building trust with users and stakeholders
+   :EXPLANATION: Explainable AI models provide insights into how they arrive at their decisions or predictions. This transparency helps build trust with users and stakeholders, allows for better auditing and validation of model behavior, and can be crucial in regulated industries where decision rationales must be provided.
+   :END:
+   - [ ] They always produce more accurate results than black-box models
+   - [ ] They require less computational resources
+   - [ ] They provide transparency in decision-making processes, building trust with users and stakeholders
+   - [ ] They eliminate the need for human oversight
+
+** Question 4: Which AWS service can help with maintaining regulatory compliance for AI systems?
+   :PROPERTIES:
+   :ANSWER: AWS Audit Manager
+   :EXPLANATION: AWS Audit Manager helps continuously audit AWS usage to simplify how you assess risk and compliance with regulations and industry standards. It can be particularly useful for AI systems, helping to ensure they meet various regulatory requirements and governance standards.
+   :END:
+   - [ ] Amazon SageMaker
+   - [ ] Amazon Rekognition
+   - [ ] AWS Audit Manager
+   - [ ] Amazon Comprehend
+
+** Question 5: What is a key aspect of data governance in AI systems?
+   :PROPERTIES:
+   :ANSWER: Ensuring data quality, privacy, and appropriate usage throughout its lifecycle
+   :EXPLANATION: Data governance in AI systems involves managing the availability, usability, integrity, and security of data. This includes ensuring data quality, protecting privacy, maintaining appropriate access controls, and ensuring that data is used in compliance with relevant regulations and ethical standards throughout its lifecycle.
+   :END:
+   - [ ] Collecting as much data as possible without restrictions
+   - [ ] Ensuring data quality, privacy, and appropriate usage throughout its lifecycle
+   - [ ] Keeping all data indefinitely
+   - [ ] Sharing all data publicly to promote transparency

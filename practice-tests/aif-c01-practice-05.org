@@ -1,7 +1,30 @@
-#+TITLE: AWS Certification Preparation: AWS Certified AI Practitioner : Practice Exam 5
-#+AUTHOR: John Doe
-#+DATE: 2024-09-21
-#+OPTIONS: toc:nil
-#+LANGUAGE: en
-#+DESCRIPTION: Study guide for AWS AWS Certified AI Practitioner certification practice exam.
+#+TITLE: AWS Certified AI Practitioner (AIF-C01): Practice Exam 5 - Comprehensive Review
+#+AUTHOR: [Your Name]
+#+DATE: [Current Date]
 
+* Comprehensive Review: All Domains
+
+** Question 1: What is the primary purpose of Amazon SageMaker?
+   :PROPERTIES:
+   :ANSWER: To build, train, and deploy machine learning models at scale
+   :EXPLANATION: Amazon SageMaker is a fully managed machine learning platform that enables developers and data scientists to quickly and easily build, train, and deploy machine learning models at any scale. It provides all the components used for machine learning in a single toolset, so models get to production faster with much less effort and at lower cost.
+   :END:
+   - [ ] To provide database services
+   - [ ] To build, train, and deploy machine learning models at scale
+   - [ ] To manage EC2 instances
+   - [ ] To provide content delivery services
+
+** Question 2: In the context of generative AI, what is a 'token'?
+   :PROPERTIES:
+   :ANSWER: A unit of text that the model processes, which can be a word, part of a word, or a character
+   :EXPLANATION: In generative AI, particularly with large language models, a 'token' is the basic unit of text that the model processes. Depending on the model and tokenization method, a token can represent a word, part of a word, or even a single character. Understanding tokens is important for tasks like prompt engineering and managing model inputs and outputs.
+   :END:
+   - [ ] A security credential
+   - [ ] A unit of computational power
+   - [ ] A unit of text that the model processes, which can be a word, part of a word, or a character
+   - [ ] A type of neural network layer
+
+** Question 3: What is the purpose of 'fine-tuning' a foundation model?
+   :PROPERTIES:
+   :ANSWER: To adapt the model to perform well on a specific task or domain
+   :EXPLANATION: Fine-tuning is the process of further training a pre-
