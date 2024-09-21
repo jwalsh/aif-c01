@@ -1,0 +1,7 @@
+#+TITLE: AWS Certification Preparation: AWS Certified SysOps Administrator – Associate : Practice Exam 3
+#+AUTHOR: John Doe
+#+DATE: 2024-09-21
+#+OPTIONS: toc:nil
+#+LANGUAGE: en
+#+DESCRIPTION: Study guide for AWS AWS Certified SysOps Administrator – Associate certification practice exam.
+
