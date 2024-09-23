@@ -40,7 +40,7 @@
    :EXPLANATION: Few-shot learning in prompt engineering involves providing a small number of examples (typically 2-5) within the prompt to demonstrate the desired task or output format. This technique helps guide the model's understanding and can improve performance on specific tasks without fine-tuning the model.
    :END:
    - [ ] A method for training models on very small datasets
-   - [ ] A technique where a small number of examples are provided in the prompt to guide the model's response
+   - [X] A technique where a small number of examples are provided in the prompt to guide the model's response
    - [ ] A way to reduce the size of the model
    - [ ] A process for rapidly fine-tuning a model
 
@@ -50,6 +50,6 @@
    :EXPLANATION: When fine-tuning a foundation model, the quality and relevance of the fine-tuning dataset is crucial. The dataset should be representative of the target task, free from biases, and of high quality. Poor quality or irrelevant data can lead to degraded performance or unintended behaviors in the fine-tuned model.
    :END:
    - [ ] The size of the original pre-training dataset
-   - [ ] The quality and relevance of the fine-tuning dataset
+   - [X] The quality and relevance of the fine-tuning dataset
    - [ ] The number of parameters in the model
    - [ ] The hardware used for training
