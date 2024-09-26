@@ -1,0 +1,55 @@
+#+TITLE: AWS Certified AI Practitioner (AIF-C01): Practice Exam 1 - Fundamentals of AI and ML
+#+AUTHOR: [Your Name]
+#+DATE: [Current Date]
+
+* Domain 1: Fundamentals of AI and ML
+
+** Question 1: What is the primary difference between AI and Machine Learning?
+   :PROPERTIES:
+   :ANSWER: Machine Learning is a subset of AI that focuses on systems that can learn from data
+   :EXPLANATION: AI is a broader concept of machines being able to carry out tasks in a way that we would consider "smart". Machine Learning is a specific subset of AI that trains a machine how to learn, focusing on the development of computer programs that can access data and use it to learn for themselves.
+   :END:
+   - [ ] AI is data-driven while Machine Learning is rule-based
+   - [X] Machine Learning is a subset of AI that focuses on systems that can learn from data
+   - [ ] AI requires supervised learning while Machine Learning can be unsupervised
+   - [ ] There is no significant difference between AI and Machine Learning
+
+** Question 2: Which of the following is an example of unsupervised learning?
+   :PROPERTIES:
+   :ANSWER: Clustering customer data to identify market segments
+   :EXPLANATION: Unsupervised learning involves finding patterns or structures in data without pre-existing labels. Clustering is a common unsupervised learning technique used to group similar data points together, such as identifying market segments from customer data.
+   :END:
+   - [ ] Predicting house prices based on historical sales data
+   - [ ] Classifying emails as spam or not spam
+   - [X] Clustering customer data to identify market segments
+   - [ ] Recognizing handwritten digits in images
+
+** Question 3: Which AWS service is most appropriate for natural language processing tasks?
+   :PROPERTIES:
+   :ANSWER: Amazon Comprehend
+   :EXPLANATION: Amazon Comprehend is a natural language processing (NLP) service that uses machine learning to find insights and relationships in text. It's specifically designed for tasks such as sentiment analysis, entity recognition, and key phrase extraction.
+   :END:
+   - [ ] Amazon Rekognition
+   - [X] Amazon Comprehend
+   - [ ] Amazon SageMaker
+   - [ ] Amazon Polly
+
+** Question 4: What is the primary purpose of feature engineering in the ML development lifecycle?
+   :PROPERTIES:
+   :ANSWER: To create new input features that better represent the underlying problem to predictive models
+   :EXPLANATION: Feature engineering is the process of using domain knowledge to extract features from raw data. This process helps to create new input features that can better represent the underlying problem to predictive models, potentially improving their performance and interpretability.
+   :END:
+   - [ ] To reduce the number of features in the dataset
+   - [X] To create new input features that better represent the underlying problem to predictive models
+   - [ ] To normalize all features to the same scale
+   - [ ] To remove outliers from the dataset
+
+** Question 5: Which of the following is a key component of MLOps?
+   :PROPERTIES:
+   :ANSWER: Continuous integration and continuous delivery (CI/CD) for ML models
+   :EXPLANATION: MLOps (Machine Learning Operations) aims to streamline the process of taking machine learning models to production and maintaining them. Continuous integration and continuous delivery (CI/CD) for ML models is a key component of MLOps, ensuring that models can be reliably and efficiently updated and deployed.
+   :END:
+   - [ ] Manual data cleansing
+   - [ ] One-time model deployment
+   - [X] Continuous integration and continuous delivery (CI/CD) for ML models
+   - [ ] Ad-hoc model retraining

@@ -1,0 +1,7 @@
+#+TITLE: AWS Certification Preparation: AWS Certified Developer – Associate : Practice Exam 4
+#+AUTHOR: John Doe
+#+DATE: 2024-09-21
+#+OPTIONS: toc:nil
+#+LANGUAGE: en
+#+DESCRIPTION: Study guide for AWS AWS Certified Developer – Associate certification practice exam.
+

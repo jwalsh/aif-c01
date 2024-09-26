@@ -1,0 +1,55 @@
+#+TITLE: AWS Certified AI Practitioner (AIF-C01): Practice Exam 2 - Fundamentals of Generative AI
+#+AUTHOR: [Your Name]
+#+DATE: [Current Date]
+
+* Domain 2: Fundamentals of Generative AI
+
+** Question 1: What is a key characteristic of foundation models in generative AI?
+   :PROPERTIES:
+   :ANSWER: They are trained on large, diverse datasets and can be adapted to a wide range of tasks
+   :EXPLANATION: Foundation models are large AI models trained on vast amounts of unlabeled data. They can be adapted to a wide range of downstream tasks through fine-tuning or prompt engineering, making them versatile tools for various AI applications.
+   :END:
+   - [ ] They are small, task-specific models
+   - [ ] They require minimal computational resources
+   - [ ] They are trained on large, diverse datasets and can be adapted to a wide range of tasks
+   - [ ] They can only be used for text generation tasks
+
+** Question 2: What is prompt engineering in the context of generative AI?
+   :PROPERTIES:
+   :ANSWER: The practice of designing and refining input prompts to get desired outputs from AI models
+   :EXPLANATION: Prompt engineering is the process of crafting and refining input prompts to elicit specific, desired responses from large language models or other AI systems. It's a crucial skill in effectively using and interacting with generative AI models.
+   :END:
+   - [ ] A technique for training AI models
+   - [ ] The practice of designing and refining input prompts to get desired outputs from AI models
+   - [ ] A method for compressing AI models
+   - [ ] A way to visualize AI model outputs
+
+** Question 3: Which AWS service provides a fully managed environment for building generative AI applications?
+   :PROPERTIES:
+   :ANSWER: Amazon Bedrock
+   :EXPLANATION: Amazon Bedrock is a fully managed service that provides access to foundation models from leading AI companies through a single API. It offers tools and capabilities to build, scale, and deploy generative AI applications securely.
+   :END:
+   - [ ] Amazon SageMaker
+   - [ ] Amazon Comprehend
+   - [ ] Amazon Bedrock
+   - [ ] AWS Lambda
+
+** Question 4: What is a potential limitation of generative AI models?
+   :PROPERTIES:
+   :ANSWER: They may produce hallucinations or false information
+   :EXPLANATION: Generative AI models, especially large language models, can sometimes produce "hallucinations" - plausible-sounding but factually incorrect or nonsensical information. This is a known limitation that users and developers need to be aware of when working with these models.
+   :END:
+   - [ ] They can only process text data
+   - [ ] They require small datasets to function
+   - [ ] They may produce hallucinations or false information
+   - [ ] They are always 100% accurate
+
+** Question 5: What is the primary advantage of using AWS generative AI services for building applications?
+   :PROPERTIES:
+   :ANSWER: They provide accessibility and lower barriers to entry for AI development
+   :EXPLANATION: AWS generative AI services, like Amazon Bedrock, provide accessibility and lower barriers to entry for AI development. They offer pre-trained models and managed infrastructure, allowing developers to build AI applications without the need for extensive ML expertise or large computational resources.
+   :END:
+   - [ ] They are always free to use
+   - [ ] They provide accessibility and lower barriers to entry for AI development
+   - [ ] They guarantee 100% accuracy in all outputs
+   - [ ] They eliminate the need for any programming knowledge
