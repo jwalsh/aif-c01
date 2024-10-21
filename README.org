@@ -9,6 +9,7 @@ This project provides comprehensive study materials, code examples, and a robust
 
 Key features of this project:
 - Structured learning paths covering all AIF-C01 exam domains
+- Secondary information supporting MLA-C01 / ME1-C01 
 - Hands-on code examples using AWS AI/ML services
 - Local development environment with LocalStack for AWS service simulation
 - Integration of Python and Clojure for a comprehensive learning experience
