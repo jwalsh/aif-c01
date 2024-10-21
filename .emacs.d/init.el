@@ -85,6 +85,18 @@
   :config
   (cljr-add-keybindings-with-prefix "C-c C-m"))
 
+(use-package chatgpt-shell
+  :ensure t
+  :custom
+  ((chatgpt-shell-openai-key
+    (lambda ()
+      (auth-source-pass-get 'secret "openai-key")))))
+
+(use-package ellama
+  :init
+  ;; setup key bindings
+  (setopt ellama-keymap-prefix "C-c e"))
+
 ;; Customizations
 (setq-default
  inhibit-startup-screen t

@@ -48,6 +48,9 @@ lint-fix: ## Fix linting issues
 	@lein cljfmt fix
 	@black scripts
 
+format: ## Format Clojure and Python files
+
+
 aws-practice: ## Practice with AWS resources (audit and optionally clean up)
 	@echo "Starting AWS resource practice session..."
 	@echo "This will list your AWS resources related to the course."

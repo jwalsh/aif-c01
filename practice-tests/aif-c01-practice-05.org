@@ -200,6 +200,6 @@
     :EXPLANATION: While generative AI models are powerful tools for content creation, they come with certain risks. One significant risk is that these models, trained on vast amounts of data from the internet, may inadvertently reproduce copyrighted material or reflect biases present in their training data. This could lead to legal issues with copyright infringement or the propagation of harmful biases. It's crucial to implement appropriate safeguards and review processes when using generative AI for content creation.
     :END:
     - [ ] The model may generate content too slowly
-    - [ ] The model may generate content that infringes on copyrights or contains biased information
+    - [X] The model may generate content that infringes on copyrights or contains biased information
     - [ ] The model may consume too much storage space
     - [ ] The model may only generate content in a single language

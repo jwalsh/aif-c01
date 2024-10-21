@@ -25,7 +25,7 @@ def download_file(download_url, local_path):
         f.write(response.content)
 
 if __name__ == "__main__":
-    org_name = "your-organization-name"  # Replace with your organization name
+    org_name = "defrecord"  # Replace with your organization name
     repos = get_org_repos(org_name)
 
     for repo in repos:
