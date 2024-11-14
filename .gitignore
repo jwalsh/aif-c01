@@ -26,3 +26,10 @@ example.md
 glue-script.py
 trust-policy-glue.json
 trust-policy-sagemaker.json
+
+# Nix shell temporary files
+.zshrc
+.zsh_history
+.zshrc.temp
+.zcompdump*
+.nix-shell/

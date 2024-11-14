@@ -19,72 +19,85 @@ Whether you're an executive looking to understand AI/ML capabilities in AWS or a
 [[file:resources/test-image-640x.png]]
 
 * Project Workflow
-
-
-The following diagram illustrates the main workflow and available commands in this project:
-
-#+BEGIN_SRC mermaid :file workflow.png :exports both
+** Development Flow
+#+begin_src mermaid :file workflow-core.png
 graph TD
-    A[Start] --> B[make setup]
-    B --> C[make deps]
-    C --> D[make init]
-    D --> E{Choose Environment}
-    E -->|LocalStack| F[make switch-profile-lcl]
-    E -->|AWS Dev| G[make switch-profile-dev]
-    F --> H[make localstack-up]
-    F --> I[make run]
-    G --> I
-    I --> J{Choose Action}
-    J -->|Run Tests| K[make test]
-    J -->|Lint Code| L[make lint]
-    J -->|Fix All Lint Issues| M[make lint-fix-all]
-    J -->|Fix Python/Shell Issues| N[make lint-fix-scripts]
-    J -->|Fix Clojure Issues| O[make lint-fix-clojure]
-    J -->|Audit AWS Resources| P[make aws-audit]
-    J -->|Cleanup AWS Resources| Q[make aws-cleanup]
-    J -->|Stop LocalStack| R[make localstack-down]
-    K --> J
-    L --> J
-    M --> J
-    N --> J
-    O --> J
-    P --> J
-    Q --> J
-    R --> S[End]
-    J --> S
-#+END_SRC
+    A[Start] --> B[direnv allow]
+    B --> C[nix-shell]
+    C --> D{Development Path}
+    D -->|Python| E[poetry shell]
+    D -->|Clojure| F[lein repl/clj]
+    D -->|Emacs| G[emacs]
+    E --> H[Development]
+    F --> H
+    G --> H
+    H --> I[End]
+#+end_src
 
-* Architecture
+*** Core Steps
+**** Environment Setup
+- Enable direnv
+- Enter nix-shell
+- Choose development path
 
+**** Development Paths
+- Python Development
+  - Poetry Shell
+  - AI/ML Libraries
+  - AWS Integration
+- Clojure Development
+  - REPL Session
+  - AWS Integration
+  - Emacs + CIDER
 
-#+BEGIN_SRC mermaid :file project_architecture.png
+** Architecture
+#+begin_src mermaid :file architecture-core.png
 graph TD
-    A[macOS] --> B[Shell Environment zsh]
+    A[System] --> B[Nix Shell]
     B --> C[direnv]
-    C --> D[Poetry Environment]
-    D --> E[Python Dependencies]
-    D --> F[AWS CLI]
-    D --> G[Leiningen]
-    G --> H[Clojure Project]
-    H --> I[Portal Data Viewer]
-    H --> J[REPL with rebel-readline]
-    B --> K[Docker]
-    K --> L[LocalStack]
-    L --> M[Simulated AWS Services]
-    M --> M1[SageMaker]
-    M --> M2[Bedrock]
-    M --> M3[Comprehend]
-    M --> M4[Kendra]
-    M --> M5[Others...]
-    B --> N[Squid Proxy]
-    N --> O[HTTP/HTTPS Traffic]
-    D --> Q[AWS Profiles]
-    Q --> Q1[lcl Profile]
-    Q --> Q2[dev Profile]
-    Q2 --> R[Real AWS Services]
+    B --> D[Core Tools]
+    
+    D --> E[Python Stack]
+    E --> E1[poetry]
+    E --> E2[AI/ML libs]
+    
+    D --> F[Clojure Stack]
+    F --> F1[leiningen]
+    F --> F2[REPL]
+    
+    D --> G[AWS Tools]
+    G --> G1[aws-cli]
+    G --> G2[localstack]
+    
+    C --> I[Environments]
+    I --> I1[local]
+    I --> I2[aws]
+#+end_src
 
-#+END_SRC
+*** Core Components
+**** Development Tools
+***** Python Environment
+- Poetry for dependencies
+- Virtual environment
+- AI/ML libraries
 
+***** Clojure Environment
+- Leiningen
+- REPL-driven development
+- Core libraries
+
+**** AWS Integration
+***** Local Development
+#+begin_src shell
+# Start LocalStack services
+localstack start
+#+end_src
+
+***** Cloud Development
+#+begin_src shell
+# Test AWS access
+aws sts get-caller-identity
+#+end_src
 * Setup
 
 1. Clone this repository

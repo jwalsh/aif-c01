@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "AWS Certified AI Practitioner (AIF-C01) exam preparation"
 authors = ["Jason Walsh <j@wal.sh>"]
 license = "MIT"
-readme = "README.md"
+readme = "README.org"
 
 [tool.poetry.dependencies]
 python = "^3.11"
@@ -15,6 +15,7 @@ pydantic = "^2.8.2"
 openai = "^1.44.1"
 chardet = "^5.2.0"
 orgparse = "^0.4.20231004"
+files-to-prompt = "^0.4"
 
 
 [tool.poetry.group.dev.dependencies]
