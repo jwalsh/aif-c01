@@ -1,0 +1,51 @@
+[alias]
+    # Basic shortcuts
+    st = status -sb
+    ci = commit
+    co = checkout
+    br = branch
+    cp = cherry-pick
+    
+    # Logging
+    lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+    ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat
+    hist = log --pretty=format:"%h %ad | %s%d [%an]" --graph --date=short
+    
+    # Branch management
+    bd = branch -d
+    bD = branch -D
+    
+    # Commits
+    amend = commit --amend
+    unstage = reset HEAD --
+    undo = reset --soft HEAD^
+    
+    # Stashing
+    sl = stash list
+    sa = stash apply
+    ss = stash save
+    sp = stash pop
+    
+    # Working with remotes
+    f = fetch --all --prune
+    p = push
+    pl = pull
+    
+    # Show changes
+    df = diff
+    dc = diff --cached
+    
+    # List aliases
+    aliases = config --get-regexp alias
+    
+    # Show current branch
+    cb = rev-parse --abbrev-ref HEAD
+    
+    # Sync with remote, rebase local changes
+    sync = !git pull --rebase && git push
+    
+    # Clean up local branches
+    cleanup = "!git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d"
+    
+    # Show recent branches
+    recent = "!git branch --sort=committerdate | tail -10"
