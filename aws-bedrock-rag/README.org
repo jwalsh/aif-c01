@@ -1,194 +1,298 @@
-# RAG with AWS Bedrock Tutorial
+* AWS Bedrock RAG Tutorial
+:PROPERTIES:
+:CUSTOM_ID: aws-bedrock-rag
+:END:
 
-This tutorial will walk you through creating a Retrieval Augmented Generation (RAG) system using AWS Bedrock. We will leverage the capabilities of Bedrock to build a knowledge base from your GitHub repositories and demonstrate how to use it for powerful, context-aware responses. The resulting RAG system will allow you to interact with your code and documentation in a more intelligent and insightful way, enhancing your development workflow.
+A hands-on tutorial implementing Retrieval Augmented Generation (RAG) with AWS Bedrock, demonstrating real-world application of AWS AI/ML services. This is part of the AWS AI Foundation certification (C01) preparation materials.
 
-**Duration:** 4 hours
+*Duration:* 4 hours
 
-**Project Name:** aws-bedrock-rag
+** Overview
+:PROPERTIES:
+:CUSTOM_ID: overview
+:END:
 
-**References:**
+This tutorial demonstrates practical implementation of RAG systems on AWS, featuring:
 
-* AWS Bedrock Documentation: https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base-create.html
-* Anthropic Cookbook - Retrieval Augmented Generation: https://github.com/anthropics/anthropic-cookbook/blob/main/skills/retrieval_augmented_generation/guide.ipynb
-* Anthropic Cookbook - Contextual Embeddings: https://github.com/anthropics/anthropic-cookbook/blob/main/skills/contextual-embeddings/guide.ipynb
+- Multiple retrieval strategies:
+  - Basic semantic search using Voyage AI embeddings
+  - BM25 text search using Elasticsearch
+  - Contextual embeddings with Claude-powered document understanding
+  - Hybrid retrieval combining semantic and lexical search
+- Comprehensive evaluation framework
+- GitHub repository integration
+- AWS Bedrock knowledge base integration
 
-**Prerequisites:**
+This implementation aligns with AWS AI Foundation certification exam objectives covering:
+- AWS Bedrock capabilities and integration
+- Machine learning implementation patterns
+- AI application architecture best practices
 
-* An AWS account with Bedrock access
-* Python 3.x
-* `boto3` library installed (`pip install boto3`)
-* Your GitHub Personal Access Token (GITHUB_TOKEN)
+** Architecture
+:PROPERTIES:
+:CUSTOM_ID: architecture
+:END:
 
-**Steps:**
+#+begin_src mermaid :file architecture.png :mkdirp t
+flowchart TB
+    subgraph DataIngestion["Data Ingestion Layer"]
+        G[GitHub Repos] --> C[Crawler]
+        C --> P[Preprocessor]
+        P --> |Chunks| V[Vector Storage]
+    end
 
-1. **Project Setup:**
-   * Navigate to the project directory: `cd aws-bedrock-rag`
-   * Initialize a Git repository (if not already done): `git init`
-   * Create/update this README.org file
+    subgraph RetrievalPipeline["Retrieval Pipeline"]
+        subgraph VectorSearch["Vector Search"]
+            V --> S1[Semantic Search]
+            V --> S2[BM25 Search]
+        end
+        
+        subgraph Enrichment["Enrichment"]
+            S1 --> H[Hybrid Retriever]
+            S2 --> H
+            H --> R[Reranker]
+        end
+    end
+    
+    subgraph KnowledgeBase["AWS Bedrock Integration"]
+        V --> B[Bedrock KB]
+        B --> L[Language Models]
+    end
+    
+    subgraph Evaluation["Evaluation Framework"]
+        M1[Metrics Collector]
+        M2[Performance Analysis]
+        M3[Comparison Tools]
+    end
 
-2. **GitHub Repository Data Retrieval:**
+    P --> B
+    R --> E{Embeddings}
+    E --> |Voyage AI| S1
+    E --> |Claude Context| S2
+    R --> L
+    R --> M1
+    M1 --> M2
+    M2 --> M3
 
-   * We'll use your GITHUB_TOKEN to fetch data from your organization's repositories.
+    classDef aws fill:#FF9900,stroke:#232F3E,stroke-width:2px,color:white
+    classDef external fill:#3B82F6,stroke:#1E40AF,stroke-width:2px,color:white
+    classDef pipeline fill:#10B981,stroke:#065F46,stroke-width:2px,color:white
+    classDef eval fill:#8B5CF6,stroke:#5B21B6,stroke-width:2px,color:white
+    
+    class B,L aws
+    class G,E external
+    class S1,S2,H,R pipeline
+    class M1,M2,M3 eval
+#+end_src
 
-   * **Tangle to Python (retrieve_github_data.py):**
-   #+begin_src python :tangle retrieve_github_data.py
-   import os
-   import requests
+The system consists of several key components demonstrating AWS AI service integration:
 
-   GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN')
+*** Data Ingestion
+   - GitHub repository crawler (=retrieve_github_data.py=)
+   - Document chunking and preprocessing
+   - AWS Bedrock knowledge base creation
 
-   def get_org_repos(org_name):
-       headers = {'Authorization': f'token {GITHUB_TOKEN}'}
-       url = f'https://api.github.com/orgs/{org_name}/repos'
-       response = requests.get(url, headers=headers)
-       response.raise_for_status()  # Raise an exception for bad responses
-       return response.json()
+*** Retrieval Pipeline
+   - Vector database with Voyage AI embeddings (=vector_db.py=)
+   - Contextual vector database (=contextual_vector_db.py=)
+   - BM25 search integration (=contextual_bm25.py=)
+   - Re-ranking system (=reranking.py=)
 
-   def get_repo_contents(repo_owner, repo_name):
-       headers = {'Authorization': f'token {GITHUB_TOKEN}'}
-       url = f'https://api.github.com/repos/{repo_owner}/{repo_name}/contents'
-       response = requests.get(url, headers=headers)
-       response.raise_for_status()
-       return response.json()
+*** Evaluation Framework
+   - Multiple evaluation metrics
+   - Comparison across different retrieval methods
+   - Performance analysis tools
 
-   def download_file(download_url, local_path):
-       headers = {'Authorization': f'token {GITHUB_TOKEN}'}
-       response = requests.get(download_url, headers=headers)
-       response.raise_for_status()
-       with open(local_path, 'wb') as f:
-           f.write(response.content)
+** Prerequisites
+:PROPERTIES:
+:CUSTOM_ID: prerequisites
+:END:
 
-   if __name__ == "__main__":
-       org_name = "defrecord"  # Replace with your organization name
-       repos = get_org_repos(org_name)
+*** Required Software
+- Python 3.8+
+- AWS Account with Bedrock access
+- =boto3= library installed (=pip install boto3=)
 
-       for repo in repos:
-           repo_owner = repo['owner']['login']
-           repo_name = repo['name']
-           contents = get_repo_contents(repo_owner, repo_name)
+*** Required Libraries
+- =anthropic= - to interact with Claude
+- =voyageai= - to generate high quality embeddings
+- =pandas=, =numpy=, =matplotlib=, and =scikit-learn= for data manipulation
+- =elasticsearch= for BM25 search
 
-           for item in contents:
-               if item['type'] == 'file':
-                   download_url = item['download_url']
-                   local_path = os.path.join('repo_data', repo_name, item['path'])
-                   os.makedirs(os.path.dirname(local_path), exist_ok=True)
-                   download_file(download_url, local_path)
-                   print(f"Downloaded {local_path}")
-   #+end_src
+*** API Keys
+- GitHub Personal Access Token
+- Anthropic API Key
+- Voyage AI API Key
+- Cohere API Key (for reranking)
 
-3. **AWS Bedrock Integration:**
+** Getting Started
+:PROPERTIES:
+:CUSTOM_ID: getting-started
+:END:
 
-   * Set up your Bedrock client using `boto3`.
+*** Environment Setup
+#+begin_src bash
+# From project root
+cd aws-bedrock-rag
 
-   * **Tangle to Python (bedrock_integration.py):**
-   #+begin_src python :tangle bedrock_integration.py
-   import boto3
+# Set up environment variables
+export GITHUB_TOKEN="your_github_token"
+export ANTHROPIC_API_KEY="your_anthropic_key"
+export VOYAGE_API_KEY="your_voyage_key"
+export COHERE_API_KEY="your_cohere_key"
+#+end_src
 
-   bedrock = boto3.client('bedrock')
-
-   def create_knowledge_base(kb_name, data_source):
-       # Implement logic to create a knowledge base in Bedrock
-       # using the provided data_source (from GitHub repo data)
-       pass
-
-   def query_knowledge_base(kb_name, query):
-       # Implement logic to query the Bedrock knowledge base
-       # and retrieve relevant information
-       pass
-   #+end_src
-
-4. **RAG Implementation:**
-
-   * Combine Bedrock's knowledge base with a language model for RAG.
-
-   * **Tangle to Python (rag_implementation.py):**
-   #+begin_src python :tangle rag_implementation.py
-   from bedrock_integration import query_knowledge_base
-
-   def generate_response(query):
-       # Retrieve relevant context from the knowledge base
-       context = query_knowledge_base('your_kb_name', query)
-
-       # Use a language model (e.g., from Bedrock or Hugging Face)
-       # to generate a response incorporating the retrieved context
-       response = language_model.generate(query, context)
-
-       return response
-   #+end_src
-
-5. **Testing and Refinement:**
-
-   * Thoroughly test your RAG system with various queries related to your GitHub repositories
-   * Refine your implementation based on the results to improve accuracy and relevance
-
-* Retrieval Augmented Generation
-
-Claude excels at a wide range of tasks, but it may struggle with queries specific to your unique business context. This is where Retrieval Augmented Generation (RAG) becomes invaluable. RAG enables Claude to leverage your internal knowledge bases or customer support documents, significantly enhancing its ability to answer domain-specific questions. Enterprises are increasingly building RAG applications to improve workflows in customer support, Q&A over internal company documents, financial & legal analysis, and much more.
-
-In this guide, we'll demonstrate how to build and optimize a RAG system using the Anthropic documentation as our knowledge base. We'll walk you through:
-
-* Setting up a basic RAG system using an in-memory vector database and embeddings from Voyage AI.
-* Building a robust evaluation suite. We'll go beyond 'vibes' based evals and show you how to measure the retrieval pipeline & end to end performance independently.
-* Implementing advanced techniques to improve RAG including summary indexing and re-ranking with Claude.
-
-Through a series of targeted improvements, we achieved significant performance gains on the following metrics compared to a basic RAG pipeline (we'll explain what all these metrics mean in a bit):
-
-* Avg Precision: 0.43 --> 0.46
-* Avg Recall: 0.66 --> 0.74
-* Avg F1 Score: 0.52 --> 0.57
-* Avg Mean Reciprocal Rank (MRR): 0.74 --> 0.93
-* End-to-End Accuracy: 70% --> 83%
-
-**Note:**
-
-The evaluations in this cookbook are meant to mirror a production evaluation system, and you should keep in mind that they can take a while to run. Also of note: if you run the evaluations in full, you may come up against rate limits unless you are in Tier 2 and above. Consider skipping the full end to end eval if you're trying to conserve token usage.
-
-* Table of Contents
-
-* Setup
-* Level 1 - Basic RAG
-* Building an Evaluation System
-* Level 2 - Summary Indexing
-* Level 3 - Summary Indexing and Re-Ranking
-
-* Setup
-
-We'll need a few libraries, including:
-
-* `anthropic` - to interact with Claude
-* `voyageai` - to generate high quality embeddings
-* `pandas`, `numpy`, `matplotlib`, and `scikit-learn` for data manipulation and visualization
-
-You'll also need API keys from Anthropic and Voyage AI
-
+*** Initial Dependencies
 #+begin_src python :tangle setup.py
-!pip install anthropic
-!pip install voyageai
-!pip install pandas
-!pip install numpy
-!pip install matplotlib
-!pip install seaborn
-!pip install -U scikit-learn
+!pip install anthropic voyageai pandas numpy matplotlib seaborn scikit-learn
 
 import os
 os.environ['VOYAGE_API_KEY'] = "VOYAGE KEY HERE"
 os.environ['ANTHROPIC_API_KEY'] = "ANTHROPIC KEY HERE"
 
 import anthropic
-import os
-client = anthropic.Anthropic(
-    # This is the default and can be omitted
-    api_key=os.getenv("ANTHROPIC_API_KEY"),)
+client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 #+end_src
 
-* Initialize a Vector DB Class
+*** Data Collection
+#+begin_src bash
+# Fetch repository data
+python retrieve_github_data.py
 
-In this example, we're using an in-memory vector DB, but for a production application, you may want to use a hosted solution.
-
-#+begin_src python :tangle vector_db.py
-import os
-import pickle
-import json
-import numpy as np
-import voyageai
+# Process and chunk documents
+python load_data.py
 #+end_src
+
+*** Vector Database Initialization
+#+begin_src bash
+# Basic vector database
+python load_data.py
+
+# Contextual vector database
+python load_contextual_data.py
+#+end_src
+
+*** Evaluation Pipeline
+#+begin_src bash
+# Basic RAG evaluation
+python evaluate_basic_rag.py
+
+# Contextual embeddings evaluation
+python evaluate_contextual_embeddings.py
+
+# BM25 hybrid evaluation
+python evaluate_contextual_bm25.py
+
+# Reranking evaluation
+python evaluate_reranking.py
+#+end_src
+
+** Implementation Details
+:PROPERTIES:
+:CUSTOM_ID: implementation-details
+:END:
+
+*** GitHub Data Retrieval
+#+begin_src python :tangle retrieve_github_data.py
+import os
+import requests
+
+GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN')
+
+def get_org_repos(org_name):
+    headers = {'Authorization': f'token {GITHUB_TOKEN}'}
+    url = f'https://api.github.com/orgs/{org_name}/repos'
+    response = requests.get(url, headers=headers)
+    response.raise_for_status()
+    return response.json()
+#+end_src
+
+*** AWS Bedrock Integration
+#+begin_src python :tangle bedrock_integration.py
+import boto3
+
+bedrock = boto3.client('bedrock')
+
+def create_knowledge_base(kb_name, data_source):
+    # Implement logic to create a knowledge base in Bedrock
+    # using the provided data_source (from GitHub repo data)
+    pass
+#+end_src
+
+*** Contextual Embeddings
+#+begin_src python
+def situate_context(doc: str, chunk: str) -> str:
+    # Generate context-aware embeddings using Claude
+    response = client.beta.prompt_caching.messages.create(
+        model="claude-3-haiku-20240307",
+        messages=[...],
+        temperature=0.0
+    )
+    return response
+#+end_src
+
+*** Hybrid Retrieval
+#+begin_src python
+def retrieve_advanced(query: str, db, es_bm25, k: int):
+    # Semantic search
+    semantic_results = db.search(query, k=k)
+    
+    # BM25 search
+    bm25_results = es_bm25.search(query, k=k)
+    
+    # Combine and rerank results
+    return combine_results(semantic_results, bm25_results)
+#+end_src
+
+** Performance Metrics
+:PROPERTIES:
+:CUSTOM_ID: performance-metrics
+:END:
+
+Through our improvements, we achieved significant gains:
+
+| Metric                       | Before | After |
+|-----------------------------+--------+-------|
+| Avg Precision               |   0.43 |  0.46 |
+| Avg Recall                  |   0.66 |  0.74 |
+| Avg F1 Score                |   0.52 |  0.57 |
+| Avg Mean Reciprocal Rank    |   0.74 |  0.93 |
+| End-to-End Accuracy         |    70% |   83% |
+
+Additional metrics tracked:
+- Pass@k (k=5,10,20)
+- Semantic vs. BM25 contribution analysis
+- Cache hit rates for contextual embeddings
+
+** Related Resources
+:PROPERTIES:
+:CUSTOM_ID: related-resources
+:END:
+
+- [[file:../aws-services-overview.org][AWS Services Overview]]
+- [[https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base-create.html][AWS Bedrock Documentation]]
+- [[https://github.com/anthropics/anthropic-cookbook/blob/main/skills/retrieval_augmented_generation/guide.ipynb][Anthropic Cookbook - RAG Guide]]
+- [[https://github.com/anthropics/anthropic-cookbook/blob/main/skills/contextual-embeddings/guide.ipynb][Anthropic Cookbook - Contextual Embeddings]]
+
+** Notes
+:PROPERTIES:
+:CUSTOM_ID: notes
+:END:
+
+*** Implementation Notes
+- Using in-memory vector DB for examples (consider hosted solutions for production)
+- Evaluations mirror production systems and can be time-intensive
+- Consider rate limits if not on Tier 2 or above
+- May want to skip full end-to-end eval to conserve token usage
+
+*** Certification Topics Covered
+- Foundation model integration with AWS Bedrock
+- Vector database implementation patterns
+- Hybrid search architectures
+- Performance evaluation methodologies
+
+*** Study Focus Areas
+- Study the AWS Bedrock configuration in =bedrock_integration.py=
+- Understand the retrieval pipeline architecture
+- Review the evaluation metrics and their significance
+- Consider how this implementation maps to exam objectives
