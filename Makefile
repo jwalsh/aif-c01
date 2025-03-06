@@ -48,8 +48,19 @@ lint-fix: ## Fix linting issues
 	@lein cljfmt fix
 	@black scripts
 
-format: ## Format Clojure and Python files
+format: format-clojure format-python format-shell ## Format all code
 
+format-clojure: ## Format Clojure files
+	@echo "Formatting Clojure files..."
+	@lein cljfmt fix
+
+format-python: ## Format Python files
+	@echo "Formatting Python files..."
+	@black scripts aws-bedrock-rag
+
+format-shell: ## Lint shell scripts
+	@echo "Linting shell scripts..."
+	@find scripts -name "*.sh" -exec shellcheck {} \;
 
 aws-practice: ## Practice with AWS resources (audit and optionally clean up)
 	@echo "Starting AWS resource practice session..."

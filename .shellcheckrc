@@ -1,0 +1,7 @@
+# ShellCheck configuration
+shell=bash
+enable=all
+disable=SC2016  # Allow single quotes in echo commands
+disable=SC1090  # Don't worry about sourcing non-constant files
+disable=SC1091  # Don't worry about can't follow non-constant sources
+source-path=scripts
