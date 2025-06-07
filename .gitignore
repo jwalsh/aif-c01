@@ -33,3 +33,10 @@ trust-policy-sagemaker.json
 .zshrc.temp
 .zcompdump*
 .nix-shell/
+# Claude local files
+.claude/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*\.class
