@@ -1,0 +1,20 @@
+[
+  {
+    "id": "example-1",
+    "text": "# Example GitHub Repository\n\nThis is an example code chunk for testing the RAG system.",
+    "metadata": {
+      "source": "example-repo",
+      "file_path": "README.md",
+      "chunk_id": 1
+    }
+  },
+  {
+    "id": "example-2",
+    "text": "def hello_world():\n    print('Hello, World!')\n    return True",
+    "metadata": {
+      "source": "example-repo",
+      "file_path": "main.py",
+      "chunk_id": 2
+    }
+  }
+]
