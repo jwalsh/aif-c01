@@ -40,3 +40,7 @@ trust-policy-sagemaker.json
 __pycache__/
 *.py[cod]
 *\.class
+
+# Generated files
+*.odt
+*.png
