@@ -36,6 +36,7 @@ jobs:
       AWS_ACCESS_KEY_ID: test
       AWS_SECRET_ACCESS_KEY: test
       AWS_DEFAULT_REGION: us-east-1
+      AWS_REGION: us-east-1
 
     steps:
       - uses: actions/checkout@v4
@@ -118,8 +119,8 @@ jobs:
           (do
             (require (quote [cognitect.aws.client.api :as aws]))
             (let [endpoint {:protocol :http :hostname "localhost" :port 4566}
-                  s3 (aws/client {:api :s3 :endpoint-override endpoint})
-                  ddb (aws/client {:api :dynamodb :endpoint-override endpoint})]
+                  s3 (aws/client {:api :s3 :region "us-east-1" :endpoint-override endpoint})
+                  ddb (aws/client {:api :dynamodb :region "us-east-1" :endpoint-override endpoint})]
               (let [result (aws/invoke s3 {:op :ListBuckets})]
                 (println "S3 response:" (pr-str result))
                 (assert (not (:cognitect.anomalies/category result))
