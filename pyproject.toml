@@ -20,7 +20,7 @@ files-to-prompt = "^0.4"
 
 [tool.poetry.group.dev.dependencies]
 flake8 = "^7.1.1"
-black = "^24.8.0"
+black = "^26.3.1"
 
 [build-system]
 requires = ["poetry-core"]
