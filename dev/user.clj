@@ -22,17 +22,37 @@
     (println "Portal opened. Use (tap> x) to send data to Portal.")
     p))
 
+(defn parse-endpoint
+  "Parse an endpoint URL into a cognitect.aws endpoint-override map."
+  [url]
+  (let [uri (java.net.URI. url)]
+    {:protocol (keyword (.getScheme uri))
+     :hostname (.getHost uri)
+     :port     (.getPort uri)}))
+
 (defn aws-info []
   (println "Current AWS configuration:")
   (println "Region:" (System/getProperty "aws.region"))
-  (println "Endpoint override:" (System/getenv "endpoint-override"))
+  (println "Endpoint override:" (or (System/getenv "AWS_ENDPOINT_URL")
+                                    (System/getenv "LOCALSTACK_ENDPOINT")))
   (println "AWS Profile:" (or (System/getenv "AWS_PROFILE") "default")))
 
+(defn make-aws-client
+  "Create a cognitect.aws client, using LocalStack endpoint when configured."
+  [service-kw]
+  (let [endpoint-url (or (System/getenv "AWS_ENDPOINT_URL")
+                         (System/getenv "LOCALSTACK_ENDPOINT"))]
+    (aws/client
+      (if endpoint-url
+        {:api service-kw
+         :endpoint-override (parse-endpoint endpoint-url)}
+        {:api service-kw}))))
+
 (defn configure-aws []
-  (when-let [endpoint (System/getenv "endpoint-override")]
-    (let [client-opts {:api :sagemaker :endpoint endpoint}]
-      (aws/client client-opts)
-      (println "AWS client configured with custom endpoint:" endpoint))))
+  (let [endpoint-url (or (System/getenv "AWS_ENDPOINT_URL")
+                         (System/getenv "LOCALSTACK_ENDPOINT"))]
+    (when endpoint-url
+      (println "AWS client configured with endpoint:" endpoint-url))))
 
 (defn rebel-repl []
   (configure-aws)

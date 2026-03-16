@@ -2,11 +2,20 @@ services:
   localstack:
     image: localstack/localstack:latest
     ports:
-      - "4566-4599:4566-4599"
+      - "4566:4566"
+      - "4510-4560:4510-4560"
     environment:
-      - SERVICES=sagemaker,bedrock,comprehend,lex,kendra,personalize
-      - DEBUG=1
-      - DATA_DIR=/tmp/localstack/data
+      - LOCALSTACK_AUTH_TOKEN=${LOCALSTACK_AUTH_TOKEN:-}
+      - SERVICES=s3,dynamodb,lambda,stepfunctions,sagemaker,bedrock,comprehend,lex,kendra,personalize
+      - GATEWAY_LISTEN=0.0.0.0:4566
+      - LOCALSTACK_HOST=${LOCALSTACK_HOST:-localhost}:4566
+      - DEBUG=${DEBUG:-0}
+      - PERSISTENCE=1
     volumes:
       - "${TMPDIR:-/tmp}/localstack:/tmp/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:4566/_localstack/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
