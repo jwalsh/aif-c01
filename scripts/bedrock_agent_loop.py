@@ -8,7 +8,6 @@ Ported from aws-samples/sample-agentic-ai-demos and
 aws-samples/sample-why-agents-fail, adapted to project conventions.
 """
 
-import json
 import logging
 from typing import Any, Callable, Dict, List, Optional
 

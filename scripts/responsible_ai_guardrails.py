@@ -11,7 +11,7 @@ Ported from aws-samples/sample-why-agents-fail, adapted to project conventions.
 import json
 import logging
 from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, List, Tuple
 
 import click
 from pydantic import BaseModel, Field

@@ -248,3 +248,4 @@ language processing", "Personalized medicine through AI", "Robotic
 surgery advancements"]
 
 scenario, recommendations = create_ai_future_scenario
+#+END_SRC

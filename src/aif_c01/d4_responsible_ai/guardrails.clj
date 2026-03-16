@@ -32,10 +32,10 @@
                         (if ((:condition rule) context)
                           acc
                           (conj acc (str "[" (name (:severity rule)) "] "
-                                        (:name rule) ": " (:message rule))))
+                                         (:name rule) ": " (:message rule))))
                         (catch Exception e
                           (conj acc (str "[error] " (:name rule)
-                                        ": rule evaluation failed: " (.getMessage e))))))
+                                         ": rule evaluation failed: " (.getMessage e))))))
                     []
                     rules)]
     [(empty? violations) violations]))

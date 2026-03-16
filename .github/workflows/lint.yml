@@ -1,0 +1,83 @@
+name: Lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  python:
+    name: Python (black + flake8)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - run: pip install black==26.3.1 flake8==7.3.0
+
+      - name: Check formatting
+        run: black --check --line-length 88 scripts/
+
+      - name: Lint
+        run: flake8 --max-line-length 88 --extend-ignore E203,E501,W291,E402 --per-file-ignores="scripts/project_alignment_checker.py:F811,F821 scripts/aws_bedrock_guardrails.py:F401 scripts/aws_polly_transcribe.py:F401" scripts/
+
+  clojure:
+    name: Clojure (cljfmt)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - uses: DeLaGuardo/setup-clojure@13.4
+        with:
+          lein: 2.11.2
+
+      - name: Cache deps
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-lein-${{ hashFiles('project.clj') }}
+          restore-keys: ${{ runner.os }}-lein-
+
+      - name: Fetch dependencies
+        run: lein deps
+
+      - name: Check formatting
+        run: lein cljfmt check
+
+  org:
+    name: Org-mode (structure)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate org files
+        run: |
+          errors=0
+          for f in $(find doc -name '*.org' 2>/dev/null) README.org; do
+            if [ -f "$f" ]; then
+              # Check for valid top-level headline
+              if ! head -20 "$f" | grep -qE '^\*+ '; then
+                echo "WARN: $f has no top-level headline in first 20 lines"
+              fi
+              # Check for unclosed blocks
+              opens=$(grep -ci '#+BEGIN_' "$f" || true)
+              closes=$(grep -ci '#+END_' "$f" || true)
+              if [ "$opens" != "$closes" ]; then
+                echo "ERROR: $f has mismatched blocks (BEGIN=$opens END=$closes)"
+                errors=$((errors + 1))
+              else
+                echo "OK: $f ($opens blocks)"
+              fi
+            fi
+          done
+          exit $errors
