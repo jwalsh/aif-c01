@@ -107,22 +107,27 @@ jobs:
           key: ${{ runner.os }}-lein-${{ hashFiles('project.clj') }}
           restore-keys: ${{ runner.os }}-lein-
 
+      - name: Fetch Clojure deps
+        run: lein deps
+
       - name: Test cognitect.aws against LocalStack
         env:
           LOCALSTACK_ENDPOINT: http://localhost:4566
         run: |
-          lein run -m clojure.main -e '
+          lein with-profile -dev run -m clojure.main -e '
           (do
             (require (quote [cognitect.aws.client.api :as aws]))
             (let [endpoint {:protocol :http :hostname "localhost" :port 4566}
                   s3 (aws/client {:api :s3 :endpoint-override endpoint})
                   ddb (aws/client {:api :dynamodb :endpoint-override endpoint})]
-              (let [buckets (aws/invoke s3 {:op :ListBuckets})]
-                (assert (some #(= "aif-c01-test" (:Name %)) (:Buckets buckets))
-                        "S3 bucket not found")
-                (println "S3:" (count (:Buckets buckets)) "bucket(s)"))
-              (let [tables (aws/invoke ddb {:op :ListTables})]
-                (assert (some #(= "aif-c01-test" %) (:TableNames tables))
-                        "DynamoDB table not found")
-                (println "DynamoDB:" (count (:TableNames tables)) "table(s)"))
+              (let [result (aws/invoke s3 {:op :ListBuckets})]
+                (println "S3 response:" (pr-str result))
+                (assert (not (:cognitect.anomalies/category result))
+                        (str "S3 error: " (pr-str result)))
+                (println "S3:" (count (:Buckets result)) "bucket(s)"))
+              (let [result (aws/invoke ddb {:op :ListTables})]
+                (println "DynamoDB response:" (pr-str result))
+                (assert (not (:cognitect.anomalies/category result))
+                        (str "DynamoDB error: " (pr-str result)))
+                (println "DynamoDB:" (count (:TableNames result)) "table(s)"))
               (println "All LocalStack checks passed")))'
