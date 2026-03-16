@@ -44,3 +44,4 @@ __pycache__/
 # Generated files
 *.odt
 *.png
+worktrees/

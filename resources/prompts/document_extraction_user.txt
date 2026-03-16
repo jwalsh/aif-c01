@@ -1,0 +1,9 @@
+Read the following document carefully:
+<document>
+{document}
+</document>
+
+Attributes to be extracted:
+<attributes>
+{attributes}
+</attributes>
