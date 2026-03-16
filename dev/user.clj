@@ -43,10 +43,10 @@
   (let [endpoint-url (or (System/getenv "AWS_ENDPOINT_URL")
                          (System/getenv "LOCALSTACK_ENDPOINT"))]
     (aws/client
-      (if endpoint-url
-        {:api service-kw
-         :endpoint-override (parse-endpoint endpoint-url)}
-        {:api service-kw}))))
+     (if endpoint-url
+       {:api service-kw
+        :endpoint-override (parse-endpoint endpoint-url)}
+       {:api service-kw}))))
 
 (defn configure-aws []
   (let [endpoint-url (or (System/getenv "AWS_ENDPOINT_URL")
