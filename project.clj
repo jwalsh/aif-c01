@@ -22,7 +22,8 @@
                  [com.cognitect.aws/dynamodb "848.2.1413.0"]
                  ;;                 [com.cognitect.aws/opensearch "848.2.1413.0"]
                  [org.clojure/data.json "2.4.0"]
-                 [clj-http "3.12.3"]]
+                 [clj-http "3.12.3"]
+                 [rewrite-clj "1.2.53"]]
   :main ^:skip-aot aif-c01.core
   :target-path "target/%s"
   :plugins [[lein-cljfmt "0.9.2"]
