@@ -12,10 +12,10 @@ switch_profile() {
 		;;
 	dev)
 		export AWS_PROFILE=dev
-		export AWS_ACCESS_KEY_ID=your_aws_access_key_id
-		export AWS_SECRET_ACCESS_KEY=your_aws_secret_access_key
+		unset AWS_ACCESS_KEY_ID
+		unset AWS_SECRET_ACCESS_KEY
 		export AWS_DEFAULT_REGION=us-east-1
-		echo "Switched to AWS dev profile"
+		echo "Switched to AWS dev profile (uses AWS_PROFILE credentials)"
 		;;
 	*)
 		echo "Usage: switch_profile [lcl|dev]"

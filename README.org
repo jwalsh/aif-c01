@@ -794,7 +794,7 @@ aws iam get-role --role-name AWSGlueServiceRole | jq -r '.Role.Arn' | tee /tmp/r
 #+end_src
 
 #+RESULTS:
-: arn:aws:iam::107396990521:role/AWSGlueServiceRole
+: arn:aws:iam::123456789012:role/AWSGlueServiceRole
 
 
 #+begin_src emacs-lisp 
@@ -803,7 +803,7 @@ aws iam get-role --role-name AWSGlueServiceRole | jq -r '.Role.Arn' | tee /tmp/r
 #+end_src
 
 #+RESULTS:
-: role_arn value: arn:aws:iam::107396990521:role/AWSGlueServiceRole
+: role_arn value: arn:aws:iam::123456789012:role/AWSGlueServiceRole
 
 #+begin_src shell
 echo "$role_arn" 
@@ -859,7 +859,7 @@ job.commit()
 #+begin_src shell
   aws glue create-job \
     --name mla-job \
-    --role arn:aws:iam::107396990521:role/AWSGlueServiceRole \
+    --role arn:aws:iam::123456789012:role/AWSGlueServiceRole \
     --command Name=glueetl,ScriptLocation=s3://aif-c01-jasonwalsh/scripts/glue-script.py \
     --output text
 #+END_SRC
