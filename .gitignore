@@ -7,7 +7,9 @@ pom.xml.asc
 *.jar
 *.class
 /.lein-*
-/.nrepl-port
+# .nrepl-port is committed at the fixed port 42527 for one-step CIDER connect.
+# nrepl.cmdline rewrites it on start and deletes it on clean exit;
+# `git checkout .nrepl-port` to restore after `make nrepl-stop`.
 /.prepl-port
 .hgignore
 .hg/

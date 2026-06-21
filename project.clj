@@ -3,7 +3,7 @@
   :url "https://github.com/jwalsh/aif-c01"
   :license {:name "MIT"
             :url "https://opensource.org/licenses/MIT"}
-  :dependencies [[org.clojure/clojure "1.11.1"]
+  :dependencies [[org.clojure/clojure "1.12.5"]
                  [com.bhauman/rebel-readline "0.1.4"]
                  [djblue/portal "0.45.0"]
                  [amazonica "0.3.164"]
@@ -32,7 +32,12 @@
   :profiles {:uberjar {:aot :all
                        :jvm-opts ["-Dclojure.compiler.direct-linking=true"]}
              :dev {:source-paths ["src" "dev"]
-                   :dependencies [[org.clojure/tools.namespace "1.4.4"]]
+                   ;; nREPL + CIDER middleware pinned to match Emacs CIDER 1.22.x
+                   ;; (see clojure-emacs-tooling reference); test.check for property tests.
+                   :dependencies [[org.clojure/tools.namespace "1.4.4"]
+                                  [nrepl/nrepl "1.7.0"]
+                                  [cider/cider-nrepl "0.59.0"]
+                                  [org.clojure/test.check "1.1.3"]]
                    :repl-options {:init-ns user
                                   :init (do
                                           (println "Welcome to the AIF-C01 REPL!")
