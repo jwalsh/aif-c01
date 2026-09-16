@@ -13,6 +13,7 @@
                  [com.cognitect.aws/glue "848.2.1413.0"]
                  [com.cognitect.aws/sagemaker "848.2.1413.0"]
                  [com.cognitect.aws/bedrock "869.2.1616.0"]
+                 [com.cognitect.aws/bedrock-runtime "871.2.30.11"]
                  [com.cognitect.aws/lambda "848.2.1413.0"]
                  ;;                 [com.cognitect.aws/cloudwatch "848.2.1413.0"]
                  ;;                 [com.cognitect.aws/comprehend "848.2.1413.0"]
@@ -32,11 +33,12 @@
   :profiles {:uberjar {:aot :all
                        :jvm-opts ["-Dclojure.compiler.direct-linking=true"]}
              :dev {:source-paths ["src" "dev"]
-                   ;; nREPL + CIDER middleware pinned to match Emacs CIDER 1.22.x
-                   ;; (see clojure-emacs-tooling reference); test.check for property tests.
+                   ;; nREPL + CIDER middleware pinned to match Emacs CIDER 2.0.1
+                   ;; (cider-required-middleware-version / cider-injected-nrepl-version
+                   ;; in cider-jack-in.el); test.check for property tests.
                    :dependencies [[org.clojure/tools.namespace "1.4.4"]
                                   [nrepl/nrepl "1.7.0"]
-                                  [cider/cider-nrepl "0.59.0"]
+                                  [cider/cider-nrepl "0.62.2"]
                                   [org.clojure/test.check "1.1.3"]]
                    :repl-options {:init-ns user
                                   :init (do
