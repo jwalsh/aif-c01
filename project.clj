@@ -3,7 +3,7 @@
   :url "https://github.com/jwalsh/aif-c01"
   :license {:name "MIT"
             :url "https://opensource.org/licenses/MIT"}
-  :dependencies [[org.clojure/clojure "1.11.1"]
+  :dependencies [[org.clojure/clojure "1.12.5"]
                  [com.bhauman/rebel-readline "0.1.4"]
                  [djblue/portal "0.45.0"]
                  [amazonica "0.3.164"]
@@ -13,6 +13,7 @@
                  [com.cognitect.aws/glue "848.2.1413.0"]
                  [com.cognitect.aws/sagemaker "848.2.1413.0"]
                  [com.cognitect.aws/bedrock "869.2.1616.0"]
+                 [com.cognitect.aws/bedrock-runtime "871.2.30.11"]
                  [com.cognitect.aws/lambda "848.2.1413.0"]
                  ;;                 [com.cognitect.aws/cloudwatch "848.2.1413.0"]
                  ;;                 [com.cognitect.aws/comprehend "848.2.1413.0"]
@@ -32,7 +33,13 @@
   :profiles {:uberjar {:aot :all
                        :jvm-opts ["-Dclojure.compiler.direct-linking=true"]}
              :dev {:source-paths ["src" "dev"]
-                   :dependencies [[org.clojure/tools.namespace "1.4.4"]]
+                   ;; nREPL + CIDER middleware pinned to match Emacs CIDER 2.0.1
+                   ;; (cider-required-middleware-version / cider-injected-nrepl-version
+                   ;; in cider-jack-in.el); test.check for property tests.
+                   :dependencies [[org.clojure/tools.namespace "1.4.4"]
+                                  [nrepl/nrepl "1.7.0"]
+                                  [cider/cider-nrepl "0.62.2"]
+                                  [org.clojure/test.check "1.1.3"]]
                    :repl-options {:init-ns user
                                   :init (do
                                           (println "Welcome to the AIF-C01 REPL!")

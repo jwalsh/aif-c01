@@ -5,11 +5,23 @@ ORG_FILES := $(wildcard doc/README/includes/*.org)
 MERMAID_ORG_FILES := $(wildcard doc/README/includes/*.org)
 EXPORT_DIR := doc/export
 
+# nREPL — fixed port + committed .nrepl-port for one-step CIDER connect.
+# Keep on localhost so an agent-spawned process can reach it.
+# 42527 is used by the www.wal.sh nREPL, which follows the same convention.
+NREPL_PORT ?= 42528
+NREPL_BIND ?= 127.0.0.1
+
+# Resolve the PID listening on NREPL_PORT. lsof is not installed on stock
+# FreeBSD, so fall back to sockstat there.
+NREPL_PID = { lsof -ti :$(NREPL_PORT) 2>/dev/null \
+              || sockstat -4lP tcp 2>/dev/null | awk '$$6 ~ /:$(NREPL_PORT)$$/ {print $$3}'; } \
+              | grep -E '^[0-9]+$$' | head -1
+
 # Default target
 .DEFAULT_GOAL := help
 
 # Phony targets
-.PHONY: all help setup run test aws-practice localstack-up localstack-down \
+.PHONY: all help setup run test nrepl nrepl-stop aws-practice localstack-up localstack-down \
         switch-profile-lcl switch-profile-dev study-resources clean lint \
         tangle generate-diagrams export-org install-emacs-packages deps \
         aws-audit aws-cleanup
@@ -35,6 +47,17 @@ run: ## Run the main application
 test: ## Run test suite
 	@echo "Running tests..."
 	@lein test
+
+nrepl: ## Start nREPL + CIDER middleware on $(NREPL_PORT) (M-x cider-connect-clj)
+	@if [ -n "$$($(NREPL_PID))" ]; then echo "nREPL already up on $(NREPL_PORT)"; else \
+	  lein with-profile +dev run -m nrepl.cmdline \
+	    --bind $(NREPL_BIND) --port $(NREPL_PORT) \
+	    --middleware '["cider.nrepl/cider-middleware"]'; fi
+
+nrepl-stop: ## Kill the nREPL on $(NREPL_PORT)
+	@pid=$$($(NREPL_PID)); \
+	  if [ -n "$$pid" ]; then kill $$pid && echo "stopped $$pid"; else echo "not running"; fi; \
+	  git checkout .nrepl-port 2>/dev/null || true
 
 lint: ## Run linters
 	@echo "Running linters..."

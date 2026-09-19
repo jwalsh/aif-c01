@@ -7,6 +7,7 @@
 
   Ported from aws-samples/sample-agentic-ai-demos."
   (:require [clojure.data.json :as json]
+            [clojure.string :as str]
             [cognitect.aws.client.api :as aws]))
 
 ;; ---------------------------------------------------------------------------
@@ -55,16 +56,67 @@
 (defn tool-get-weather
   "Get current weather for a city (stub)."
   [{:keys [city]}]
-  (get weather-data (clojure.string/lower-case city)
+  (get weather-data (str/lower-case city)
        (str "No weather data for " city)))
 
+;; The model sends infix text ("42 * 17"), so the expression is parsed directly
+;; rather than passed to read-string/eval: read-string returns only the first
+;; form (42), and eval would execute whatever the model sent.
+
+(declare parse-sum)
+
+(defn- parse-number
+  "Read a numeric token as a long, or a double when it has a decimal point."
+  [token]
+  (if (str/includes? token ".")
+    (Double/parseDouble token)
+    (Long/parseLong token)))
+
+(defn- parse-atom
+  "Parse a number, a unary minus, or a parenthesised expression.
+  Returns [value remaining-tokens]."
+  [[token & more :as tokens]]
+  (cond
+    (nil? token) (throw (ex-info "Unexpected end of expression" {:tokens tokens}))
+    (= "-" token) (let [[value remaining] (parse-atom more)]
+                    [(- value) remaining])
+    (= "(" token) (let [[value remaining] (parse-sum more)]
+                    (if (= ")" (first remaining))
+                      [value (next remaining)]
+                      (throw (ex-info "Unbalanced parentheses" {:tokens tokens}))))
+    :else [(parse-number token) more]))
+
+(defn- parse-binary
+  "Parse a left-associative run of `ops` over operands from `parse-operand`."
+  [ops parse-operand tokens]
+  (loop [[value remaining] (parse-operand tokens)]
+    (if-let [op (ops (first remaining))]
+      (let [[right after] (parse-operand (next remaining))]
+        (recur [(op value right) after]))
+      [value remaining])))
+
+(defn- parse-product
+  [tokens]
+  (parse-binary {"*" * "/" /} parse-atom tokens))
+
+(defn- parse-sum
+  [tokens]
+  (parse-binary {"+" + "-" -} parse-product tokens))
+
 (defn tool-calculate
-  "Evaluate a simple arithmetic expression."
+  "Evaluate a simple infix arithmetic expression over + - * / and parentheses."
   [{:keys [expression]}]
-  (let [allowed-pattern #"^[\d+\-*/.()\s]+$"]
-    (if (re-matches allowed-pattern expression)
-      (str (eval (read-string expression)))
-      "Error: expression contains invalid characters")))
+  (if-not (re-matches #"[\d+\-*/.()\s]+" (str expression))
+    "Error: expression contains invalid characters"
+    (try
+      (let [[value remaining] (parse-sum (re-seq #"\d+\.?\d*|[+\-*/()]" expression))]
+        (if (seq remaining)
+          (str "Error: could not parse expression: " expression)
+          (str value)))
+      (catch ArithmeticException e
+        (str "Error: " (.getMessage e)))
+      (catch Exception _
+        (str "Error: could not parse expression: " expression)))))
 
 ;; ---------------------------------------------------------------------------
 ;; Agent loop
@@ -82,7 +134,7 @@
   (->> (:content message)
        (filter :text)
        (map :text)
-       (clojure.string/join "\n")))
+       (str/join "\n")))
 
 (defn execute-tools
   "Execute all tool_use blocks in an assistant message."
